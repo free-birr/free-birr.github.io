@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CHALI VIP - Ultimate Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f1f5f9; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 420px; background: #f8fafc; min-height: 100vh; padding-bottom: 75px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.05); }
+        .page { display: none; padding: 0 0 15px 0; }
+        .page.active { display: block; }
+        .text-blue { color: #f97316; }
+
+        /* Language & Live Clock Bar */
+        .lang-bar { background: #c2410c; padding: 6px 15px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 11px; font-weight: bold; }
+        .live-clock { display: flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, 0.15); padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px; }
+        .lang-select-wrapper { display: flex; align-items: center; gap: 6px; }
+        .lang-select { background: #f97316; color: #fff; border: none; border-radius: 4px; padding: 3px 6px; font-size: 11px; outline: none; cursor: pointer; font-weight: bold; }
+
+        /* Auth Pages */
+        .auth-container { padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(180deg, #f97316 0%, #c2410c 100%); color: #fff; }
+        .auth-card { background: #fff; width: 100%; border-radius: 20px; padding: 25px 20px; color: #334155; margin-top: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .phone-input-group { display: flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: #fff; }
+        .phone-prefix { background: #f1f5f9; padding: 9px 10px; font-weight: bold; color: #c2410c; border-right: 1px solid #cbd5e1; font-size: 13px; }
+        .phone-input-group input { border: none; outline: none; padding: 9px; width: 100%; font-size: 13px; }
+
+        /* Header & Banners */
+        .top-banner { background: linear-gradient(180deg, #f97316 0%, #c2410c 100%); padding: 20px 15px; border-radius: 0 0 20px 20px; color: #fff; }
+        .app-logo { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .quick-actions { display: flex; gap: 12px; }
+        .quick-btn { flex: 1; padding: 10px; border: none; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .quick-btn.recharge { background: #ffedd5; color: #c2410c; }
+        .quick-btn.withdraw { background: #f59e0b; color: #fff; }
+
+        /* Grid Menu */
+        .grid-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
+        .grid-item { background: #ffffff; padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; }
+        .grid-item i { font-size: 22px; margin-bottom: 6px; display: block; color: #f97316; }
+        .grid-item span { font-size: 11px; color: #334155; font-weight: 600; }
+
+        .promo-banner { margin: 0 15px 10px 15px; padding: 12px; border-radius: 12px; color: #fff; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 10px; cursor: pointer; background: linear-gradient(135deg, #fb923c, #f97316); }
+
+        /* Membership Levels */
+        .section-title { font-size: 15px; font-weight: bold; color: #c2410c; margin: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .vip-levels-list { padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
+        .vip-level-card { background: #ffffff; border-radius: 12px; padding: 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #fed7aa; gap: 10px; position: relative; }
+        .vip-badge { background: #f97316; color: #fff; padding: 6px 10px; border-radius: 20px; font-weight: bold; font-size: 11px; white-space: nowrap; }
+        .vip-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+        .info-line { display: flex; justify-content: space-between; font-size: 10px; color: #64748b; width: 100%; }
+        .info-line span { color: #475569; }
+        .info-line strong { color: #c2410c; }
+        .vip-action-btn { background: #f97316; color: #ffffff; border: none; padding: 8px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+        .vip-action-btn.pending { background: #f59e0b; color: #fff; }
+
+        /* Tasks Page */
+        .header-tasks { background: linear-gradient(180deg, #f97316 0%, #c2410c 100%); padding: 20px 15px; color: #ffffff; border-radius: 0 0 20px 20px; text-align: center; }
+        .tasks-title { font-size: 20px; font-weight: 600; margin-bottom: 15px; }
+        .tasks-stats-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .stat-box { background: #ffffff; border-radius: 16px; padding: 12px 8px; flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .icon-stat { font-size: 24px; color: #f97316; }
+        .stat-num { font-size: 18px; font-weight: bold; color: #c2410c; }
+        .stat-label { font-size: 10px; color: #f97316; }
+        .progress-circle-box { width: 90px; height: 90px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; }
+        .progress-percent { font-size: 18px; font-weight: bold; color: #fff; display: block; }
+        .progress-label { font-size: 10px; color: #fff; }
+        
+        .dashboard-cards-row { display: flex; gap: 10px; margin: 15px; }
+        .mini-card { flex: 1; background: #fff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .mini-card small { font-size: 11px; color: #64748b; }
+        .mini-card strong { display: block; font-size: 14px; color: #f97316; margin-top: 2px; }
+
+        .card { background: #ffffff; border-radius: 16px; padding: 15px; border: 1px solid #e2e8f0; margin: 15px; }
+        .task-video-box { background: #0f172a; border-radius: 10px; padding: 15px; color: #fff; text-align: center; margin-top: 10px; }
+        .timer-display { font-size: 28px; font-weight: bold; color: #38bdf8; margin: 10px 0; }
+
+        /* Daily Reward Box Styles */
+        .daily-reward-card { background: #1e1e2d; color: #fff; padding: 16px; border-radius: 16px; margin: 15px; border: 1px solid #f97316; }
+        .reward-header h3 { font-size: 15px; color: #fbbf24; margin-bottom: 4px; }
+        .reward-header p { font-size: 11px; color: #94a3b8; }
+        .streak-days-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+        .day-box { background: #2a2a3c; border-radius: 8px; padding: 8px 4px; text-align: center; font-size: 11px; border: 1px solid #3f3f56; }
+        .day-box span { display: block; font-weight: bold; color: #cbd5e1; }
+        .day-box p { font-size: 10px; color: #38bdf8; margin: 2px 0 6px 0; }
+        .day-box button { width: 100%; background: #f39c12; border: none; color: #fff; padding: 4px 2px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .day-box button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
+        .day-box.claimed { border: 1px solid #2ecc71; background: #1a2e23; }
+
+        /* Team / Invite Page */
+        .invite-header { background: linear-gradient(180deg, #f97316 0%, #c2410c 100%); padding: 20px 15px; color: #fff; text-align: center; }
+        .invite-container { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .referral-box { display: flex; justify-content: space-between; align-items: center; background: #fff7ed; padding: 10px 12px; border-radius: 8px; border: 1px dashed #f97316; margin-top: 8px; }
+        .copy-btn { background: #f97316; color: #ffffff; border: none; padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .table-responsive { overflow-x: auto; margin-top: 10px; }
+        .team-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .team-table th, .team-table td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
+        .team-table th { background-color: #c2410c; color: white; }
+        .team-table tr:nth-child(even) { background-color: #f8fafc; }
+        .commission-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; text-align: center; }
+        .comm-card { background: #fff7ed; border: 1px solid #ffedd5; padding: 8px; border-radius: 8px; font-size: 11px; }
+        .comm-card strong { display: block; color: #c2410c; font-size: 13px; margin-top: 2px; }
+
+        /* Me Page */
+        .me-header { background: linear-gradient(180deg, #f97316 0%, #c2410c 100%); padding: 20px 15px; color: #ffffff; }
+        .me-content-container { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .financial-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .wallet-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+        
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 11px; color: #475569; margin-bottom: 4px; font-weight: bold; }
+        .form-control { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; outline: none; }
+        .btn { padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; width: 100%; }
+        .btn-primary { background: #f97316; color: #fff; }
+        .btn-danger { background: #ef4444; color: #fff; margin-top: 10px; }
+
+        .menu-list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: #fff; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 13px; color: #334155; position: relative; }
+        .menu-list-item i { color: #f97316; width: 20px; }
+        .badge-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: inline-block; margin-left: 6px; }
+
+        /* Admin Panel Styles */
+        .admin-card { background: #fff; border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid #cbd5e1; font-size: 12px; }
+        .admin-btn-approve { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; margin-top: 6px; margin-right: 4px; }
+        .admin-btn-reject { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; margin-top: 6px; }
+        .admin-screenshot { width: 100%; max-height: 150px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 6px; background: #000; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #fff; width: 90%; max-width: 380px; border-radius: 16px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 18px; cursor: pointer; color: #64748b; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; background: #ffffff; display: flex; justify-content: space-around; align-items: center; padding: 10px 0; border-top: 1px solid #e2e8f0; z-index: 1000; }
+        .nav-item { text-align: center; color: #64748b; cursor: pointer; font-size: 11px; flex: 1; }
+        .nav-item i { font-size: 18px; display: block; margin-bottom: 2px; }
+        .nav-item.active { color: #f97316; font-weight: bold; }
+
+        .history-item, .message-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- Language & Live Clock Bar -->
+        <div class="lang-bar">
+            <div class="live-clock">
+                <i class="fa-regular fa-clock" style="font-size: 11px;"></i>
+                <span id="liveClockDisplay">00:00:00 AM</span>
+            </div>
+            <div class="lang-select-wrapper">
+                <i class="fa-solid fa-globe" style="font-size: 12px;"></i>
+                <select id="langSelector" class="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="am">አማርኛ</option>
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- AUTH PAGE: SIGN IN / LOGIN -->
+        <div id="page-login" class="page">
+            <div class="auth-container">
+                <div style="font-size: 28px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                    <i class="fa-solid fa-gem"></i><span>CHALI VIP</span>
+                </div>
+                <p id="txtLoginSubtitle" style="font-size: 12px; opacity: 0.9; margin-top: 5px;">Join Chal & Create Stable Income</p>
+
+                <div class="auth-card">
+                    <h3 id="txtLoginTitle" style="color: #c2410c; font-size: 16px; margin-bottom: 12px;">Login (ግባ)</h3>
+                    <div class="form-group">
+                        <label id="txtPhoneLabel">Phone Number (ስልክ ቁጥር):</label>
+                        <div class="phone-input-group">
+                            <span class="phone-prefix">+251</span>
+                            <input type="tel" id="loginPhone" maxlength="9" placeholder="911112222">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label id="txtPassLabel">Login Password (የይለፍ ቃል 6 አሃዝ):</label>
+                        <input type="password" id="loginPass" maxlength="6" class="form-control" placeholder="******">
+                    </div>
+                    <button class="btn btn-primary" id="btnLoginBtn" onclick="processLogin()">Sign In (ግባ)</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; font-size: 12px;">
+                        <span class="text-blue" id="txtForgotPass" style="cursor: pointer; font-weight: bold;" onclick="openForgotPasswordModal()">Forgot Password?</span>
+                        <span style="color: #64748b;" id="txtNoAccount">No account? <span class="text-blue" style="cursor: pointer; font-weight: bold;" onclick="showAuthMode('signup')">Sign Up</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTH PAGE: SIGN UP -->
+        <div id="page-signup" class="page">
+            <div class="auth-container">
+                <div style="font-size: 28px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                    <i class="fa-solid fa-gem"></i><span>CHALI VIP</span>
+                </div>
+                <p id="txtSignupSub" style="font-size: 12px; opacity: 0.9; margin-top: 5px;">Smart Safety Management</p>
+
+                <div class="auth-card">
+                    <h3 id="txtSignupTitle" style="color: #c2410c; font-size: 16px; margin-bottom: 12px;">Sign Up (ምዝገባ)</h3>
+                    <div class="form-group">
+                        <label id="txtSignupPhoneLbl">Phone Number (+251):</label>
+                        <div class="phone-input-group">
+                            <span class="phone-prefix">+251</span>
+                            <input type="tel" id="signupPhone" maxlength="9" placeholder="942049239">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label id="txtSignupPassLbl">Password (6 digits):</label>
+                        <input type="password" id="signupPass" maxlength="6" class="form-control" placeholder="6 digits">
+                    </div>
+                    <div class="form-group">
+                        <label id="txtSignupConfirmLbl">Confirm Password:</label>
+                        <input type="password" id="signupConfirmPass" maxlength="6" class="form-control" placeholder="Confirm password">
+                    </div>
+                    <div class="form-group">
+                        <label id="txtSignupInviteLbl">Invite Code:</label>
+                        <input type="text" id="signupRefCode" class="form-control" placeholder="Invitation code (ማስገደድ ወይም በሊንክ የሚሞላ)">
+                    </div>
+                    <button class="btn btn-primary" id="btnSignupBtn" onclick="processSignup()">Sign Up (ይመዝገቡ)</button>
+                    <p style="text-align: center; font-size: 12px; margin-top: 15px; color: #64748b;" id="txtHaveAccount">
+                        Already have account? <span class="text-blue" style="cursor: pointer; font-weight: bold;" onclick="showAuthMode('login')">Sign In</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 1: HOME -->
+        <div id="page-home" class="page">
+            <div class="top-banner">
+                <div class="app-logo"><i class="fa-solid fa-gem"></i><span>CHALI VIP</span></div>
+                <div id="txtBannerSub" style="font-size: 12px; margin-bottom: 12px; opacity: 0.9;">Join Chal & Create Stable Income | Smart Safety Management</div>
+                <div class="quick-actions">
+                    <button class="quick-btn recharge" onclick="openDepositModal()"><i class="fa-solid fa-arrow-down"></i> <span id="txtRechargeBtn">Recharge</span></button>
+                    <button class="quick-btn withdraw" onclick="openWithdrawModal()"><i class="fa-solid fa-arrow-up"></i> <span id="txtWithdrawBtn">Withdraw</span></button>
+                </div>
+            </div>
+
+            <div class="grid-menu">
+                <div class="grid-item" onclick="switchPage('task')"><i class="fa-solid fa-list-check"></i><span id="txtNavTasks">Tasks</span></div>
+                <div class="grid-item" onclick="switchPage('invite')"><i class="fa-solid fa-users"></i><span id="txtNavTeam">Team</span></div>
+                <div class="grid-item" onclick="window.open('https://t.me/Chalitytech', '_blank')"><i class="fa-brands fa-telegram"></i><span>Telegram</span></div>
+            </div>
+
+            <!-- Daily Reward Box Component with 24-Hour / Cooldown Restriction -->
+            <div class="daily-reward-card">
+                <div class="reward-header">
+                    <h3 id="txtDailyTitle"><i class="fa-solid fa-gift"></i> Daily Check-In Bonus</h3>
+                    <p id="txtDailySub">Check in every 24 hours to earn <strong>20 ETB</strong> per day!</p>
+                </div>
+                <div class="streak-days-grid" id="streakDaysGrid">
+                    <div class="day-box" id="dayBox1">
+                        <span id="txtDay1">Day 1</span>
+                        <p>+20 ETB</p>
+                        <button onclick="claimDailyReward(1)" id="btnDay1">Claim</button>
+                    </div>
+                    <div class="day-box" id="dayBox2">
+                        <span id="txtDay2">Day 2</span>
+                        <p>+20 ETB</p>
+                        <button onclick="claimDailyReward(2)" id="btnDay2" disabled>Locked</button>
+                    </div>
+                    <div class="day-box" id="dayBox3">
+                        <span id="txtDay3">Day 3</span>
+                        <p>+20 ETB</p>
+                        <button onclick="claimDailyReward(3)" id="btnDay3" disabled>Locked</button>
+                    </div>
+                    <div class="day-box" id="dayBox4">
+                        <span id="txtDay4">Day 4</span>
+                        <p>+20 ETB</p>
+                        <button onclick="claimDailyReward(4)" id="btnDay4" disabled>Locked</button>
+                    </div>
+                    <div class="day-box" id="dayBox5">
+                        <span id="txtDay5">Day 5</span>
+                        <p>+20 ETB</p>
+                        <button onclick="claimDailyReward(5)" id="btnDay5" disabled>Locked</button>
+                    </div>
+                    <div class="day-box" id="dayBox6">
+                        <span id="txtDay6">Day 6</span>
+                        <p>+20 ETB</p>
+                        <button onclick="claimDailyReward(6)" id="btnDay6" disabled>Locked</button>
+                    </div>
+                    <div class="day-box" id="dayBox7">
+                        <span id="txtDay7">Day 7</span>
+                        <p>+20 ETB</p>
+                        <button onclick="claimDailyReward(7)" id="btnDay7" disabled>Locked</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redeem / Gift Code Box Integration -->
+            <div class="card" style="margin: 15px;">
+                <h3 id="txtRedeemTitle" style="font-size: 14px; margin-bottom: 6px; color: #c2410c;"><i class="fa-solid fa-ticket"></i> Redeem / Gift Code</h3>
+                <p id="txtRedeemSub" style="font-size: 11px; color: #64748b; margin-bottom: 10px;">ያገኙትን የጊፍት ኮድ እዚህ በመፃፍ ቦነስ ሰብስብ</p>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="giftCodeInput" class="form-control" placeholder="GIFT-XXXX" style="font-size: 12px; padding: 8px;">
+                    <button class="btn btn-primary" id="btnRedeemAction" style="width: auto; padding: 8px 14px; font-size: 12px;" onclick="processRedeemCode()">Redeem</button>
+                </div>
+                <div id="redeemMessage" style="font-size: 11px; margin-top: 6px; font-weight: bold;"></div>
+            </div>
+
+            <div class="promo-banner" onclick="window.open('https://t.me/Chalitytech', '_blank')">
+                <i class="fa-brands fa-telegram" style="font-size: 18px;"></i>
+                <span id="txtChannelJoin">Join Channel: Chality tech</span>
+            </div>
+
+            <div class="section-title">
+                <span id="txtMembershipTitle"><i class="fa-solid fa-star text-blue"></i> Membership Levels (VIP 1 - 10)</span>
+                <small id="userVipStatusBadge" style="background:#f97316; color:#fff; padding:2px 8px; border-radius:10px; font-size:10px;">VIP 0</small>
+            </div>
+
+            <div class="vip-levels-list" id="vipLevelsContainer"></div>
+        </div>
+
+        <!-- PAGE 2: TASK -->
+        <div id="page-task" class="page">
+            <div class="header-tasks">
+                <h2 class="tasks-title" id="txtTaskHeaderTitle">Daily Video Tasks</h2>
+                <div class="tasks-stats-row">
+                    <div class="stat-box"><i class="fa-regular fa-clock icon-stat"></i><span class="stat-num" id="unfinishedCount">2</span><small class="stat-label" id="txtUnfinishedLbl">Unfinished</small></div>
+                    <div class="progress-circle-box"><div><span class="progress-percent" id="taskProgressPercent">0%</span><small class="progress-label" id="txtProgressLbl">Progress</small></div></div>
+                    <div class="stat-box"><i class="fa-regular fa-circle-check icon-stat"></i><span class="stat-num" id="completedCount">0</span><small class="stat-label" id="txtCompletedLbl">Completed</small></div>
+                </div>
+            </div>
+
+            <div class="dashboard-cards-row">
+                <div class="mini-card"><small id="txtTodayProfitLbl">Today profit</small><strong id="todayProfit">ETB 0.00</strong></div>
+                <div class="mini-card"><small id="txtAvailBalLbl">Available balance</small><strong id="taskAvailableBalance">ETB 0.00</strong></div>
+            </div>
+
+            <div class="card">
+                <h3 id="txtVideoTaskTitle"><i class="fa-solid fa-circle-play text-blue"></i> Video Task</h3>
+                <p id="txtVideoTaskSub" style="font-size: 11px; color: #64748b; margin-top: 4px;">ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ</p>
+                <div class="task-video-box" id="taskBoxUI">
+                    <div id="videoInstruction" style="font-size: 12px; margin-bottom: 5px;">ታስክ ለመጀመር ከታች ቁልፉን ይጫኑ</div>
+                    <div class="timer-display" id="timerCount">00:10</div>
+                    <button class="btn btn-primary" id="startTaskBtn" onclick="startVideoTask()">Start Task</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3: TEAM / INVITE -->
+        <div id="page-invite" class="page">
+            <div class="invite-header"><h2 id="txtTeamHeader">Team Data Center</h2></div>
+            <div class="invite-container">
+                <div class="card" style="margin:0;">
+                    <h3 id="txtInviteLinkTitle" style="font-size: 14px; margin-bottom: 8px; color: #c2410c;"><i class="fa-solid fa-share-nodes"></i> Your Invite Link</h3>
+                    <p id="txtInviteSub" style="font-size: 11px; color: #64748b;">ጓደኞችዎን በመጋበዝ የኮሚሽን ሽልማት ያግኙ!</p>
+                    <div class="referral-box">
+                        <span id="userRefCodeDisplay" style="font-weight: bold; color: #f97316; font-size: 12px;">LOADING...</span>
+                        <button class="copy-btn" id="btnCopyLink" onclick="copyRefLink()">Copy Link</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin:0;">
+                    <h3 id="txtCommRatesTitle" style="font-size: 14px; margin-bottom: 8px; color: #c2410c;"><i class="fa-solid fa-percent"></i> Team Commission Rates</h3>
+                    <div class="commission-box">
+                        <div class="comm-card"><span id="txtLvl1Team">Level 1 Team</span><strong>15%</strong></div>
+                        <div class="comm-card"><span id="txtLvl2Team">Level 2 Team</span><strong>2%</strong></div>
+                        <div class="comm-card"><span id="txtLvl3Team">Level 3 Team</span><strong>1%</strong></div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin:0;">
+                    <h3 id="txtTeamMembersTitle" style="font-size: 14px; margin-bottom: 8px; color: #c2410c;"><i class="fa-solid fa-users-line"></i> Team Members List</h3>
+                    <div class="table-responsive">
+                        <table class="team-table">
+                            <thead>
+                                <tr>
+                                    <th id="thNo">No.</th>
+                                    <th id="thPhone">Phone Number</th>
+                                    <th id="thUid">UID</th>
+                                    <th id="thVip">VIP Level</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teamMembersTableBody">
+                                <tr>
+                                    <td>1</td>
+                                    <td>+251942049239</td>
+                                    <td>UID10023</td>
+                                    <td>VIP 1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 4: ME (PROFILE) -->
+        <div id="page-me" class="page">
+            <div class="me-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:40px; height:40px; background:rgba(255,255,255,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-user"></i></div>
+                    <div>
+                        <strong id="userPhoneDisplay">+251942049239</strong><br>
+                        <small id="userUidDisplay" style="color: #fed7aa; font-weight: bold;">UID: --</small> | <small id="userVipLabelMe">vip0</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="me-content-container">
+                <div class="financial-grid">
+                    <div class="wallet-card"><small id="txtYestEarn">Yesterday's earning</small><strong id="yestEarning">ETB 0.00</strong></div>
+                    <div class="wallet-card"><small id="txtTodayEarn">Today's earning</small><strong id="todayEarningMe">ETB 0.00</strong></div>
+                    <div class="wallet-card"><small id="txtWeekEarn">Week's earning</small><strong id="weekEarning">ETB 0.00</strong></div>
+                    <div class="wallet-card"><small id="txtMonthEarn">This month's earn</small><strong id="monthEarning">ETB 0.00</strong></div>
+                    <div class="wallet-card"><small id="txtTeamInc">Team income</small><strong id="teamIncome">ETB 0.00</strong></div>
+                    <div class="wallet-card"><small id="txtInviteInc">Invite income</small><strong id="inviteIncome">ETB 0.00</strong></div>
+                    <div class="wallet-card" style="grid-column: span 2; background: #fff7ed;"><small id="txtTotalRev">Total Revenue</small><strong id="totalRevenue" style="color:#c2410c; font-size:15px;">ETB 0.00</strong></div>
+                </div>
+
+                <div style="background:#fff; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0;">
+                    <div class="menu-list-item" onclick="openBankModal()"><div style="display:flex; gap:10px; align-items:center;"><i class="fa-solid fa-building-columns"></i><span id="txtMenuBank">Bank Card (የባንክ አካውንት)</span></div><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></div>
+                    
+                    <!-- Message Notification Menu -->
+                    <div class="menu-list-item" onclick="openMessagesModal()"><div style="display:flex; gap:10px; align-items:center;"><i class="fa-solid fa-envelope"></i><span id="txtMenuMsgs">Messages (መልእክቶች) <span id="msgBadge" class="badge-dot" style="display:none;"></span></span></div><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></div>
+
+                    <!-- Separated Records Menus -->
+                    <div class="menu-list-item" onclick="openDepositHistoryModal()"><div style="display:flex; gap:10px; align-items:center;"><i class="fa-solid fa-file-invoice-dollar"></i><span id="txtMenuDepRec">Deposit Record (የገንዘብ ማስገቢያ ታሪክ)</span></div><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></div>
+                    <div class="menu-list-item" onclick="openWithdrawHistoryModal()"><div style="display:flex; gap:10px; align-items:center;"><i class="fa-solid fa-wallet"></i><span id="txtMenuWdRec">Withdraw Record (የገንዘብ ማውጣት ታሪክ)</span></div><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></div>
+
+                    <div class="menu-list-item" onclick="window.open('https://t.me/ethsigns', '_blank')"><div style="display:flex; gap:10px; align-items:center;"><i class="fa-solid fa-headset"></i><span id="txtMenuSupport">Customer Services</span></div><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></div>
+                    <div class="menu-list-item" onclick="openPasswordModal()"><div style="display:flex; gap:10px; align-items:center;"><i class="fa-solid fa-key"></i><span id="txtMenuPass">Login Password</span></div><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></div>
+                    
+                    <!-- Admin Panel Menu -->
+                    <div id="adminMenuBtn" class="menu-list-item" style="display:none; background:#fff7ed;" onclick="openAdminPanel()"><div style="display:flex; gap:10px; align-items:center;"><i class="fa-solid fa-user-shield" style="color:#c2410c;"></i><span id="txtMenuAdmin" style="color:#c2410c; font-weight:bold;">Admin Panel (የአድሚን ፓነል)</span></div><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></div>
+                </div>
+
+                <button class="btn btn-danger" id="btnLogoutBtn" onclick="signoutUser()"><i class="fa-solid fa-right-from-bracket"></i> Log Out (ውጣ)</button>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="bottom-nav" id="bottomNavContainer" style="display: none;">
+            <div class="nav-item active" onclick="switchPage('home')"><i class="fa-solid fa-house"></i><span id="navHome">Home</span></div>
+            <div class="nav-item" onclick="switchPage('task')"><i class="fa-solid fa-list-check"></i><span id="navTask">Tasks</span></div>
+            <div class="nav-item" onclick="switchPage('invite')"><i class="fa-solid fa-users"></i><span id="navTeam">Team</span></div>
+            <div class="nav-item" onclick="switchPage('me')"><i class="fa-solid fa-user"></i><span id="navMe">Me</span></div>
+        </div>
+
+    </div>
+
+    <!-- MODALS -->
+    <div id="depositModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-arrow-down"></i> Recharge (ገንዘብ ማስገቢያ)</h3>
+            <div style="background:#fff7ed; padding:10px; border-radius:8px; font-size:12px; margin-bottom:12px; border:1px solid #fed7aa;">
+                <div><strong>1. Bank:</strong> Commercial Bank of Ethiopia (CBE)</div>
+                <div><strong>Account No:</strong> <span class="text-blue" style="font-weight:bold;">1000092937449</span></div>
+                <div><strong>Holder:</strong> <strong>Chalachew Haymanot</strong></div>
+                <hr style="border:0; border-top:1px solid #fed7aa; margin:8px 0;">
+                <div><strong>2. Telebirr:</strong> Telebirr Account</div>
+                <div><strong>Account No:</strong> <span class="text-blue" style="font-weight:bold;">924099009</span></div>
+                <div><strong>Holder:</strong> <strong>Chalachew Haymanot</strong></div>
+            </div>
+            <div class="form-group">
+                <label>Select VIP Level:</label>
+                <select id="depVipSelect" class="form-control">
+                    <option value="1">VIP 1 (ETB 1,000)</option>
+                    <option value="2">VIP 2 (ETB 8,000)</option>
+                    <option value="3">VIP 3 (ETB 16,000)</option>
+                    <option value="4">VIP 4 (ETB 32,000)</option>
+                    <option value="5">VIP 5 (ETB 64,000)</option>
+                    <option value="6">VIP 6 (ETB 128,000)</option>
+                    <option value="7">VIP 7 (ETB 200,000)</option>
+                    <option value="8">VIP 8 (ETB 300,000)</option>
+                    <option value="9">VIP 9 (ETB 400,000)</option>
+                    <option value="10">VIP 10 (ETB 500,000)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Transaction ID (የትራንዛክሽን ቁጥር):</label>
+                <input type="text" id="depTxId" class="form-control" placeholder="ለምሳሌ: FT24123XXXXX ወይም ቴሌብር ቁጥር">
+            </div>
+            <div class="form-group">
+                <label>Payment Screenshot:</label>
+                <input type="file" id="depScreenshot" class="form-control" accept="image/*">
+            </div>
+            <button class="btn btn-primary" onclick="submitDeposit()">Submit Recharge</button>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL MODAL -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-user-shield"></i> Admin Panel - Approvals</h3>
+            <div style="display: flex; gap: 5px; margin-bottom: 12px;">
+                <button class="btn btn-primary" style="font-size: 11px; padding: 6px;" onclick="switchAdminTab('deposits')">Deposits</button>
+                <button class="btn btn-primary" style="font-size: 11px; padding: 6px;" onclick="switchAdminTab('withdrawals')">Withdrawals</button>
+            </div>
+            <div id="adminDepositListContainer" class="admin-tab-content" style="max-height: 320px; overflow-y: auto;"></div>
+            <div id="adminWithdrawalListContainer" class="admin-tab-content" style="max-height: 320px; overflow-y: auto; display: none;"></div>
+        </div>
+    </div>
+
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-arrow-up"></i> Withdraw (ገንዘብ ማውጣት)</h3>
+            <div class="form-group">
+                <label>Withdraw Amount (ETB):</label>
+                <input type="number" id="withdrawAmtInput" class="form-control" placeholder="Amount">
+            </div>
+            <button class="btn btn-primary" onclick="submitWithdraw()">Confirm Withdraw</button>
+        </div>
+    </div>
+
+    <div id="bankModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-building-columns"></i> Bank / Telebirr Account Registration</h3>
+            <div class="form-group">
+                <label>Account / Phone Number:</label>
+                <input type="text" id="bankAccNo" class="form-control" placeholder="1000... ወይም 924...">
+            </div>
+            <div class="form-group">
+                <label>Account Holder Name:</label>
+                <input type="text" id="bankAccName" class="form-control" placeholder="Full name">
+            </div>
+            <button class="btn btn-primary" onclick="saveBankAccount()">Save Account</button>
+        </div>
+    </div>
+
+    <!-- MESSAGES MODAL -->
+    <div id="messagesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-envelope"></i> System Messages</h3>
+            <div id="messagesContainer" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- SEPARATED DEPOSIT HISTORY MODAL -->
+    <div id="depositHistoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-file-invoice-dollar"></i> Deposit Record</h3>
+            <div id="depositHistoryContainer" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- SEPARATED WITHDRAW HISTORY MODAL -->
+    <div id="withdrawHistoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-wallet"></i> Withdraw Record</h3>
+            <div id="withdrawHistoryContainer" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-key"></i> Change Login Password</h3>
+            <div class="form-group">
+                <label>Current Password:</label>
+                <input type="password" id="currentPassInput" maxlength="6" class="form-control" placeholder="******">
+            </div>
+            <div class="form-group">
+                <label>New 6-digit Password:</label>
+                <input type="password" id="newPassInput" maxlength="6" class="form-control" placeholder="******">
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password:</label>
+                <input type="password" id="confirmNewPassInput" maxlength="6" class="form-control" placeholder="******">
+            </div>
+            <button class="btn btn-primary" onclick="updatePassword()">Update Password</button>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <h3 style="color:#c2410c; font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-key"></i> Forgot Password</h3>
+            <div class="form-group">
+                <label>Phone Number (+251):</label>
+                <div class="phone-input-group">
+                    <span class="phone-prefix">+251</span>
+                    <input type="tel" id="forgotPhone" maxlength="9" placeholder="942049239">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>New 6-digit Password:</label>
+                <input type="password" id="forgotNewPass" maxlength="6" class="form-control" placeholder="******">
+            </div>
+            <button class="btn btn-primary" onclick="processForgotPassword()">Reset Password</button>
+        </div>
+    </div>
+
+    <!-- Script & Logic -->
+    <script>
+        const ADMIN_PHONE = "+251911112222";
+        let currentLang = localStorage.getItem('siteLang') || 'am';
+
+        const translations = {
+            am: {
+                loginSub: "ቻሊን ይቀላቀሉ እና የተረጋጋ ገቢ ይፍጠሩ",
+                loginTitle: "ግባ (Login)",
+                phoneLbl: "ስልክ ቁጥር (Phone Number):",
+                passLbl: "የይለፍ ቃል 6 አሃዝ (Password):",
+                loginBtn: "ግባ (Sign In)",
+                forgotPass: "ይለፍ ቃል ረስተዋል?",
+                noAccount: "አካውንት የለዎትም? ይመዝገቡ",
+                signupSub: "ስማርት ደህንነት አስተዳደር",
+                signupTitle: "ምዝገባ (Sign Up)",
+                signupPhoneLbl: "ስልክ ቁጥር (+251):",
+                signupPassLbl: "የይለፍ ቃል (6 አሃዝ):",
+                signupConfirmLbl: "የይለፍ ቃል ያረጋግጡ:",
+                signupInviteLbl: "የመጋበዣ ኮድ (Invite Code):",
+                signupBtn: "ይመዝገቡ (Sign Up)",
+                haveAccount: "አካውንት አለዎት? ይግቡ",
+                bannerSub: "ቻሊን ይቀላቀሉ እና የተረጋጋ ገቢ ይፍጠሩ | ስማርት ደህንነት አስተዳደር",
+                recharge: "ገንዘብ ማስገቢያ",
+                withdraw: "ገንዘብ ማውጣት",
+                navTasks: "ታስኮች",
+                navTeam: "ቡድን",
+                dailyTitle: "ዕለታዊ የቼክ-ኢን ቦነስ",
+                dailySub: "በየ 24 ሰዓቱ በመግባት <strong>20 ብር</strong> በነፃ ያግኙ!",
+                claim: "ይሰብስቡ",
+                locked: "ተቆልፏል",
+                claimed: "ተወስዷል",
+                redeemTitle: "ጊፍት ኮድ / ቦነስ",
+                redeemSub: "ያገኙትን የጊፍት ኮድ እዚህ በመፃፍ ቦነስ ሰብስብ",
+                redeemBtn: "መዝግብ",
+                channelJoin: "የቴሌግራም ቻናል ይቀላቀሉ: Chality tech",
+                membershipTitle: "የአባልነት ደረጃዎች (VIP 1 - 10)",
+                taskHeaderTitle: "ዕለታዊ የቪዲዮ ታስኮች",
+                unfinishedLbl: "ያልተጠናቀቁ",
+                progressLbl: "ሂደት",
+                completedLbl: "የተጠናቀቁ",
+                todayProfitLbl: "የዛሬ ገቢ",
+                availBalLbl: "ቀሪ ሂሳብ",
+                videoTaskTitle: "የቪዲዮ ታስክ",
+                videoTaskSub: "ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ",
+                startTaskBtn: "ታስክ ጀምር",
+                teamHeader: "የቡድን ዳታ ሴንተር",
+                inviteLinkTitle: "የእርስዎ መጋበዣ ሊንክ",
+                inviteSub: "ጓደኞችዎን በመጋበዝ የኮሚሽን ሽልማት ያግኙ!",
+                copyLinkBtn: "ሊንክ ገልብጥ",
+                commRatesTitle: "የቡድን የኮሚሽን መጠኖች",
+                lvl1Team: "ደረጃ 1 ቡድን",
+                lvl2Team: "ደረጃ 2 ቡድን",
+                lvl3Team: "ደረጃ 3 ቡድን",
+                teamMembersTitle: "የቡድን አባላት ዝርዝር",
+                thNo: "ቁ.",
+                thPhone: "ስልክ ቁጥር",
+                thUid: "ዩአይዲ",
+                thVip: "ደረጃ",
+                yestEarn: "የநேት ገቢ",
+                todayEarn: "የዛሬ ገቢ",
+                weekEarn: "የዚህ ሳምንት ገቢ",
+                monthEarn: "የዚህ ወር ገቢ",
+                teamInc: "የቡድን ገቢ",
+                inviteInc: "የጋበዛቸው ገቢ",
+                totalRev: "አጠቃላይ ገቢ",
+                menuBank: "የባንክ አካውንት (Bank Card)",
+                menuMsgs: "መልእክቶች (Messages)",
+                menuDepRec: "የገንዘብ ማስገቢያ ታሪክ (Deposit Record)",
+                menuWdRec: "የገንዘብ ማውጣት ታሪክ (Withdraw Record)",
+                menuSupport: "የደንበኞች አገልግሎት (Support)",
+                menuPass: "የይለፍ ቃል መቀየሪያ",
+                menuAdmin: "የአድሚን ፓነል (Admin Panel)",
+                logoutBtn: "ከመተግበሪያው ውጣ (Log Out)",
+                navHome: "መነሻ",
+                navTaskNav: "ታስኮች",
+                navTeamNav: "ቡድን",
+                navMeNav: "እኔ"
+            },
+            en: {
+                loginSub: "Join Chal & Create Stable Income",
+                loginTitle: "Login",
+                phoneLbl: "Phone Number:",
+                passLbl: "Login Password (6 digits):",
+                loginBtn: "Sign In",
+                forgotPass: "Forgot Password?",
+                noAccount: "No account? Sign Up",
+                signupSub: "Smart Safety Management",
+                signupTitle: "Sign Up",
+                signupPhoneLbl: "Phone Number (+251):",
+                signupPassLbl: "Password (6 digits):",
+                signupConfirmLbl: "Confirm Password:",
+                signupInviteLbl: "Invite Code:",
+                signupBtn: "Sign Up",
+                haveAccount: "Already have account? Sign In",
+                bannerSub: "Join Chal & Create Stable Income | Smart Safety Management",
+                recharge: "Recharge",
+                withdraw: "Withdraw",
+                navTasks: "Tasks",
+                navTeam: "Team",
+                dailyTitle: "Daily Check-In Bonus",
+                dailySub: "Check in every 24 hours to earn <strong>20 ETB</strong> per day!",
+                claim: "Claim",
+                locked: "Locked",
+                claimed: "Claimed",
+                redeemTitle: "Redeem / Gift Code",
+                redeemSub: "Enter your gift code here to get bonus",
+                redeemBtn: "Redeem",
+                channelJoin: "Join Channel: Chality tech",
+                membershipTitle: "Membership Levels (VIP 1 - 10)",
+                taskHeaderTitle: "Daily Video Tasks",
+                unfinishedLbl: "Unfinished",
+                progressLbl: "Progress",
+                completedLbl: "Completed",
+                todayProfitLbl: "Today profit",
+                availBalLbl: "Available balance",
+                videoTaskTitle: "Video Task",
+                videoTaskSub: "Watch video to collect your revenue",
+                startTaskBtn: "Start Task",
+                teamHeader: "Team Data Center",
+                inviteLinkTitle: "Your Invite Link",
+                inviteSub: "Invite friends and earn commission rewards!",
+                copyLinkBtn: "Copy Link",
+                commRatesTitle: "Team Commission Rates",
+                lvl1Team: "Level 1 Team",
+                lvl2Team: "Level 2 Team",
+                lvl3Team: "Level 3 Team",
+                teamMembersTitle: "Team Members List",
+                thNo: "No.",
+                thPhone: "Phone Number",
+                thUid: "UID",
+                thVip: "VIP Level",
+                yestEarn: "Yesterday's earning",
+                todayEarn: "Today's earning",
+                weekEarn: "Week's earning",
+                monthEarn: "This month's earn",
+                teamInc: "Team income",
+                inviteInc: "Invite income",
+                totalRev: "Total Revenue",
+                menuBank: "Bank Card",
+                menuMsgs: "Messages",
+                menuDepRec: "Deposit Record",
+                menuWdRec: "Withdraw Record",
+                menuSupport: "Customer Services",
+                menuPass: "Login Password",
+                menuAdmin: "Admin Panel",
+                logoutBtn: "Log Out",
+                navHome: "Home",
+                navTaskNav: "Tasks",
+                navTeamNav: "Team",
+                navMeNav: "Me"
+            },
+            ar: {
+                loginSub: "انضم إلى شال واქმع دخلًا ثابتًا",
+                loginTitle: "تسجيل الدخول",
+                phoneLbl: "رقم الهاتفك:",
+                passLbl: "كلمة المرور (6 أرقام):",
+                loginBtn: "تسجيل الدخول",
+                forgotPass: "هل نسيت كلمة المرور؟",
+                noAccount: "ليس لديك حساب؟ انشئ حساب",
+                signupSub: "إدارة الأمان الذكية",
+                signupTitle: "إنشاء حساب",
+                signupPhoneLbl: "رقم الهاتف (+251):",
+                signupPassLbl: "كلمة المرور (6 أرقام):",
+                signupConfirmLbl: "تأكيد كلمة المرور:",
+                signupInviteLbl: "رمز الدعوة:",
+                signupBtn: "تسجيل",
+                haveAccount: "لديك حساب بالفعل؟ سجل دخول",
+                bannerSub: "انضم إلى شال واქმع دخلًا ثابتًا | إدارة الأمان الذكية",
+                recharge: "إيداع",
+                withdraw: "سحب",
+                navTasks: "المهام",
+                navTeam: "الفريق",
+                dailyTitle: "مكافأة تسجيل الدخول اليومية",
+                dailySub: "سجل دخول كل 24 ساعة لكسب <strong>20 ETB</strong> يومياً!",
+                claim: "مطالبة",
+                locked: "مقفل",
+                claimed: "تم الاستلام",
+                redeemTitle: "رمز الهدية / الاستبدال",
+                redeemSub: "أدخل رمز الهدية الخاص بك هنا للحصول على المكافأة",
+                redeemBtn: "استبدال",
+                channelJoin: "انضم إلى القناة: Chality tech",
+                membershipTitle: "مستويات العضوية (VIP 1 - 10)",
+                taskHeaderTitle: "مهام الفيديو اليومية",
+                unfinishedLbl: "غير مكتملة",
+                progressLbl: "التقدم",
+                completedLbl: "مكتملة",
+                todayProfitLbl: "أرباح اليوم",
+                availBalLbl: "الرصيد المتاح",
+                videoTaskTitle: "مهمة الفيديو",
+                videoTaskSub: "شاهد الفيديو لتحصيل أرباحك",
+                startTaskBtn: "بدء المهمة",
+                teamHeader: "مركز بيانات الفريق",
+                inviteLinkTitle: "رابط الدعوة الخاص بك",
+                inviteSub: "ادع أصدقائك واكسب مكافآت العمولة!",
+                copyLinkBtn: "نسخ الرابط",
+                commRatesTitle: "نسب عمولة الفريق",
+                lvl1Team: "فريق المستوى 1",
+                lvl2Team: "فريق المستوى 2",
+                lvl3Team: "فريق المستوى 3",
+                teamMembersTitle: "قائمة أعضاء الفريق",
+                thNo: "رقم",
+                thPhone: "رقم الهاتف",
+                thUid: "المعرف",
+                thVip: "مستوى VIP",
+                yestEarn: "أرباح الأمس",
+                todayEarn: "أرباح اليوم",
+                weekEarn: "أرباح الأسبوع",
+                monthEarn: "أرباح الشهر",
+                teamInc: "دخل الفريق",
+                inviteInc: "دخل الدعوة",
+                totalRev: "إجمالي الإيرادات",
+                menuBank: "بطاقة البنك",
+                menuMsgs: "الرسائل",
+                menuDepRec: "سجل الإيداع",
+                menuWdRec: "سجل السحب",
+                menuSupport: "خدمة العملاء",
+                menuPass: "كلمة مرور الدخول",
+                menuAdmin: "لوحة التحكم",
+                logoutBtn: "تسجيل الخروج",
+                navHome: "الرئيسية",
+                navTaskNav: "المهام",
+                navTeamNav: "الفريق",
+                navMeNav: "أنا"
+            },
+            zh: {
+                loginSub: "加入 Chal 并创造稳定收入",
+                loginTitle: "登录",
+                phoneLbl: "手机号码:",
+                passLbl: "登录密码 (6位):",
+                loginBtn: "登录",
+                forgotPass: "忘记密码？",
+                noAccount: "没有账号？注册",
+                signupSub: "智能安全管理",
+                signupTitle: "注册",
+                signupPhoneLbl: "手机号码 (+251):",
+                signupPassLbl: "密码 (6位):",
+                signupConfirmLbl: "确认密码:",
+                signupInviteLbl: "邀请码:",
+                signupBtn: "注册",
+                haveAccount: "已有账号？登录",
+                bannerSub: "加入 Chal 并创造稳定收入 | 智能安全管理",
+                recharge: "充值",
+                withdraw: "提现",
+                navTasks: "任务",
+                navTeam: "团队",
+                dailyTitle: "每日签到奖励",
+                dailySub: "每24小时签到一次，每天可赚取 <strong>20 ETB</strong>！",
+                claim: "领取",
+                locked: "已锁定",
+                claimed: "已领取",
+                redeemTitle: "兑换 / 礼品码",
+                redeemSub: "在此处输入您的礼品码以获得奖励",
+                redeemBtn: "兑换",
+                channelJoin: "加入频道: Chality tech",
+                membershipTitle: "会员等级 (VIP 1 - 10)",
+                taskHeaderTitle: "每日视频任务",
+                unfinishedLbl: "未完成",
+                progressLbl: "进度",
+                completedLbl: "已完成",
+                todayProfitLbl: "今日收益",
+                availBalLbl: "可用余额",
+                videoTaskTitle: "视频任务",
+                videoTaskSub: "观看视频以收集您的收益",
+                startTaskBtn: "开始任务",
+                teamHeader: "团队数据中心",
+                inviteLinkTitle: "您的邀请链接",
+                inviteSub: "邀请好友并赚取佣金奖励！",
+                copyLinkBtn: "复制链接",
+                commRatesTitle: "团队佣金比例",
+                lvl1Team: "一级团队",
+                lvl2Team: "二级团队",
+                lvl3Team: "三级团队",
+                teamMembersTitle: "团队成员列表",
+                thNo: "序号",
+                thPhone: "手机号码",
+                thUid: "UID",
+                thVip: "VIP等级",
+                yestEarn: "昨日收益",
+                todayEarn: "今日收益",
+                weekEarn: "本周收益",
+                monthEarn: "本月收益",
+                teamInc: "团队收入",
+                inviteInc: "邀请收入",
+                totalRev: "总收入",
+                menuBank: "银行卡",
+                menuMsgs: "消息",
+                menuDepRec: "充值记录",
+                menuWdRec: "提现记录",
+                menuSupport: "客服服务",
+                menuPass: "登录密码",
+                menuAdmin: "管理面板",
+                logoutBtn: "退出登录",
+                navHome: "首页",
+                navTaskNav: "任务",
+                navTeamNav: "团队",
+                navMeNav: "我的"
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('siteLang', lang);
+            document.getElementById('langSelector').value = lang;
+            applyTranslations();
+        }
+
+        function applyTranslations() {
+            let t = translations[currentNavLang()];
+            if(!t) return;
+
+            document.getElementById('txtLoginSubtitle').textContent = t.loginSub;
+            document.getElementById('txtLoginTitle').textContent = t.loginTitle;
+            document.getElementById('txtPhoneLabel').textContent = t.phoneLbl;
+            document.getElementById('txtPassLabel').textContent = t.passLbl;
+            document.getElementById('btnLoginBtn').textContent = t.loginBtn;
+            document.getElementById('txtForgotPass').textContent = t.forgotPass;
+            document.getElementById('txtNoAccount').childNodes[0].nodeValue = t.noAccount.split('?')[0] + '? ';
+            
+            document.getElementById('txtSignupSub').textContent = t.signupSub;
+            document.getElementById('txtSignupTitle').textContent = t.signupTitle;
+            document.getElementById('txtSignupPhoneLbl').textContent = t.signupPhoneLbl;
+            document.getElementById('txtSignupPassLbl').textContent = t.signupPassLbl;
+            document.getElementById('txtSignupConfirmLbl').textContent = t.signupConfirmLbl;
+            document.getElementById('txtSignupInviteLbl').textContent = t.signupInviteLbl;
+            document.getElementById('btnSignupBtn').textContent = t.signupBtn;
+
+            document.getElementById('txtBannerSub').textContent = t.bannerSub;
+            document.getElementById('txtRechargeBtn').textContent = t.recharge;
+            document.getElementById('txtWithdrawBtn').textContent = t.withdraw;
+            document.getElementById('txtNavTasks').textContent = t.navTasks;
+            document.getElementById('txtNavTeam').textContent = t.navTeam;
+
+            document.getElementById('txtDailyTitle').innerHTML = `<i class="fa-solid fa-gift"></i> ${t.dailyTitle}`;
+            document.getElementById('txtDailySub').innerHTML = t.dailySub;
+            
+            document.getElementById('txtRedeemTitle').innerHTML = `<i class="fa-solid fa-ticket"></i> ${t.redeemTitle}`;
+            document.getElementById('txtRedeemSub').textContent = t.redeemSub;
+            document.getElementById('btnRedeemAction').textContent = t.redeemBtn;
+
+            document.getElementById('txtChannelJoin').textContent = t.channelJoin;
+            document.getElementById('txtMembershipTitle').innerHTML = `<i class="fa-solid fa-star text-blue"></i> ${t.membershipTitle}`;
+
+            document.getElementById('txtTaskHeaderTitle').textContent = t.taskHeaderTitle;
+            document.getElementById('txtUnfinishedLbl').textContent = t.unfinishedLbl;
+            document.getElementById('txtProgressLbl').textContent = t.progressLbl;
+            document.getElementById('txtCompletedLbl').textContent = t.completedLbl;
+            document.getElementById('txtTodayProfitLbl').textContent = t.todayProfitLbl;
+            document.getElementById('txtAvailBalLbl').textContent = t.availBalLbl;
+            document.getElementById('txtVideoTaskTitle').innerHTML = `<i class="fa-solid fa-circle-play text-blue"></i> ${t.videoTaskTitle}`;
+            document.getElementById('txtVideoTaskSub').textContent = t.videoTaskSub;
+            document.getElementById('startTaskBtn').textContent = t.startTaskBtn;
+
+            document.getElementById('txtTeamHeader').textContent = t.teamHeader;
+            document.getElementById('txtInviteLinkTitle').innerHTML = `<i class="fa-solid fa-share-nodes"></i> ${t.inviteLinkTitle}`;
+            document.getElementById('txtInviteSub').textContent = t.inviteSub;
+            document.getElementById('btnCopyLink').textContent = t.copyLinkBtn;
+            document.getElementById('txtCommRatesTitle').innerHTML = `<i class="fa-solid fa-percent"></i> ${t.commRatesTitle}`;
+            document.getElementById('txtLvl1Team').textContent = t.lvl1Team;
+            document.getElementById('txtLvl2Team').textContent = t.lvl2Team;
+            document.getElementById('txtLvl3Team').textContent = t.lvl3Team;
+            document.getElementById('txtTeamMembersTitle').innerHTML = `<i class="fa-solid fa-users-line"></i> ${t.teamMembersTitle}`;
+            document.getElementById('thNo').textContent = t.thNo;
+            document.getElementById('thPhone').textContent = t.thPhone;
+            document.getElementById('thUid').textContent = t.thUid;
+            document.getElementById('thVip').textContent = t.thVip;
+
+            document.getElementById('txtYestEarn').textContent = t.yestEarn;
+            document.getElementById('txtTodayEarn').textContent = t.todayEarn;
+            document.getElementById('txtWeekEarn').textContent = t.weekEarn;
+            document.getElementById('txtMonthEarn').textContent = t.monthEarn;
+            document.getElementById('txtTeamInc').textContent = t.teamInc;
+            document.getElementById('txtInviteInc').textContent = t.inviteInc;
+            document.getElementById('txtTotalRev').textContent = t.totalRev;
+
+            document.getElementById('txtMenuBank').textContent = t.menuBank;
+            document.getElementById('txtMenuMsgs').textContent = t.menuMsgs;
+            document.getElementById('txtMenuDepRec').textContent = t.menuDepRec;
+            document.getElementById('txtMenuWdRec').textContent = t.menuWdRec;
+            document.getElementById('txtMenuSupport').textContent = t.menuSupport;
+            document.getElementById('txtMenuPass').textContent = t.menuPass;
+            document.getElementById('txtMenuAdmin').textContent = t.menuAdmin;
+            document.getElementById('btnLogoutBtn').innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> ${t.logoutBtn}`;
+
+            document.getElementById('navHome').textContent = t.navHome;
+            document.getElementById('navTask').textContent = t.navTaskNav;
+            document.getElementById('navTeam').textContent = t.navTeamNav;
+            document.getElementById('navMe').textContent = t.navMeNav;
+        }
+
+        function currentNavLang() {
+            return translations[currentLang] ? currentLang : 'am';
+        }
+
+        // Live Clock Implementation
+        function updateLiveClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            let timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+            const clockEl = document.getElementById('liveClockDisplay');
+            if(clockEl) {
+                clockEl.textContent = timeString;
+            }
+        }
+        setInterval(updateLiveClock, 1000);
+        updateLiveClock();
+
+        let currentUserPhone = localStorage.getItem('currentUserPhone') || null;
+        let earningsBalance = parseFloat(localStorage.getItem('earningsBalance')) || 0.0;
+        let currentVipLevel = parseInt(localStorage.getItem('currentVipLevel')) || 0;
+        let vipStatusState = localStorage.getItem('vipStatusState') || 'none';
+        let pendingVipLevel = parseInt(localStorage.getItem('pendingVipLevel')) || 0;
+        let completedTasksToday = parseInt(localStorage.getItem('completedTasksToday')) || 0;
+        let lastResetDate = localStorage.getItem('lastResetDate') || '';
+
+        let earningsLedger = JSON.parse(localStorage.getItem('earningsLedger')) || [];
+
+        let userUid = localStorage.getItem('userUid');
+        if (!userUid) {
+            userUid = "UID" + Math.floor(10000 + Math.random() * 90000);
+            localStorage.setItem('userUid', userUid);
+        }
+
+        let userRefCode = localStorage.getItem('userRefCode');
+        if (!userRefCode) {
+            const randomString = Math.random().toString(36).substring(2, 8).toUpperCase();
+            userRefCode = "CHALI" + randomString;
+            localStorage.setItem('userRefCode', userRefCode);
+        }
+
+        let historyList = JSON.parse(localStorage.getItem('historyList')) || [];
+        let messageList = JSON.parse(localStorage.getItem('messageList')) || [
+            { title: "Welcome to CHALI VIP!", text: "እንኳን ወደ ቻሊ ቪአይፒ በሰላም መጡ! አዳዲስ ታስኮችን በመሥራት ገቢዎትን ማሳደግ ይችላሉ።", date: "2026-08-01 10:00", read: false }
+        ];
+
+        let currentStreakDay = parseInt(localStorage.getItem('chali_streak_day')) || 1;
+        let lastClaimTimestamp = parseInt(localStorage.getItem('chali_last_claim_timestamp')) || 0;
+        let redeemedCodesList = JSON.parse(localStorage.getItem('redeemedCodesList')) || [];
+
+        const vipData = {
+            1: { price: 1000, taskPrice: 100, dailyTasks: 2, weekIncome: 1400, monthIncome: 6400 },
+            2: { price: 8000, taskPrice: 800, dailyTasks: 2, weekIncome: 11200, monthIncome: 51200 },
+            3: { price: 16000, taskPrice: 1600, dailyTasks: 2, weekIncome: 22400, monthIncome: 102400 },
+            4: { price: 32000, taskPrice: 3200, dailyTasks: 2, weekIncome: 44800, monthIncome: 204800 },
+            5: { price: 64000, taskPrice: 6400, dailyTasks: 2, weekIncome: 89600, monthIncome: 409600 },
+            6: { price: 128000, taskPrice: 13100, dailyTasks: 2, weekIncome: 183400, monthIncome: 838400 },
+            7: { price: 200000, taskPrice: 20800, dailyTasks: 2, weekIncome: 291200, monthIncome: 1331200 },
+            8: { price: 300000, taskPrice: 31900, dailyTasks: 2, weekIncome: 446600, monthIncome: 2041600 },
+            9: { price: 400000, taskPrice: 43500, dailyTasks: 2, weekIncome: 609000, monthIncome: 2784000 },
+            10: { price: 500000, taskPrice: 56000, dailyTasks: 2, weekIncome: 784000, monthIncome: 3584000 }
+        };
+
+        function checkDailyReset() {
+            const todayStr = new Date().toDateString();
+            if (lastResetDate !== todayStr) {
+                completedTasksToday = 0;
+                localStorage.setItem('completedTasksToday', 0);
+                localStorage.setItem('lastResetDate', todayStr);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkDailyReset();
+            document.getElementById('langSelector').value = currentLang;
+            applyTranslations();
+
+            // Check URL parameters for invitation code support (e.g. ?code=CHALIXXXX)
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('code');
+            if(refParam) {
+                document.getElementById('signupRefCode').value = refParam;
+                showAuthMode('signup');
+            }
+
+            if (!currentUserPhone) {
+                showAuthMode('login');
+            } else {
+                switchPage('home');
+                document.getElementById('bottomNavContainer').style.display = 'flex';
+            }
+            renderVipLevels();
+            checkAdminAccess();
+            updateMessageBadge();
+            checkClaimAvailability();
+        });
+
+        function recordEarning(amount, category) {
+            let now = new Date();
+            earningsLedger.push({
+                amount: amount,
+                category: category,
+                timestamp: now.getTime(),
+                dateStr: now.toDateString()
+            });
+            localStorage.setItem('earningsLedger', JSON.stringify(earningsLedger));
+        }
+
+        function calculateFinancialGrid() {
+            let now = new Date();
+            let todayStr = now.toDateString();
+            let yesterday = new Date();
+            yesterday.setDate(now.getDate() - 1);
+            let yesterdayStr = yesterday.toDateString();
+
+            let oneWeekAgo = now.getTime() - (7 * 24 * 60 * 60 * 1000);
+            let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+            let todayEarn = 0;
+            let yestEarn = 0;
+            let weekEarn = 0;
+            let monthEarn = 0;
+            let teamInc = 0;
+            let inviteInc = 0;
+            let totalRev = 0;
+
+            earningsLedger.forEach(item => {
+                totalRev += item.amount;
+                if (item.dateStr === todayStr) todayEarn += item.amount;
+                if (item.dateStr === yesterdayStr) yestEarn += item.amount;
+                if (item.timestamp >= oneWeekAgo) weekEarn += item.amount;
+                if (item.timestamp >= startOfMonth) monthEarn += item.amount;
+
+                if (item.category === 'invite_income') {
+                    inviteInc += item.amount;
+                    teamInc += item.amount;
+                }
+            });
+
+            document.getElementById('todayEarningMe').textContent = `ETB ${todayEarn.toFixed(2)}`;
+            document.getElementById('yestEarning').textContent = `ETB ${yestEarn.toFixed(2)}`;
+            document.getElementById('weekEarning').textContent = `ETB ${weekEarn.toFixed(2)}`;
+            document.getElementById('monthEarning').textContent = `ETB ${monthEarn.toFixed(2)}`;
+            document.getElementById('teamIncome').textContent = `ETB ${teamInc.toFixed(2)}`;
+            document.getElementById('inviteIncome').textContent = `ETB ${inviteInc.toFixed(2)}`;
+            document.getElementById('totalRevenue').textContent = `ETB ${totalRev.toFixed(2)}`;
+        }
+
+        function checkClaimAvailability() {
+            let now = new Date().getTime();
+            let cooldownHours = 24; 
+            let hoursPassed = (now - lastClaimTimestamp) / (1000 * 60 * 60);
+
+            for (let i = 1; i <= 7; i++) {
+                let btn = document.getElementById(`btnDay${i}`);
+                let box = document.getElementById(`dayBox${i}`);
+                if (!btn || !box) continue;
+
+                if (i < currentStreakDay) {
+                    btn.innerText = translations[currentNavLang()].claimed;
+                    btn.disabled = true;
+                    box.classList.add('claimed');
+                } else if (i === currentStreakDay) {
+                    if (lastClaimTimestamp > 0 && hoursPassed < cooldownHours) {
+                        let remHours = (cooldownHours - hoursPassed).toFixed(1);
+                        btn.innerText = `${remHours}h left`;
+                        btn.disabled = true;
+                        box.classList.remove('claimed');
+                    } else {
+                        btn.innerText = translations[currentNavLang()].claim;
+                        btn.disabled = false;
+                        box.classList.remove('claimed');
+                    }
+                } else {
+                    btn.innerText = translations[currentNavLang()].locked;
+                    btn.disabled = true;
+                    box.classList.remove('claimed');
+                }
+            }
+        }
+
+        function claimDailyReward(day) {
+            let now = new Date().getTime();
+            let cooldownHours = 24;
+            let hoursPassed = (now - lastClaimTimestamp) / (1000 * 60 * 60);
+
+            if (lastClaimTimestamp > 0 && hoursPassed < cooldownHours) {
+                alert("እባክዎ የ 24 ሰዓት የቆይታ ጊዜ ይጨርሱ!");
+                return;
+            }
+            if (day !== currentStreakDay) return;
+
+            earningsBalance += 20;
+            lastClaimTimestamp = now;
+            localStorage.setItem('earningsBalance', earningsBalance);
+            localStorage.setItem('chali_last_claim_timestamp', lastClaimTimestamp);
+
+            recordEarning(20, 'daily_bonus');
+
+            alert(`Success! You claimed 20 ETB for Day ${day}.`);
+            currentStreakDay++;
+            if (currentStreakDay > 7) {
+                currentStreakDay = 1;
+            }
+            localStorage.setItem('chali_streak_day', currentStreakDay);
+            updateUI();
+            checkClaimAvailability();
+        }
+
+        function processRedeemCode() {
+            const codeInput = document.getElementById('giftCodeInput');
+            const msgDiv = document.getElementById('redeemMessage');
+            const code = codeInput.value.trim();
+
+            if (!code) {
+                msgDiv.style.color = "#ef4444";
+                msgDiv.textContent = "እባክዎ የጊፍት ኮዱን ያስገቡ።";
+                return;
+            }
+
+            if (redeemedCodesList.includes(code)) {
+                msgDiv.style.color = "#ef4444";
+                msgDiv.textContent = "ይህ ኮድ ቀድሞውኑ ጥቅም ላይ ውሏል!";
+                return;
+            }
+
+            if (code === "GIFT-2026" || code === "CHALI50" || code === "CHALI-7ETB" || code === "CHALI-VIP7") {
+                let bonusAmt = (code === "CHALI-7ETB" || code === "CHALI-VIP7") ? 7 : (code === "CHALI50" ? 50 : 20);
+                earningsBalance += bonusAmt;
+                localStorage.setItem('earningsBalance', earningsBalance);
+                
+                redeemedCodesList.push(code);
+                localStorage.setItem('redeemedCodesList', JSON.stringify(redeemedCodesList));
+
+                recordEarning(bonusAmt, 'gift_code');
+
+                msgDiv.style.color = "#10b981";
+                msgDiv.textContent = `ተሳክቷል! ETB ${bonusAmt} ወደ መለያዎ ገብቷል።`;
+                codeInput.value = '';
+                updateUI();
+            } else {
+                msgDiv.style.color = "#ef4444";
+                msgDiv.textContent = "ያስገቡት ኮድ ትክክል አይደለም።";
+            }
+        }
+
+        function checkAdminAccess() {
+            if (currentUserPhone === ADMIN_PHONE) {
+                document.getElementById('adminMenuBtn').style.display = 'flex';
+            } else {
+                document.getElementById('adminMenuBtn').style.display = 'none';
+            }
+        }
+
+        function showAuthMode(mode) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('bottomNavContainer').style.display = 'none';
+            if (mode === 'login') {
+                document.getElementById('page-login').classList.add('active');
+            } else {
+                document.getElementById('page-signup').classList.add('active');
+            }
+        }
+
+        function processSignup() {
+            let phone = document.getElementById('signupPhone').value.trim();
+            let pass = document.getElementById('signupPass').value.trim();
+            let confirmPass = document.getElementById('signupConfirmPass').value.trim();
+            let inviteCode = document.getElementById('signupRefCode').value.trim();
+
+            if (phone.length !== 9 || pass.length !== 6 || pass !== confirmPass) {
+                alert("⚠️ እባክዎን ትክክለኛ መረጃ ይሙሉ (ፕስዎርድ 6 አሃዝ መሆን አለበት)።");
+                return;
+            }
+
+            if(inviteCode && inviteCode.length < 4) {
+                alert("⚠️ ያስገቡት የመጋበዣ ኮድ ልክ አይደለም።");
+                return;
+            }
+
+            let fullPhone = "+251" + phone;
+            localStorage.setItem('regUserPhone', fullPhone);
+            localStorage.setItem('regUserPass', pass);
+            localStorage.setItem('regUsedInviteCode', inviteCode || 'NONE');
+            
+            alert("🎉 ምዝገባው በሰላም ተጠናቋል!");
+            showAuthMode('login');
+        }
+
+        function processLogin() {
+            let phone = document.getElementById('loginPhone').value.trim();
+            let pass = document.getElementById('loginPass').value.trim();
+            let fullPhone = "+251" + phone;
+
+            if (phone.length !== 9 || pass.length !== 6) {
+                alert("⚠️ እባክዎን ስልክ ቁጥር እና 6 አሃዝ ፕስዎርድ ያስገቡ!");
+                return;
+            }
+
+            currentUserPhone = fullPhone;
+            localStorage.setItem('currentUserPhone', currentUserPhone);
+            document.getElementById('userPhoneDisplay').textContent = currentUserPhone;
+            document.getElementById('bottomNavContainer').style.display = 'flex';
+            switchPage('home');
+            updateUI();
+            checkAdminAccess();
+            alert("✅ በሰላም ገብተዋል");
+        }
+
+        function openForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+        }
+
+        function processForgotPassword() {
+            let phone = document.getElementById('forgotPhone').value.trim();
+            let newPass = document.getElementById('forgotNewPass').value.trim();
+
+            if (phone.length !== 9 || newPass.length !== 6) {
+                alert("⚠️ እባክዎን ትክክለኛ ስልክ እና 6 አሃዝ ፕስዎርድ ያስገቡ።");
+                return;
+            }
+            localStorage.setItem('regUserPass', newPass);
+            closeModals();
+            alert("✅ የይለፍ ቃልዎ በተሳካ ሁኔታ ታድሷል!");
+        }
+
+        function signoutUser() {
+            if (confirm("እርግጠኛ ኖት ከሰስተሙ መውጣት ይፈልጋሉ?")) {
+                currentUserPhone = null;
+                localStorage.removeItem('currentUserPhone');
+                document.getElementById('bottomNavContainer').style.display = 'none';
+                showAuthMode('login');
+            }
+        }
+
+        function switchPage(pageId) {
+            if (!currentUserPhone && pageId !== 'login' && pageId !== 'signup') {
+                showAuthMode('login');
+                return;
+            }
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`page-${pageId}`).classList.add('active');
+
+            const navItems = document.querySelectorAll('.nav-item');
+            if(pageId === 'home') navItems[0].classList.add('active');
+            if(pageId === 'task') navItems[1].classList.add('active');
+            if(pageId === 'invite') navItems[2].classList.add('active');
+            if(pageId === 'me') navItems[3].classList.add('active');
+
+            updateUI();
+        }
+
+        function updateUI() {
+            if(currentUserPhone) {
+                document.getElementById('userPhoneDisplay').textContent = currentUserPhone;
+            }
+            document.getElementById('userUidDisplay').textContent = `UID: ${userUid}`;
+            document.getElementById('taskAvailableBalance').textContent = `ETB ${earningsBalance.toFixed(2)}`;
+            
+            // Updated to GitHub Pages format using username 'free-birr'
+            document.getElementById('userRefCodeDisplay').textContent = `https://free-birr.github.io/?code=${userRefCode}`;
+
+            calculateFinancialGrid();
+
+            let badgeText = currentVipLevel > 0 ? `VIP ${currentVipLevel}` : (vipStatusState === 'pending' ? 'Pending VIP' : 'VIP 0');
+            document.getElementById('userVipStatusBadge').textContent = badgeText;
+            document.getElementById('userVipLabelMe').textContent = `vip${currentVipLevel}`;
+
+            let totalDailyTasks = currentVipLevel > 0 ? vipData[currentVipLevel].dailyTasks : 0;
+            let unfinished = Math.max(0, totalDailyTasks - completedTasksToday);
+            document.getElementById('unfinishedCount').textContent = unfinished;
+            document.getElementById('completedCount').textContent = completedTasksToday;
+
+            let percent = totalDailyTasks > 0 ? Math.round((completedTasksToday / totalDailyTasks) * 100) : 0;
+            document.getElementById('taskProgressPercent').textContent = `${percent}%`;
+
+            if(completedTasksToday > 0 && currentVipLevel > 0) {
+                let singleProfit = vipData[currentVipLevel].taskPrice;
+                document.getElementById('todayProfit').textContent = `ETB ${(completedTasksToday * singleProfit).toFixed(2)}`;
+            }
+            updateMessageBadge();
+        }
+
+        function renderVipLevels() {
+            const container = document.getElementById('vipLevelsContainer');
+            container.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                let isUnlocked = currentVipLevel >= i;
+                let isPending = (vipStatusState === 'pending' && pendingVipLevel === i);
+                let v = vipData[i];
+                let btnText = 'Join now';
+                let btnClass = '';
+
+                if (isUnlocked) {
+                    btnText = 'Unlocked';
+                } else if (isPending) {
+                    btnText = 'Pending Review';
+                    btnClass = 'pending';
+                }
+
+                let weekInc = v.weekIncome.toLocaleString();
+                let monthInc = v.monthIncome.toLocaleString();
+
+                container.innerHTML += `
+                    <div class="vip-level-card">
+                        <div class="vip-badge">VIP ${i}</div>
+                        <div class="vip-info">
+                            <div class="info-line"><span>Task price:</span> <strong>ETB ${v.taskPrice.toLocaleString()}</strong></div>
+                            <div class="info-line"><span>Daily tasks:</span> <strong>${v.dailyTasks}</strong></div>
+                            <div class="info-line"><span>Week / Month Income:</span> <strong>ETB ${weekInc} / ${monthInc}</strong></div>
+                            <div class="info-line"><span>Recharge amount:</span> <strong>ETB ${v.price.toLocaleString()}</strong></div>
+                        </div>
+                        <button class="vip-action-btn ${btnClass}" onclick="handleVipClick(${i})" ${isPending ? 'disabled' : ''}>${btnText}</button>
+                    </div>
+                `;
+            }
+        }
+
+        function handleVipClick(lvl) {
+            if(currentVipLevel >= lvl) {
+                alert(`✅ ቀድሞውኑ በ VIP ${lvl} ላይ ነዎት!`);
+                switchPage('task');
+            } else if(vipStatusState === 'pending') {
+                alert("⚠️ ቀድሞ የላኩት የሬቻርጅ ጥያቄ በግምገማ ላይ ነው።");
+            } else {
+                openDepositModal();
+                document.getElementById('depVipSelect').value = lvl;
+            }
+        }
+
+        function openDepositModal() { document.getElementById('depositModal').style.display = 'flex'; }
+        function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
+        function openBankModal() { document.getElementById('bankModal').style.display = 'flex'; }
+        function openPasswordModal() { document.getElementById('passwordModal').style.display = 'flex'; }
+        function openDepositHistoryModal() { renderDepositHistory(); document.getElementById('depositHistoryModal').style.display = 'flex'; }
+        function openWithdrawHistoryModal() { renderWithdrawHistory(); document.getElementById('withdrawHistoryModal').style.display = 'flex'; }
+        
+        function openMessagesModal() {
+            renderMessages();
+            document.getElementById('messagesModal').style.display = 'flex';
+            messageList.forEach(m => m.read = true);
+            localStorage.setItem('messageList', JSON.stringify(messageList));
+            updateMessageBadge();
+        }
+
+        function openAdminPanel() {
+            renderAdminDepositList();
+            renderAdminWithdrawalList();
+            document.getElementById('adminModal').style.display = 'flex';
+        }
+
+        function switchAdminTab(tab) {
+            if(tab === 'deposits') {
+                document.getElementById('adminDepositListContainer').style.display = 'block';
+                document.getElementById('adminWithdrawalListContainer').style.display = 'none';
+            } else {
+                document.getElementById('adminDepositListContainer').style.display = 'none';
+                document.getElementById('adminWithdrawalListContainer').style.display = 'block';
+            }
+        }
+
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+
+        function submitDeposit() {
+            let vipLvl = parseInt(document.getElementById('depVipSelect').value);
+            let txId = document.getElementById('depTxId').value.trim();
+            let screenshotInput = document.getElementById('depScreenshot');
+
+            if(!txId || screenshotInput.files.length === 0) {
+                alert("⚠️ እባክዎን የትራንዛክሽን ቁጥር እና የክፍያ ማረጋገጫ ፎቶ ያያይዙ።");
+                return;
+            }
+
+            let file = screenshotInput.files[0];
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let imageUrl = e.target.result;
+                vipStatusState = 'pending';
+                pendingVipLevel = vipLvl;
+                localStorage.setItem('vipStatusState', vipStatusState);
+                localStorage.setItem('pendingVipLevel', pendingVipLevel);
+
+                historyList.unshift({
+                    type: 'Recharge',
+                    uid: userUid,
+                    phone: currentUserPhone,
+                    desc: `VIP ${vipLvl} Recharge (Tx: ${txId})`,
+                    screenshot: imageUrl,
+                    status: 'Pending Approval',
+                    date: new Date().toLocaleString(),
+                    vipLvl: vipLvl
+                });
+                localStorage.setItem('historyList', JSON.stringify(historyList));
+
+                closeModals();
+                updateUI();
+                renderVipLevels();
+                alert(`✅ የክፍያ ጥያቄዎ በተሳካ ሁኔታ ተልኳል!`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderAdminDepositList() {
+            let container = document.getElementById('adminDepositListContainer');
+            let pendingItems = historyList.filter(item => item.type === 'Recharge' && item.status === 'Pending Approval');
+            if (pendingItems.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#64748b; font-size:12px; padding:20px;">ምንም የሚጠብቅ ዴፖዚት የለም</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            pendingItems.forEach((item) => {
+                let originalIndex = historyList.findIndex(h => h === item);
+                container.innerHTML += `
+                    <div class="admin-card">
+                        <div><strong>UID:</strong> <span class="text-blue">${item.uid}</span></div>
+                        <div><strong>ስልክ:</strong> ${item.phone}</div>
+                        <div><strong>ዝርዝር:</strong> ${item.desc}</div>
+                        <div><strong>ቀን:</strong> ${item.date}</div>
+                        ${item.screenshot ? `<img src="${item.screenshot}" class="admin-screenshot">` : ''}
+                        <button class="admin-btn-approve" onclick="approveUserDeposit(${originalIndex}, ${item.vipLvl || 1})">Approve</button>
+                        <button class="admin-btn-reject" onclick="rejectUserDeposit(${originalIndex})">Reject</button>
+                    </div>
+                `;
+            });
+        }
+
+        function renderAdminWithdrawalList() {
+            let container = document.getElementById('adminWithdrawalListContainer');
+            let pendingItems = historyList.filter(item => item.type === 'Withdraw' && item.status === 'Pending Approval');
+            if (pendingItems.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#64748b; font-size:12px; padding:20px;">ምንም የሚጠብቅ የገንዘብ ማውጣት ጥያቄ የለም</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            pendingItems.forEach((item) => {
+                let originalIndex = historyList.findIndex(h => h === item);
+                container.innerHTML += `
+                    <div class="admin-card">
+                        <div><strong>UID:</strong> <span class="text-blue">${item.uid}</span></div>
+                        <div><strong>ስልክ:</strong> ${item.phone}</div>
+                        <div><strong>ዝርዝር:</strong> ${item.desc}</div>
+                        <div><strong>ቀን:</strong> ${item.date}</div>
+                        <button class="admin-btn-approve" onclick="approveUserWithdrawal(${originalIndex})">Approve</button>
+                        <button class="admin-btn-reject" onclick="rejectUserWithdrawal(${originalIndex})">Reject</button>
+                    </div>
+                `;
+            });
+        }
+
+        function approveUserDeposit(index, vipLvl) {
+            historyList[index].status = 'Success';
+            historyList[index].date = new Date().toLocaleString();
+            localStorage.setItem('historyList', JSON.stringify(historyList));
+
+            currentVipLevel = vipLvl;
+            vipStatusState = 'success';
+            localStorage.setItem('currentVipLevel', currentVipLevel);
+            localStorage.setItem('vipStatusState', vipStatusState);
+
+            renderAdminDepositList();
+            updateUI();
+            renderVipLevels();
+            alert(`✅ ዴፖዚቱ ጸድቆ ቪአይፒ ${vipLvl} አክቲቭ ሆኗል!`);
+        }
+
+        function rejectUserDeposit(index) {
+            historyList[index].status = 'Rejected';
+            localStorage.setItem('historyList', JSON.stringify(historyList));
+
+            vipStatusState = 'none';
+            pendingVipLevel = 0;
+            localStorage.setItem('vipStatusState', vipStatusState);
+            localStorage.setItem('pendingVipLevel', pendingVipLevel);
+
+            renderAdminDepositList();
+            updateUI();
+            renderVipLevels();
+            alert(`❌ የዴፖዚት ጥያቄው ውድቅ ተደርጓል።`);
+        }
+
+        function approveUserWithdrawal(index) {
+            historyList[index].status = 'Success';
+            localStorage.setItem('historyList', JSON.stringify(historyList));
+            renderAdminWithdrawalList();
+            alert(`✅ የገንዘብ ማውጣት ጥያቄው ጸድቋል!`);
+        }
+
+        function rejectUserWithdrawal(index) {
+            let item = historyList[index];
+            let match = item.desc.match(/ETB\s+([0-9.]+)/);
+            let refundAmt = match ? parseFloat(match[1]) : 0;
+
+            earningsBalance += refundAmt;
+            localStorage.setItem('earningsBalance', earningsBalance);
+
+            historyList[index].status = 'Rejected';
+            localStorage.setItem('historyList', JSON.stringify(historyList));
+
+            renderAdminWithdrawalList();
+            updateUI();
+            alert(`❌ የገንዘብ ማውጣት ጥያቄው ውድቅ ተደርጎ ገንዘቡ ተመላሽ ሆኗል።`);
+        }
+
+        let taskTimerInterval = null;
+
+        function startVideoTask() {
+            if(currentVipLevel === 0) {
+                alert("⚠️ ማሳሰቢያ፦ መጀመሪያ VIP ደረጃ መክፈት አለብዎት!");
+                openDepositModal();
+                return;
+            }
+            let totalDailyTasks = vipData[currentVipLevel].dailyTasks;
+            if(completedTasksToday >= totalDailyTasks) {
+                alert("⚠️ የዛሬውን ታስኮች ጨርሰዋል!");
+                return;
+            }
+
+            let btn = document.getElementById('startTaskBtn');
+            btn.disabled = true;
+            let timeLeft = 10;
+            document.getElementById('videoInstruction').textContent = "ቪዲዮው በመጫወት ላይ ነው...";
+
+            taskTimerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timerCount').textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
+                if(timeLeft <= 0) {
+                    clearInterval(taskTimerInterval);
+                    completeTaskAction();
+                }
+            }, 1000);
+        }
+
+        function completeTaskAction() {
+            completedTasksToday++;
+            localStorage.setItem('completedTasksToday', completedTasksToday);
+
+            let reward = vipData[currentVipLevel].taskPrice;
+            earningsBalance += reward;
+            localStorage.setItem('earningsBalance', earningsBalance);
+
+            recordEarning(reward, 'task');
+
+            document.getElementById('videoInstruction').textContent = "✅ Task Completed successfully!";
+            document.getElementById('timerCount').textContent = "00:10";
+            document.getElementById('startTaskBtn').disabled = false;
+
+            updateUI();
+            alert(`🎉 Task Completed! +${reward} ETB ገብቷል።`);
+        }
+
+        function submitWithdraw() {
+            let amt = parseFloat(document.getElementById('withdrawAmtInput').value) || 0;
+            if(amt <= 0 || amt > earningsBalance) {
+                alert("⚠️ ትክክለኛ መጠን ያስገቡ ወይም በቂ ባላንስ የለዎትም!");
+                return;
+            }
+
+            earningsBalance -= amt;
+            localStorage.setItem('earningsBalance', earningsBalance);
+
+            historyList.unshift({
+                type: 'Withdraw',
+                uid: userUid,
+                phone: currentUserPhone,
+                desc: `Withdrawal Request: ETB ${amt}`,
+                status: 'Pending Approval',
+                date: new Date().toLocaleString()
+            });
+            localStorage.setItem('historyList', JSON.stringify(historyList));
+
+            closeModals();
+            updateUI();
+            document.getElementById('withdrawAmtInput').value = '';
+            alert(`✅ የገንዘብ ማውጣት ጥያቄዎ ተልኳል!`);
+        }
+
+        function saveBankAccount() {
+            let accNo = document.getElementById('bankAccNo').value;
+            let accName = document.getElementById('bankAccName').value;
+            if(!accNo || !accName) {
+                alert("⚠️ ሁሉንም መረጃዎች ይሙሉ");
+                return;
+            }
+            localStorage.setItem('savedBankAcc', `${accNo} - ${accName}`);
+            closeModals();
+            alert("✅ አካውንትዎ ተመዝግቧል!");
+        }
+
+        function updatePassword() {
+            let currentPass = localStorage.getItem('regUserPass') || '123456';
+            let enteredCurrent = document.getElementById('currentPassInput').value;
+            let newPass = document.getElementById('newPassInput').value;
+            let confirmNew = document.getElementById('confirmNewPassInput').value;
+
+            if(enteredCurrent !== currentPass || newPass.length !== 6 || newPass !== confirmNew) {
+                alert("⚠️ ያስገቡት መረጃ ትክክል አይደለም።");
+                return;
+            }
+
+            localStorage.setItem('regUserPass', newPass);
+            closeModals();
+            alert("✅ የይለፍ ቃልዎ ተቀይሯል!");
+        }
+
+        function renderDepositHistory() {
+            let container = document.getElementById('depositHistoryContainer');
+            let userDeposits = historyList.filter(item => (item.phone === currentUserPhone || item.uid === userUid) && item.type === 'Recharge');
+            if(userDeposits.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#64748b; font-size:12px; padding:20px;">ምንም የዲፖዚት ታሪክ የለም</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            userDeposits.forEach(item => {
+                let badgeColor = item.status === 'Success' ? '#10b981' : (item.status === 'Rejected' ? '#ef4444' : '#f59e0b');
+                container.innerHTML += `
+                    <div class="history-item" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${item.type}</strong><br>
+                            <small style="color:#64748b;">${item.desc}</small><br>
+                            <small style="color:#94a3b8;">${item.date}</small>
+                        </div>
+                        <div><span style="background:${badgeColor}; color:#fff; padding:3px 6px; border-radius:4px; font-size:9px; font-weight:bold;">${item.status}</span></div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderWithdrawHistory() {
+            let container = document.getElementById('withdrawHistoryContainer');
+            let userWithdraws = historyList.filter(item => (item.phone === currentUserPhone || item.uid === userUid) && item.type === 'Withdraw');
+            if(userWithdraws.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#64748b; font-size:12px; padding:20px;">ምንም የገንዘብ ማውጣት ታሪክ የለም</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            userWithdraws.forEach(item => {
+                let badgeColor = item.status === 'Success' ? '#10b981' : (item.status === 'Rejected' ? '#ef4444' : '#f59e0b');
+                container.innerHTML += `
+                    <div class="history-item" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${item.type}</strong><br>
+                            <small style="color:#64748b;">${item.desc}</small><br>
+                            <small style="color:#94a3b8;">${item.date}</small>
+                        </div>
+                        <div><span style="background:${badgeColor}; color:#fff; padding:3px 6px; border-radius:4px; font-size:9px; font-weight:bold;">${item.status}</span></div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderMessages() {
+            let container = document.getElementById('messagesContainer');
+            if(messageList.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#64748b; font-size:12px; padding:20px;">ምንም መልእክት የለም</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            messageList.forEach(m => {
+                container.innerHTML += `
+                    <div class="message-item">
+                        <strong style="color:#c2410c; font-size:12px;">${m.title}</strong>
+                        <p style="color:#334155; margin:4px 0; font-size:11px;">${m.text}</p>
+                        <small style="color:#94a3b8;">${m.date}</small>
+                    </div>
+                `;
+            });
+        }
+
+        function updateMessageBadge() {
+            let unread = messageList.some(m => !m.read);
+            let badge = document.getElementById('msgBadge');
+            if(badge) {
+                badge.style.display = unread ? 'inline-block' : 'none';
+            }
+        }
+
+        function copyRefLink() {
+            let link = `https://free-birr.github.io/?code=${userRefCode}`;
+            navigator.clipboard.writeText(link);
+            alert("ሪፈራል ሊንክ ተገለብጧል: " + link);
+        }
+    </script>
+</body>
+</html>
