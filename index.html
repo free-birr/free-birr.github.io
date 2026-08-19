@@ -183,9 +183,9 @@
             text-align: center;
         }
         .vip-card.coming-soon {
-            opacity: 0.8;
-            background: #f1f5f9;
-            border: 2px dashed #94a3b8;
+            opacity: 0.9;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
         }
         .vip-card.coming-soon .vip-badge { background: #64748b; }
         .vip-details { flex: 1; margin: 0 12px; font-size: 11px; color: #64748b; }
@@ -317,6 +317,7 @@
             font-weight: bold;
             cursor: pointer;
         }
+        .btn-start-task:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* Generic Card */
         .page-card {
@@ -493,6 +494,18 @@
         .icon-green { color: #10b981; }
         .icon-purple { color: #8b5cf6; }
 
+        /* Status Badges */
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .status-badge.approved { background: #dcfce7; color: #15803d; }
+        .status-badge.rejected { background: #fee2e2; color: #b91c1c; }
+        .status-badge.pending { background: #fef3c7; color: #b45309; }
+
         /* ADMIN PANEL STYLES */
         .admin-panel-card {
             background: #1e293b;
@@ -601,7 +614,7 @@
 
         /* Modals */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index: 1000; }
-        .modal-body { background:white; padding:20px; border-radius:12px; width:90%; max-width:380px; max-height: 90vh; overflow-y: auto; }
+        .modal-body { background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; max-height: 90vh; overflow-y: auto; }
         .modal-body input, .modal-body select { width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px; font-size:13px; }
         .modal-btn { width:100%; padding:10px; background:var(--primary-orange); color:white; border:none; border-radius:6px; font-weight:bold; margin-top:5px; cursor:pointer; }
         
@@ -688,6 +701,19 @@
             border-radius: 6px;
             font-size: 11px;
             margin-bottom: 8px;
+        }
+
+        /* History Table Items */
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -784,7 +810,7 @@
             </div>
 
             <div class="section-title">
-                <span id="txt-vip-title">⭐ የአባልነት ደረጃዎች (VIP 1 - 14)</span>
+                <span id="txt-vip-title">⭐ የአባልነት ደረጃዎች (VIP 1 - 18)</span>
                 <span style="font-size:10px; background:#e2e8f0; padding:2px 6px; border-radius:4px;" id="userVipBadge">VIP 0</span>
             </div>
 
@@ -944,6 +970,10 @@
             </div>
 
             <div class="menu-list">
+                <div class="menu-item" onclick="openRecordsModal()">
+                    <div class="menu-left"><i class="fas fa-history icon-blue"></i> <span>የገንዘብ ገቢ/ወጪ ታሪክ (Records)</span></div>
+                    <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
+                </div>
                 <div class="menu-item" onclick="openModal('redeemModal')">
                     <div class="menu-left"><i class="fas fa-gift icon-orange"></i> <span id="txt-menu-redeem">ኮድ ማስገቢያ (Redeem Code)</span></div>
                     <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
@@ -1039,6 +1069,7 @@
                                     <th>User</th>
                                     <th>VIP / Amt</th>
                                     <th>TxID</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -1057,6 +1088,7 @@
                                     <th>User</th>
                                     <th>Method/Acc</th>
                                     <th>Net Amt</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -1130,6 +1162,22 @@
     </div>
 
     <!-- MODALS -->
+    <!-- User Records Modal -->
+    <div id="userRecordsModal" class="modal">
+        <div class="modal-body">
+            <h3><i class="fas fa-list-alt" style="color:var(--primary-orange);"></i> የገንዘብ ገቢ/ወጪ ታሪክ (Records)</h3>
+            <p style="font-size:11px; color:#64748b; margin-bottom:10px;">የእርስዎ የተቀበሏቸው እና የጠየቋቸው የተቀማጭ እና የወጪ መረጃዎች ከታች ተዘርዝረዋል።</p>
+            
+            <h4 style="font-size:12px; color:#ea580c; margin-top:10px; margin-bottom:5px;">📥 የገንዘብ ማስገባት ታሪክ (Deposit Records)</h4>
+            <div id="userDepositRecordsContainer"></div>
+
+            <h4 style="font-size:12px; color:#ea580c; margin-top:15px; margin-bottom:5px;">📤 የገንዘብ ማውጣት ታሪክ (Withdrawal Records)</h4>
+            <div id="userWithdrawRecordsContainer"></div>
+
+            <button class="modal-btn" style="background:#ef4444; margin-top:15px;" onclick="closeModals()">ዝጋ</button>
+        </div>
+    </div>
+
     <!-- Redeem Code Modal -->
     <div id="redeemModal" class="modal">
         <div class="modal-body">
@@ -1227,7 +1275,7 @@
         const DEFAULT_ADMIN_PHONE = "913347992";
         const DEFAULT_ADMIN_PASS = "314297";
 
-        // VIP 1 to 14 setup
+        // VIP 1 to 15 setup
         const vipList = [
             { level: 1, price: 1000, taskPrice: 50 },
             { level: 2, price: 2000, taskPrice: 100 },
@@ -1242,7 +1290,15 @@
             { level: 11, price: 75000, taskPrice: 3750 },
             { level: 12, price: 100000, taskPrice: 5000 },
             { level: 13, price: 150000, taskPrice: 7500 },
-            { level: 14, price: 200000, taskPrice: 10000 }
+            { level: 14, price: 200000, taskPrice: 10000 },
+            { level: 15, price: 300000, taskPrice: 15000 }
+        ];
+
+        // Calculated VIP 16, 17, 18 (Coming Soon)
+        const comingSoonVips = [
+            { level: 16, price: 450000, taskPrice: 22500, dailyIncome: 45000 },
+            { level: 17, price: 650000, taskPrice: 32500, dailyIncome: 65000 },
+            { level: 18, price: 1000000, taskPrice: 50000, dailyIncome: 100000 }
         ];
 
         // Translation Dictionary
@@ -1255,7 +1311,7 @@
                 team: "ቡድን",
                 rewardHead: "ዕለታዊ ነፃ ቦነስ",
                 claimBtn: "1 ETB ውሰድ",
-                vipTitle: "⭐ የአባልነት ደረጃዎች (VIP 1 - 14)",
+                vipTitle: "⭐ የአባልነት ደረጃዎች (VIP 1 - 18)",
                 taskHead: "ዕለታዊ የቪዲዮ ታስኮች",
                 uncompleted: "ያልተጠናቀቀ",
                 process: "ሂደት",
@@ -1293,7 +1349,7 @@
                 team: "Team",
                 rewardHead: "Daily Free Bonus",
                 claimBtn: "Claim 1 ETB",
-                vipTitle: "⭐ VIP Membership Levels (VIP 1 - 14)",
+                vipTitle: "⭐ VIP Membership Levels (VIP 1 - 18)",
                 taskHead: "Daily Video Tasks",
                 uncompleted: "Uncompleted",
                 process: "Progress",
@@ -1331,7 +1387,7 @@
                 team: "الفريق",
                 rewardHead: "المكافأة اليومية المجانية",
                 claimBtn: "احصل على 1 ETB",
-                vipTitle: "⭐ مستويات العضوية (VIP 1 - 14)",
+                vipTitle: "⭐ مستويات العضوية (VIP 1 - 18)",
                 taskHead: "مهام الفيديو اليومية",
                 uncompleted: "غير مكتمل",
                 process: "التقدم",
@@ -1369,7 +1425,7 @@
                 team: "团队",
                 rewardHead: "每日免费奖励",
                 claimBtn: "领取 1 ETB",
-                vipTitle: "⭐ VIP 会员等级 (VIP 1 - 14)",
+                vipTitle: "⭐ VIP 会员等级 (VIP 1 - 18)",
                 taskHead: "每日视频任务",
                 uncompleted: "未完成",
                 process: "进度",
@@ -1408,6 +1464,14 @@
         let userInviteCode = localStorage.getItem('userInviteCode') || ('FREEBIRR-' + Math.floor(1000 + Math.random() * 9000));
         let userReferredBy = localStorage.getItem('userReferredBy') || "";
 
+        function getTodayDateString() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         // Members Database Array
         let membersList = JSON.parse(localStorage.getItem('membersList')) || [
             { 
@@ -1425,6 +1489,7 @@
                 teamCommission: 0.00,
                 completedTasks: 0,
                 lastRewardClaimDate: '',
+                lastResetDate: getTodayDateString(),
                 rewardStreak: 0,
                 usedRedeemCodes: [],
                 regDate: '2026-01-01' 
@@ -1436,6 +1501,17 @@
             { code: "FREEBIRR50", amount: 50, maxUses: 100, usedBy: [] },
             { code: "VIPBONUS", amount: 100, maxUses: 50, usedBy: [] }
         ];
+
+        function checkDailyResetForUser(user) {
+            const todayStr = getTodayDateString();
+            if (!user.lastResetDate || user.lastResetDate !== todayStr) {
+                user.completedTasks = 0;
+                user.todayEarned = 0.00;
+                user.lastResetDate = todayStr;
+                return true;
+            }
+            return false;
+        }
 
         function getCurrentUser() {
             let user = membersList.find(m => m.phone === userPhone);
@@ -1455,9 +1531,10 @@
                     teamCommission: 0.00,
                     completedTasks: 0,
                     lastRewardClaimDate: '',
+                    lastResetDate: getTodayDateString(),
                     rewardStreak: 0,
                     usedRedeemCodes: [],
-                    regDate: new Date().toISOString().split('T')[0]
+                    regDate: getTodayDateString()
                 };
                 membersList.push(user);
                 saveMembersList();
@@ -1465,6 +1542,10 @@
             if(!user.usedRedeemCodes) user.usedRedeemCodes = [];
             if(!user.approvedVips) user.approvedVips = [];
             if(!user.purchasedVips) user.purchasedVips = [];
+
+            if (checkDailyResetForUser(user)) {
+                saveMembersList();
+            }
             return user;
         }
 
@@ -1474,6 +1555,11 @@
 
         function saveRedeemCodes() {
             localStorage.setItem('redeemCodes', JSON.stringify(redeemCodes));
+        }
+
+        function saveRequests() {
+            localStorage.setItem('depositRequests', JSON.stringify(depositRequests));
+            localStorage.setItem('withdrawRequests', JSON.stringify(withdrawRequests));
         }
 
         // Active Proxy State
@@ -1522,9 +1608,19 @@
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString();
+
+            const todayStr = getTodayDateString();
+            if (currentUser && currentUser.lastResetDate !== todayStr) {
+                checkDailyResetForUser(currentUser);
+                userBalance = currentUser.balance;
+                currentVip = currentUser.vip;
+                completedTasks = currentUser.completedTasks;
+                todayEarned = currentUser.todayEarned;
+                checkDailyRewardStatus();
+                updateTaskDashboardUI();
+            }
         }
 
-        /* Language Switcher */
         function changeLanguage(lang) {
             localStorage.setItem('appLang', lang);
             const dict = translations[lang] || translations.am;
@@ -1572,7 +1668,6 @@
             setTxt('txt-logout-btn', dict.logout);
         }
 
-        /* Check Referral Code */
         function checkUrlRefCode() {
             const urlParams = new URLSearchParams(window.location.search);
             const refParam = urlParams.get('ref');
@@ -1583,7 +1678,6 @@
             }
         }
 
-        /* Authentication Flow */
         function checkAuthStatus() {
             const authOverlay = document.getElementById('authOverlay');
             const adminSection = document.getElementById('adminPanelSection');
@@ -1703,9 +1797,10 @@
                 teamCommission: 0.00,
                 completedTasks: 0,
                 lastRewardClaimDate: '',
+                lastResetDate: getTodayDateString(),
                 rewardStreak: 0,
                 usedRedeemCodes: [],
-                regDate: new Date().toISOString().split('T')[0]
+                regDate: getTodayDateString()
             };
 
             membersList.push(newUser);
@@ -1745,7 +1840,7 @@
             checkAuthStatus();
         }
 
-        /* VIP List Render with Approved & Purchased VIP Check */
+        /* VIP List Render with Level 16, Level 17, Level 18 Calculated Coming Soon */
         function renderVIPs() {
             const container = document.getElementById('vipContainer');
             const depSelect = document.getElementById('depVipSelect');
@@ -1754,18 +1849,14 @@
             if(depSelect) depSelect.innerHTML = '';
 
             const user = getCurrentUser();
-            const approvedVips = user.approvedVips || [];
-            const purchasedVips = user.purchasedVips || [];
 
             vipList.forEach(v => {
                 const div = document.createElement('div');
                 div.className = 'vip-card';
 
                 let btnHtml = '';
-                if (purchasedVips.includes(v.level) || user.vip === v.level) {
-                    btnHtml = `<button class="vip-btn" style="background:#10b981; cursor:default;" disabled>Purchased</button>`;
-                } else if (approvedVips.includes(v.level)) {
-                    btnHtml = `<button class="vip-btn" style="background:#f97316;" onclick="activateVipLevel(${v.level})">ከፈት</button>`;
+                if (user.vip >= v.level) {
+                    btnHtml = `<button class="vip-btn" style="background:#10b981; cursor:default;" disabled><i class="fas fa-check-circle"></i> Active</button>`;
                 } else {
                     btnHtml = `<button class="vip-btn" onclick="openDepositModalForLevel(${v.level})">ከፈት</button>`;
                 }
@@ -1788,18 +1879,21 @@
                 }
             });
 
-            // VIP 15
-            const csDiv = document.createElement('div');
-            csDiv.className = 'vip-card coming-soon';
-            csDiv.innerHTML = `
-                <div class="vip-badge">VIP 15</div>
-                <div class="vip-details">
-                    <div>ደረጃ: <strong>VIP 15</strong></div>
-                    <div style="color:#ea580c; font-weight:bold;">በቅርብ ቀን ይጠብቁ (Coming Soon)</div>
-                </div>
-                <button class="vip-btn" style="background:#64748b; cursor:not-allowed;" disabled>Soon</button>
-            `;
-            container.appendChild(csDiv);
+            // Calculated VIP 16, 17, 18 Coming Soon cards
+            comingSoonVips.forEach(v => {
+                const csDiv = document.createElement('div');
+                csDiv.className = 'vip-card coming-soon';
+                csDiv.innerHTML = `
+                    <div class="vip-badge">VIP ${v.level}</div>
+                    <div class="vip-details">
+                        <div>ዋጋ: <strong>${v.price.toLocaleString()} ETB</strong></div>
+                        <div>ዕለታዊ ገቢ: <strong>${v.dailyIncome.toLocaleString()} ETB</strong></div>
+                        <div style="color:#ea580c; font-weight:bold; margin-top:3px;">በቅርብ ቀን ይጠብቁ (Coming Soon)</div>
+                    </div>
+                    <button class="vip-btn" style="background:#64748b; cursor:not-allowed;" disabled>Soon</button>
+                `;
+                container.appendChild(csDiv);
+            });
         }
 
         function openDepositModalForLevel(level) {
@@ -1814,26 +1908,6 @@
             openModal('depositModal');
         }
 
-        function activateVipLevel(level) {
-            let user = getCurrentUser();
-            if (!user.approvedVips || !user.approvedVips.includes(level)) {
-                alert("⚠️ ለዚህ VIP ደረጃ deposit አድርገው በአድሚን አልፀደቀም!");
-                return;
-            }
-
-            user.vip = level;
-            if (!user.purchasedVips) user.purchasedVips = [];
-            if (!user.purchasedVips.includes(level)) {
-                user.purchasedVips.push(level);
-            }
-
-            currentVip = level;
-            syncUserToDatabase();
-            renderVIPs();
-            updateTaskDashboardUI();
-            alert(`🎉 VIP ${level} በተሳካ ሁኔታ ተከፍቷል (Purchased)!`);
-        }
-
         function populateAdminVipOptions() {
             const adminSelect = document.getElementById('adminEditVipLevel');
             if(!adminSelect) return;
@@ -1843,7 +1917,6 @@
             });
         }
 
-        /* Bank Details Control */
         function updateSystemBankDisplay() {
             document.getElementById('displayCbeHolder').textContent = sysCbeHolder;
             document.getElementById('displayCbeAcc').textContent = sysCbeAcc;
@@ -1875,7 +1948,7 @@
 
         /* Daily Reward System */
         function checkDailyRewardStatus() {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getTodayDateString();
             const claimBtn = document.getElementById('claimRewardBtn');
             const rewardSub = document.getElementById('dailyRewardSub');
 
@@ -1884,13 +1957,6 @@
                 claimBtn.textContent = "ዛሬ ተወስዷል";
                 rewardSub.textContent = `የዛሬው ቦነስ ተወስዷል | ተከታታይ ቀናት: Day ${rewardStreak}`;
             } else {
-                if (lastRewardClaimDate) {
-                    const lastDateObj = new Date(lastRewardClaimDate);
-                    const todayDateObj = new Date(today);
-                    const diffTime = Math.abs(todayDateObj - lastDateObj);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    if (diffDays > 1) rewardStreak = 0;
-                }
                 claimBtn.disabled = false;
                 claimBtn.textContent = "1 ETB ውሰድ";
                 rewardSub.textContent = `በየቀኑ ነፃ ስጦታዎን ይውሰዱ (Day ${rewardStreak + 1})`;
@@ -1898,7 +1964,7 @@
         }
 
         function claimDailyReward() {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getTodayDateString();
             if (lastRewardClaimDate === today) {
                 alert("የዛሬውን ቦነስ አስቀድመው ወስደዋል!");
                 return;
@@ -1910,181 +1976,224 @@
             lastRewardClaimDate = today;
 
             syncUserToDatabase();
-            alert(`🎉 እንኳን ደስ አለዎት! የ Day ${rewardStreak} 1 ETB ቦነስ ተቀብለዋል።`);
             checkDailyRewardStatus();
             updateTaskDashboardUI();
+            alert("🎉 እንኳን ደስ አለዎት! 1 ETB የዕለታዊ ነፃ ቦነስ ወስደዋል።");
         }
 
-        /* REDEEM CODE LOGIC */
-        function submitRedeemCode() {
-            const codeInput = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
-            if (!codeInput) {
-                alert("እባክዎን የመቤዠት ኮድ ያስገቡ!");
-                return;
-            }
+        /* Navigation Functions */
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(t => t.classList.remove('active-tab'));
 
-            let codeObj = redeemCodes.find(c => c.code.toUpperCase() === codeInput);
-            if (!codeObj) {
-                alert("❌ የተሳሳተ የመቤዠት ኮድ ነው!");
-                return;
-            }
+            const navs = document.querySelectorAll('.nav-item');
+            navs.forEach(n => n.classList.remove('active'));
 
-            if (!currentUser.usedRedeemCodes) currentUser.usedRedeemCodes = [];
+            const activeTab = document.getElementById('tab-' + tabName);
+            const activeNav = document.getElementById('nav-' + tabName);
 
-            if (codeObj.usedBy.includes(userPhone) || currentUser.usedRedeemCodes.includes(codeInput)) {
-                alert("⚠️ ይህን ኮድ ቀደም ብለው ተጠቅመውበታል!");
-                return;
-            }
+            if (activeTab) activeTab.classList.add('active-tab');
+            if (activeNav) activeNav.classList.add('active');
 
-            if (codeObj.usedBy.length >= codeObj.maxUses) {
-                alert("⚠️ የዚህ ኮድ የመጠቀሚያ ብዛት አልቋል!");
-                return;
-            }
-
-            const rewardAmt = parseFloat(codeObj.amount);
-            userBalance += rewardAmt;
-            todayEarned += rewardAmt;
-
-            codeObj.usedBy.push(userPhone);
-            currentUser.usedRedeemCodes.push(codeInput);
-
-            saveRedeemCodes();
-            syncUserToDatabase();
-            updateTaskDashboardUI();
-            closeModals();
-
-            document.getElementById('redeemCodeInput').value = '';
-            alert(`🎉 እንኳን ደስ አለዎት! ${rewardAmt} ETB በኮዱ ተቀብለዋል።`);
+            if (tabName === 'task') updateTaskDashboardUI();
+            if (tabName === 'me') updateMeDashboardUI();
+            if (tabName === 'team') updateTeamUI();
         }
 
-        function createAdminRedeemCode() {
-            const code = document.getElementById('adminRedeemCodeName').value.trim().toUpperCase();
-            const amount = parseFloat(document.getElementById('adminRedeemAmount').value);
-            const maxUses = parseInt(document.getElementById('adminRedeemMaxUses').value);
+        /* Task Management */
+        function updateTaskDashboardUI() {
+            const user = getCurrentUser();
+            const vipObj = vipList.find(v => v.level === user.vip);
+            const totalDailyTasks = user.vip > 0 ? 2 : 0;
+            
+            const uncompCount = Math.max(0, totalDailyTasks - user.completedTasks);
+            const compCount = user.completedTasks;
+            const progress = totalDailyTasks > 0 ? Math.round((compCount / totalDailyTasks) * 100) : 0;
 
-            if (!code || isNaN(amount) || isNaN(maxUses) || amount <= 0 || maxUses <= 0) {
-                alert("እባክዎን ሁሉንም መረጃዎች ትክክለኛ በሆነ መንገድ ያስገቡ!");
-                return;
-            }
+            document.getElementById('uncompletedCount').textContent = uncompCount;
+            document.getElementById('completedCount').textContent = compCount;
+            document.getElementById('progressPercent').textContent = progress + '%';
 
-            if (redeemCodes.some(c => c.code.toUpperCase() === code)) {
-                alert("ይህ ኮድ አስቀድሞ አለ! እባክዎን ሌላ ስም ይጠቀሙ።");
-                return;
-            }
+            document.getElementById('todayIncome').textContent = `ETB ${user.todayEarned.toFixed(2)}`;
+            document.getElementById('taskBalance').textContent = `ETB ${user.balance.toFixed(2)}`;
 
-            redeemCodes.push({ code, amount, maxUses, usedBy: [] });
-            saveRedeemCodes();
-            renderAdminRedeemTable();
+            document.getElementById('userVipBadge').textContent = `VIP ${user.vip}`;
 
-            document.getElementById('adminRedeemCodeName').value = '';
-            document.getElementById('adminRedeemAmount').value = '';
-            document.getElementById('adminRedeemMaxUses').value = '';
+            const startBtn = document.getElementById('startTaskBtn');
+            const boxText = document.getElementById('boxText');
 
-            alert(`✅ አዲስ Redeem Code (${code}) ተፈጥሯል!`);
-        }
-
-        function deleteRedeemCode(codeName) {
-            if (confirm(`የተመረጠውን ኮድ (${codeName}) ማጥፋት ይፈልጋሉ?`)) {
-                redeemCodes = redeemCodes.filter(c => c.code !== codeName);
-                saveRedeemCodes();
-                renderAdminRedeemTable();
+            if (user.vip === 0) {
+                boxText.textContent = "ታስክ ለመስራት እባክዎን የ VIP ደረጃ ይግዙ";
+                startBtn.disabled = true;
+            } else if (uncompCount === 0) {
+                boxText.textContent = "የዛሬውን ሁሉንም ታስኮች አጠናቀዋል! ነገ ይመለሱ።";
+                startBtn.disabled = true;
+            } else {
+                boxText.textContent = `ታስክ ${compCount + 1} ለመጀመር ከታች ያለውን ቁልፍ ይጫኑ`;
+                startBtn.disabled = false;
             }
         }
 
-        function renderAdminRedeemTable() {
-            const tbody = document.getElementById('adminRedeemTable');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-
-            redeemCodes.forEach(c => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${c.code}</strong></td>
-                    <td>${c.amount} ETB</td>
-                    <td>${c.usedBy.length} / ${c.maxUses}</td>
-                    <td><button class="admin-btn admin-btn-reject" onclick="deleteRedeemCode('${c.code}')"><i class="fas fa-trash"></i></button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        /* Daily Video Task */
-        let isTaskRunning = false;
         function runVideoTask() {
-            if (currentVip < 1) {
-                alert("⚠️ VIP ሳይገዙ daily task መስራት አይችሉም! እባክዎን አስቀድመው VIP ደረጃ ይክፈቱ።");
-                openModal('depositModal');
+            const user = getCurrentUser();
+            if (user.vip === 0) {
+                alert("ታስክ ለመስራት አነስተኛው የ VIP 1 አባልነት ያስፈልጋል!");
                 return;
             }
 
-            if (completedTasks >= 2) {
-                alert("የዛሬውን ዕለታዊ ታስኮች ጨርሰዋል። ነገ ይመለሱ!");
+            const vipObj = vipList.find(v => v.level === user.vip);
+            if (!vipObj) return;
+
+            if (user.completedTasks >= 2) {
+                alert("የዛሬውን ሁሉንም ታስኮች አጠናቀዋል!");
                 return;
             }
 
-            if (isTaskRunning) return;
-            isTaskRunning = true;
-
-            const currentVipObj = vipList.find(v => v.level === currentVip) || vipList[0];
-            const rewardPerTask = currentVipObj.taskPrice;
-
-            let timeLeft = 10;
             const startBtn = document.getElementById('startTaskBtn');
             const timerDisplay = document.getElementById('taskTimerDisplay');
             const boxText = document.getElementById('boxText');
 
             startBtn.disabled = true;
-            boxText.textContent = "ቪዲዮው እየተመለከቱ ነው... እባክዎን ይቆዩ";
+            boxText.textContent = "ቪዲዮው በመጫን ላይ ነው... እባክዎን 10 ሰከንድ ይቆዩ";
 
-            const interval = setInterval(() => {
+            let timeLeft = 10;
+            timerDisplay.textContent = "00:10";
+
+            const timer = setInterval(() => {
                 timeLeft--;
                 timerDisplay.textContent = `00:0${timeLeft}`;
                 if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    isTaskRunning = false;
+                    clearInterval(timer);
+                    
+                    const rewardAmt = vipObj.taskPrice;
+                    userBalance += rewardAmt;
+                    todayEarned += rewardAmt;
                     completedTasks += 1;
-                    userBalance += rewardPerTask;
-                    todayEarned += rewardPerTask;
 
                     syncUserToDatabase();
-
-                    timerDisplay.textContent = "00:10";
-                    startBtn.disabled = false;
-                    boxText.textContent = "ታስክ ለመጀመር ከታች ቁልፉን ይጫኑ";
-
-                    alert(`✅ ታስኩ ተጠናቋል! ${rewardPerTask} ETB ወደ ሂሳብዎ ተጨምሯል።`);
                     updateTaskDashboardUI();
+                    timerDisplay.textContent = "00:10";
+                    alert(`✅ ታስኩ በተሳካ ሁኔታ ተጠናቋል! +${rewardAmt} ETB ወደ ሂሳብዎ ተጨምሯል።`);
                 }
             }, 1000);
         }
 
-        function updateTaskDashboardUI() {
-            document.getElementById('taskBalance').textContent = `ETB ${userBalance.toFixed(2)}`;
-            document.getElementById('gridTotalBalance').textContent = `ETB ${userBalance.toFixed(2)}`;
-            document.getElementById('todayIncome').textContent = `ETB ${todayEarned.toFixed(2)}`;
-            document.getElementById('gridTodayEarned').textContent = `ETB ${todayEarned.toFixed(2)}`;
-            document.getElementById('gridTotalDeposit').textContent = `ETB ${totalDepositAmt.toFixed(2)}`;
-            document.getElementById('gridTotalWithdrawn').textContent = `ETB ${totalWithdrawnAmt.toFixed(2)}`;
-            document.getElementById('gridTeamCommission').textContent = `ETB ${teamCommissionAmt.toFixed(2)}`;
+        /* Profile & Me Page UI */
+        function updateMeDashboardUI() {
+            const user = getCurrentUser();
+            document.getElementById('userPhoneDisplay').textContent = user.phone;
+            document.getElementById('userUidDisplay').textContent = user.inviteCode.replace('FREEBIRR-', '');
+            document.getElementById('meVipBadge').textContent = `VIP ${user.vip}`;
 
-            document.getElementById('completedCount').textContent = completedTasks;
-            document.getElementById('uncompletedCount').textContent = Math.max(0, 2 - completedTasks);
-            const percent = Math.min(100, Math.round((completedTasks / 2) * 100));
-            document.getElementById('progressPercent').textContent = `${percent}%`;
-
-            document.getElementById('userPhoneDisplay').textContent = `+251 ${userPhone}`;
-            document.getElementById('userVipBadge').textContent = `VIP ${currentVip}`;
-            document.getElementById('meVipBadge').textContent = `VIP ${currentVip}`;
-
-            document.getElementById('userInviteCode').textContent = userInviteCode;
-            document.getElementById('userInviteLink').textContent = `https://free-birr.github.io/?ref=${userInviteCode}`;
-            document.getElementById('balanceDisplay').textContent = `ETB ${userBalance.toFixed(2)}`;
+            document.getElementById('gridTotalBalance').textContent = `ETB ${user.balance.toFixed(2)}`;
+            document.getElementById('gridTodayEarned').textContent = `ETB ${user.todayEarned.toFixed(2)}`;
+            document.getElementById('gridTeamCommission').textContent = `ETB ${(user.teamCommission || 0).toFixed(2)}`;
+            document.getElementById('gridTotalDeposit').textContent = `ETB ${(user.deposit || 0).toFixed(2)}`;
+            document.getElementById('gridTotalWithdrawn').textContent = `ETB ${(user.withdraw || 0).toFixed(2)}`;
         }
 
-        /* Submit Deposit Request */
+        /* Team Page Functions */
+        function updateTeamUI() {
+            const user = getCurrentUser();
+            document.getElementById('userInviteCode').textContent = user.inviteCode;
+            const fullLink = `${window.location.origin}${window.location.pathname}?ref=${user.inviteCode}`;
+            document.getElementById('userInviteLink').textContent = fullLink;
+
+            const lvl1Members = membersList.filter(m => m.referredBy === user.inviteCode);
+            const lvl1Codes = lvl1Members.map(m => m.inviteCode);
+
+            const lvl2Members = membersList.filter(m => lvl1Codes.includes(m.referredBy));
+            const lvl2Codes = lvl2Members.map(m => m.inviteCode);
+
+            const lvl3Members = membersList.filter(m => lvl2Codes.includes(m.referredBy));
+
+            document.getElementById('countLvl1').textContent = lvl1Members.length;
+            document.getElementById('countLvl2').textContent = lvl2Members.length;
+            document.getElementById('countLvl3').textContent = lvl3Members.length;
+
+            renderLevelMemberList(currentSelectedLevel);
+        }
+
+        function switchLevelTab(lvl) {
+            currentSelectedLevel = lvl;
+            for(let i=1; i<=3; i++) {
+                const el = document.getElementById('tabLvl' + i);
+                if(el) el.classList.remove('active');
+            }
+            document.getElementById('tabLvl' + lvl).classList.add('active');
+            renderLevelMemberList(lvl);
+        }
+
+        function renderLevelMemberList(lvl) {
+            const user = getCurrentUser();
+            const container = document.getElementById('memberListContainer');
+            document.getElementById('levelListTitle').textContent = `Level ${lvl} Members List`;
+            container.innerHTML = '';
+
+            let list = [];
+            const lvl1Members = membersList.filter(m => m.referredBy === user.inviteCode);
+            if (lvl === 1) {
+                list = lvl1Members;
+            } else if (lvl === 2) {
+                const lvl1Codes = lvl1Members.map(m => m.inviteCode);
+                list = membersList.filter(m => lvl1Codes.includes(m.referredBy));
+            } else if (lvl === 3) {
+                const lvl1Codes = lvl1Members.map(m => m.inviteCode);
+                const lvl2Members = membersList.filter(m => lvl1Codes.includes(m.referredBy));
+                const lvl2Codes = lvl2Members.map(m => m.inviteCode);
+                list = membersList.filter(m => lvl2Codes.includes(m.referredBy));
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="font-size:12px; color:#94a3b8; text-align:center; padding:15px;">በዚህ ደረጃ የተመዘገበ አባል የለም</div>`;
+                return;
+            }
+
+            list.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>📱 ${m.phone}</strong><br>
+                        <span style="font-size:10px; color:#64748b;">የተመዘገበበት: ${m.regDate || 'N/A'}</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="status-badge approved">VIP ${m.vip}</span><br>
+                        <span style="font-size:10px; color:#ea580c; font-weight:bold;">Deposit: ETB ${(m.deposit || 0).toFixed(2)}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        /* Modals Control */
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'flex';
+                if (id === 'withdrawModal') {
+                    document.getElementById('balanceDisplay').textContent = `ETB ${userBalance.toFixed(2)}`;
+                    calculateWithdrawFee();
+                }
+            }
+        }
+
+        function closeModals() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(m => m.style.display = 'none');
+        }
+
+        function calculateWithdrawFee() {
+            const amt = parseFloat(document.getElementById('withdrawAmt').value) || 0;
+            const fee = amt * 0.15;
+            const net = Math.max(0, amt - fee);
+            document.getElementById('feeAmount').textContent = `ETB ${fee.toFixed(2)}`;
+            document.getElementById('netAmount').textContent = `ETB ${net.toFixed(2)}`;
+        }
+
+        /* User Financial Actions */
         function submitDeposit() {
-            const levelSelect = document.getElementById('depVipSelect');
-            const vipLevel = parseInt(levelSelect.value);
+            const vipLevel = parseInt(document.getElementById('depVipSelect').value);
             const txId = document.getElementById('txId').value.trim();
 
             if (!txId) {
@@ -2093,8 +2202,10 @@
             }
 
             const vipObj = vipList.find(v => v.level === vipLevel);
+            if (!vipObj) return;
+
             const req = {
-                id: Date.now(),
+                id: 'DEP-' + Date.now(),
                 phone: userPhone,
                 vipLevel: vipLevel,
                 amount: vipObj.price,
@@ -2104,420 +2215,431 @@
             };
 
             depositRequests.push(req);
-            localStorage.setItem('depositRequests', JSON.stringify(depositRequests));
-
-            document.getElementById('txId').value = '';
+            saveRequests();
             closeModals();
+            alert("✅ የ Deposit ጥያቄዎ በተሳካ ሁኔታ ተልኳል! በአድሚን እስኪረጋገጥ ይጠብቁ።");
             renderAdminTables();
-            alert("✅ የ Deposit ጥያቄዎ በተሳካ ሁኔታ ተልኳል! አድሚኑ እስከሚያፀድቀው ይቆዩ።");
         }
 
-        /* Calculate Withdrawal Fee */
-        function calculateWithdrawFee() {
-            const amtInput = document.getElementById('withdrawAmt');
-            const amt = parseFloat(amtInput.value) || 0;
-            const fee = amt * 0.15;
-            const net = Math.max(0, amt - fee);
-
-            document.getElementById('feeAmount').textContent = `ETB ${fee.toFixed(2)}`;
-            document.getElementById('netAmount').textContent = `ETB ${net.toFixed(2)}`;
-        }
-
-        /* Submit Withdraw Request */
         function submitWithdraw() {
             const method = document.getElementById('withdrawMethod').value;
-            const accName = document.getElementById('withdrawName').value.trim();
-            const accNum = document.getElementById('withdrawAcc').value.trim();
+            const name = document.getElementById('withdrawName').value.trim();
+            const acc = document.getElementById('withdrawAcc').value.trim();
             const amt = parseFloat(document.getElementById('withdrawAmt').value);
 
-            if (!accName || !accNum || isNaN(amt)) {
-                alert("እባክዎን ሁሉንም መረጃዎች ያስገቡ!");
+            if (!name || !acc || isNaN(amt)) {
+                alert("እባክዎን ሁሉንም መረጃዎች በትክክል ያስገቡ!");
                 return;
             }
 
             if (amt < 200) {
-                alert("⚠️ አነስተኛው የማውጫ መጠን 200 ETB ነው!");
+                alert("አነስተኛው የማውጫ መጠን 200 ETB ነው!");
                 return;
             }
 
             if (amt > userBalance) {
-                alert("⚠️ ሂሳብዎ ላይ በቂ ገንዘብ የለም!");
+                alert("በቂ ቀሪ ሂሳብ የሎትም!");
                 return;
             }
 
             userBalance -= amt;
-            totalWithdrawnAmt += amt;
             syncUserToDatabase();
 
+            const fee = amt * 0.15;
+            const net = amt - fee;
+
             const req = {
-                id: Date.now(),
+                id: 'WITH-' + Date.now(),
                 phone: userPhone,
                 method: method,
-                accName: accName,
-                accNum: accNum,
-                amount: amt,
-                fee: amt * 0.15,
-                netAmount: amt * 0.85,
+                name: name,
+                acc: acc,
+                grossAmount: amt,
+                fee: fee,
+                netAmount: net,
                 status: 'pending',
                 date: new Date().toLocaleString()
             };
 
             withdrawRequests.push(req);
-            localStorage.setItem('withdrawRequests', JSON.stringify(withdrawRequests));
-
-            document.getElementById('withdrawAmt').value = '';
+            saveRequests();
             closeModals();
             updateTaskDashboardUI();
+            alert("✅ የማውጣት ጥያቄዎ በተሳካ ሁኔታ ተልኳል!");
             renderAdminTables();
-            alert("✅ የማውጣት ጥያቄዎ ተልኳል! በአጭር ጊዜ ውስጥ ገቢ ይደረጋል።");
         }
 
-        /* Referral Commission Distribution System */
-        function distributeCommission(refCode, depAmount) {
-            if (!refCode) return;
-
-            // Level 1 Parent (15%)
-            let parentL1 = membersList.find(m => m.inviteCode === refCode);
-            if (parentL1) {
-                const commL1 = depAmount * 0.15;
-                parentL1.balance = (parentL1.balance || 0) + commL1;
-                parentL1.teamCommission = (parentL1.teamCommission || 0) + commL1;
-
-                // Level 2 Parent (3%)
-                if (parentL1.referredBy) {
-                    let parentL2 = membersList.find(m => m.inviteCode === parentL1.referredBy);
-                    if (parentL2) {
-                        const commL2 = depAmount * 0.03;
-                        parentL2.balance = (parentL2.balance || 0) + commL2;
-                        parentL2.teamCommission = (parentL2.teamCommission || 0) + commL2;
-
-                        // Level 3 Parent (2%)
-                        if (parentL2.referredBy) {
-                            let parentL3 = membersList.find(m => m.inviteCode === parentL2.referredBy);
-                            if (parentL3) {
-                                const commL3 = depAmount * 0.02;
-                                parentL3.balance = (parentL3.balance || 0) + commL3;
-                                parentL3.teamCommission = (parentL3.teamCommission || 0) + commL3;
-                            }
-                        }
-                    }
-                }
-            }
-            saveMembersList();
-        }
-
-        /* ADMIN CONTROL FUNCTIONS */
-        function adminApproveDeposit(reqId) {
-            let req = depositRequests.find(r => r.id === reqId);
-            if (!req) return;
-
-            req.status = 'approved';
-            let user = membersList.find(m => m.phone === req.phone);
-            if (user) {
-                if (!user.approvedVips) user.approvedVips = [];
-                if (!user.approvedVips.includes(req.vipLevel)) {
-                    user.approvedVips.push(req.vipLevel);
-                }
-                user.deposit = (user.deposit || 0) + parseFloat(req.amount);
-
-                // Distribute Commission to referrer
-                distributeCommission(user.referredBy, parseFloat(req.amount));
-                saveMembersList();
+        /* Redeem Code Operations */
+        function submitRedeemCode() {
+            const codeInput = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
+            if (!codeInput) {
+                alert("እባክዎን ኮድ ያስገቡ!");
+                return;
             }
 
-            localStorage.setItem('depositRequests', JSON.stringify(depositRequests));
-            renderAdminTables();
-            if (userPhone === req.phone) {
-                syncUserToDatabase();
-                renderVIPs();
-                updateTaskDashboardUI();
-            }
-            alert(`VIP ${req.vipLevel} Deposit Approved for ${req.phone}!`);
-        }
-
-        function adminRejectDeposit(reqId) {
-            let req = depositRequests.find(r => r.id === reqId);
-            if (!req) return;
-            req.status = 'rejected';
-            localStorage.setItem('depositRequests', JSON.stringify(depositRequests));
-            renderAdminTables();
-            alert("Deposit request rejected.");
-        }
-
-        function adminApproveWithdraw(reqId) {
-            let req = withdrawRequests.find(r => r.id === reqId);
-            if (!req) return;
-            req.status = 'approved';
-            localStorage.setItem('withdrawRequests', JSON.stringify(withdrawRequests));
-            renderAdminTables();
-            alert("Withdrawal request approved.");
-        }
-
-        function adminRejectWithdraw(reqId) {
-            let req = withdrawRequests.find(r => r.id === reqId);
-            if (!req) return;
-            req.status = 'rejected';
-
-            // Refund user
-            let user = membersList.find(m => m.phone === req.phone);
-            if (user) {
-                user.balance = (user.balance || 0) + parseFloat(req.amount);
-                user.withdraw = Math.max(0, (user.withdraw || 0) - parseFloat(req.amount));
-                saveMembersList();
+            const codeObj = redeemCodes.find(r => r.code === codeInput);
+            if (!codeObj) {
+                alert("የተሳሳተ የ Redeem Code!");
+                return;
             }
 
-            localStorage.setItem('withdrawRequests', JSON.stringify(withdrawRequests));
-            renderAdminTables();
-            if (userPhone === req.phone) {
-                syncUserToDatabase();
-                updateTaskDashboardUI();
-            }
-            alert("Withdrawal request rejected and funds refunded.");
-        }
-
-        function onAdminSelectMemberChange() {
-            const phone = document.getElementById('adminEditUserSelect').value;
-            let user = membersList.find(m => m.phone === phone);
-            if (!user) return;
-
-            document.getElementById('adminEditBalance').value = user.balance || 0;
-            document.getElementById('adminEditVipLevel').value = user.vip || 0;
-            document.getElementById('adminEditDeposit').value = user.deposit || 0;
-            document.getElementById('adminEditWithdraw').value = user.withdraw || 0;
-            document.getElementById('adminEditTodayEarned').value = user.todayEarned || 0;
-            document.getElementById('adminEditTeamComm').value = user.teamCommission || 0;
-        }
-
-        function saveMemberFinancialRecord() {
-            const phone = document.getElementById('adminEditUserSelect').value;
-            let user = membersList.find(m => m.phone === phone);
-            if (!user) return;
-
-            user.balance = parseFloat(document.getElementById('adminEditBalance').value) || 0;
-            user.vip = parseInt(document.getElementById('adminEditVipLevel').value) || 0;
-            user.deposit = parseFloat(document.getElementById('adminEditDeposit').value) || 0;
-            user.withdraw = parseFloat(document.getElementById('adminEditWithdraw').value) || 0;
-            user.todayEarned = parseFloat(document.getElementById('adminEditTodayEarned').value) || 0;
-            user.teamCommission = parseFloat(document.getElementById('adminEditTeamComm').value) || 0;
-
-            saveMembersList();
-            renderAdminTables();
-
-            if (userPhone === phone) {
-                userBalance = user.balance;
-                currentVip = user.vip;
-                totalDepositAmt = user.deposit;
-                totalWithdrawnAmt = user.withdraw;
-                todayEarned = user.todayEarned;
-                teamCommissionAmt = user.teamCommission;
-                renderVIPs();
-                updateTaskDashboardUI();
+            if (codeObj.usedBy.length >= codeObj.maxUses) {
+                alert("ይህ ኮድ የመጠቀም ገደቡ አልቋል!");
+                return;
             }
 
-            alert("የአባሉ የፋይናንስ መረጃዎች በተሳካ ሁኔታ ተቀይረዋል!");
-        }
-
-        function renderAdminTables() {
-            // Populate select box
-            const selectEl = document.getElementById('adminEditUserSelect');
-            if (selectEl) {
-                selectEl.innerHTML = '';
-                membersList.forEach(m => {
-                    selectEl.innerHTML += `<option value="${m.phone}">${m.phone} (VIP ${m.vip})</option>`;
-                });
-                if (membersList.length > 0) onAdminSelectMemberChange();
+            if (currentUser.usedRedeemCodes.includes(codeInput)) {
+                alert("ይህንን ኮድ አስቀድመው ተጠቅመዋል!");
+                return;
             }
 
-            // Deposit Requests Table
-            const depTable = document.getElementById('adminDepositTable');
-            if (depTable) {
-                depTable.innerHTML = '';
-                const pendingDeps = depositRequests.filter(r => r.status === 'pending');
-                if (pendingDeps.length === 0) {
-                    depTable.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">ምንም የለም (No pending deposits)</td></tr>';
-                } else {
-                    pendingDeps.forEach(r => {
-                        depTable.innerHTML += `
-                            <tr>
-                                <td>${r.phone}</td>
-                                <td>VIP ${r.vipLevel} / ${r.amount} ETB</td>
-                                <td>${r.txId}</td>
-                                <td>
-                                    <button class="admin-btn admin-btn-approve" onclick="adminApproveDeposit(${r.id})">Approve</button>
-                                    <button class="admin-btn admin-btn-reject" onclick="adminRejectDeposit(${r.id})">Reject</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-            }
-
-            // Withdraw Requests Table
-            const withTable = document.getElementById('adminWithdrawTable');
-            if (withTable) {
-                withTable.innerHTML = '';
-                const pendingWiths = withdrawRequests.filter(r => r.status === 'pending');
-                if (pendingWiths.length === 0) {
-                    withTable.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">ምንም የለም (No pending withdrawals)</td></tr>';
-                } else {
-                    pendingWiths.forEach(r => {
-                        withTable.innerHTML += `
-                            <tr>
-                                <td>${r.phone}</td>
-                                <td>${r.method}: ${r.accNum} (${r.accName})</td>
-                                <td>${r.netAmount} ETB</td>
-                                <td>
-                                    <button class="admin-btn admin-btn-approve" onclick="adminApproveWithdraw(${r.id})">Approve</button>
-                                    <button class="admin-btn admin-btn-reject" onclick="adminRejectWithdraw(${r.id})">Reject</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-            }
-
-            // Members Directory Table
-            const memTable = document.getElementById('adminMembersTable');
-            if (memTable) {
-                memTable.innerHTML = '';
-                membersList.forEach(m => {
-                    memTable.innerHTML += `
-                        <tr>
-                            <td>+251 ${m.phone}</td>
-                            <td>VIP ${m.vip}</td>
-                            <td>${(m.balance||0).toFixed(2)}</td>
-                            <td>${(m.deposit||0).toFixed(2)}</td>
-                            <td>${(m.withdraw||0).toFixed(2)}</td>
-                            <td><button class="admin-btn admin-btn-save" style="font-size:10px; padding:4px 6px;" onclick="document.getElementById('adminEditUserSelect').value='${m.phone}'; onAdminSelectMemberChange();">Edit</button></td>
-                        </tr>
-                    `;
-                });
-            }
-        }
-
-        /* TEAM UI & LEVELS SYSTEM */
-        function switchLevelTab(lvl) {
-            currentSelectedLevel = lvl;
-            document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(`tabLvl${lvl}`).classList.add('active');
-            updateTeamUI();
-        }
-
-        function updateTeamUI() {
-            const currentUserObj = getCurrentUser();
-            let lvl1Members = membersList.filter(m => m.referredBy === currentUserObj.inviteCode);
-            
-            let lvl2Members = [];
-            lvl1Members.forEach(m1 => {
-                let found = membersList.filter(m => m.referredBy === m1.inviteCode);
-                lvl2Members = lvl2Members.concat(found);
-            });
-
-            let lvl3Members = [];
-            lvl2Members.forEach(m2 => {
-                let found = membersList.filter(m => m.referredBy === m2.inviteCode);
-                lvl3Members = lvl3Members.concat(found);
-            });
-
-            document.getElementById('countLvl1').textContent = lvl1Members.length;
-            document.getElementById('countLvl2').textContent = lvl2Members.length;
-            document.getElementById('countLvl3').textContent = lvl3Members.length;
-
-            const titleEl = document.getElementById('levelListTitle');
-            const containerEl = document.getElementById('memberListContainer');
-            containerEl.innerHTML = '';
-
-            let targetList = [];
-            if (currentSelectedLevel === 1) { titleEl.textContent = "Level 1 Members (15% Commission)"; targetList = lvl1Members; }
-            else if (currentSelectedLevel === 2) { titleEl.textContent = "Level 2 Members (3% Commission)"; targetList = lvl2Members; }
-            else { titleEl.textContent = "Level 3 Members (2% Commission)"; targetList = lvl3Members; }
-
-            if (targetList.length === 0) {
-                containerEl.innerHTML = '<div style="font-size:12px; color:#94a3b8; text-align:center; padding:15px;">በዚህ Level ምንም የተመዘገበ አባል የለም።</div>';
-            } else {
-                targetList.forEach(m => {
-                    containerEl.innerHTML += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:8px 12px; border-radius:8px; margin-bottom:6px; font-size:12px; border:1px solid #e2e8f0;">
-                            <div>
-                                <strong>+251 ${m.phone}</strong>
-                                <div style="font-size:10px; color:#64748b;">Reg: ${m.regDate || 'N/A'}</div>
-                            </div>
-                            <div style="text-align:right;">
-                                <span style="background:#ea580c; color:white; padding:2px 6px; border-radius:10px; font-size:10px; font-weight:bold;">VIP ${m.vip}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        /* PASSWORD & BANK DETAILS MODAL HANDLERS */
-        function saveBankCardDetails() {
-            const cbeName = document.getElementById('cbeHolderName').value.trim();
-            const cbeAcc = document.getElementById('cbeAccNumber').value.trim();
-            const teleName = document.getElementById('telebirrHolderName').value.trim();
-            const teleAcc = document.getElementById('telebirrAccNumber').value.trim();
-
-            currentUser.cbeName = cbeName;
-            currentUser.cbeAcc = cbeAcc;
-            currentUser.teleName = teleName;
-            currentUser.teleAcc = teleAcc;
+            userBalance += codeObj.amount;
+            todayEarned += codeObj.amount;
+            currentUser.usedRedeemCodes.push(codeInput);
+            codeObj.usedBy.push(userPhone);
 
             syncUserToDatabase();
+            saveRedeemCodes();
             closeModals();
-            alert("የባንክ መረጃዎ በስኬት ተቀምጧል!");
+            updateTaskDashboardUI();
+            alert(`🎉 እንኳን ደስ አለዎት! ${codeObj.amount} ETB ቦነስ ወደ ሂሳብዎ ገቢ ሆኗል።`);
         }
 
+        /* User Password & Bank Changes */
         function submitPasswordChange() {
             const oldP = document.getElementById('oldPasswordInput').value.trim();
             const newP = document.getElementById('newPasswordInput').value.trim();
             const confP = document.getElementById('confirmPasswordInput').value.trim();
 
-            if (oldP !== currentUser.password) {
-                alert("የድሮው ይለፍ ቃል አልተሳካም!");
+            if (oldP !== userPassword) {
+                alert("የድሮው ይለፍ ቃል የተሳሳተ ነው!");
                 return;
             }
-            if (!newP || newP !== confP) {
+            if (newP !== confP) {
                 alert("አዲሱ ይለፍ ቃል አይመሳሰልም!");
                 return;
             }
+            if (newP.length < 4) {
+                alert("ይለፍ ቃል አነስተኛው 4 ፊደላት/ቁጥሮች መሆን አለበት!");
+                return;
+            }
 
-            currentUser.password = newP;
             userPassword = newP;
-            localStorage.setItem('userPassword', newP);
+            currentUser.password = newP;
             syncUserToDatabase();
-
-            document.getElementById('oldPasswordInput').value = '';
-            document.getElementById('newPasswordInput').value = '';
-            document.getElementById('confirmPasswordInput').value = '';
+            localStorage.setItem('userPassword', newP);
             closeModals();
-
             alert("የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል!");
         }
 
-        /* UTILITY & UI SWITCHERS */
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        function saveBankCardDetails() {
+            currentUser.cbeHolder = document.getElementById('cbeHolderName').value.trim();
+            currentUser.cbeAcc = document.getElementById('cbeAccNumber').value.trim();
+            currentUser.teleHolder = document.getElementById('telebirrHolderName').value.trim();
+            currentUser.teleAcc = document.getElementById('telebirrAccNumber').value.trim();
 
-            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
-            document.getElementById(`nav-${tabId}`).classList.add('active');
-
-            if (tabId === 'home') renderVIPs();
-            if (tabId === 'team') updateTeamUI();
-            if (tabId === 'task' || tabId === 'me') updateTaskDashboardUI();
+            saveMembersList();
+            closeModals();
+            alert("የባንክ መረጃዎ በተሳካ ሁኔታ ተመዝግቧል!");
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function openCustomerService() { window.open('https://t.me/cryptopmt', '_blank'); }
+        /* Records History Modal */
+        function openRecordsModal() {
+            const user = getCurrentUser();
+            const depContainer = document.getElementById('userDepositRecordsContainer');
+            const withContainer = document.getElementById('userWithdrawRecordsContainer');
 
-        function copyText(txt) {
-            navigator.clipboard.writeText(txt).then(() => {
-                alert("ኮፒ ተደርጓል: " + txt);
-            }).catch(() => {
-                alert("ኮፒ ተደርጓል: " + txt);
+            depContainer.innerHTML = '';
+            withContainer.innerHTML = '';
+
+            const userDeps = depositRequests.filter(r => r.phone === user.phone);
+            const userWiths = withdrawRequests.filter(r => r.phone === user.phone);
+
+            if (userDeps.length === 0) {
+                depContainer.innerHTML = `<div style="font-size:11px; color:#94a3b8;">ምንም አይነት የገንዘብ ገቢ ታሪክ የለም</div>`;
+            } else {
+                userDeps.forEach(r => {
+                    depContainer.innerHTML += `
+                        <div class="history-item">
+                            <div>
+                                <strong>VIP ${r.vipLevel} (${r.amount} ETB)</strong><br>
+                                <span style="font-size:10px; color:#64748b;">TxID: ${r.txId}</span>
+                            </div>
+                            <div>
+                                <span class="status-badge ${r.status}">${r.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (userWiths.length === 0) {
+                withContainer.innerHTML = `<div style="font-size:11px; color:#94a3b8;">ምንም አይነት የገንዘብ ማውጣት ታሪክ የለም</div>`;
+            } else {
+                userWiths.forEach(r => {
+                    withContainer.innerHTML += `
+                        <div class="history-item">
+                            <div>
+                                <strong>${r.method} - ${r.netAmount.toFixed(2)} ETB</strong><br>
+                                <span style="font-size:10px; color:#64748b;">${r.date}</span>
+                            </div>
+                            <div>
+                                <span class="status-badge ${r.status}">${r.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            openModal('userRecordsModal');
+        }
+
+        /* Utilities */
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("ተኮፒ አድርጓል: " + text);
+            }).catch(err => {
+                alert("ኮፒ ማድረግ አልተሳካም!");
             });
+        }
+
+        function openCustomerService() {
+            window.open('https://t.me/cryptopmt', '_blank');
+        }
+
+        /* ADMIN PANEL OPERATIONS */
+        function renderAdminTables() {
+            if (userPhone !== DEFAULT_ADMIN_PHONE) return;
+
+            // Render Deposits Table
+            const depTbody = document.getElementById('adminDepositTable');
+            depTbody.innerHTML = '';
+            depositRequests.forEach((r, idx) => {
+                depTbody.innerHTML += `
+                    <tr>
+                        <td>${r.phone}</td>
+                        <td>VIP ${r.vipLevel} (${r.amount})</td>
+                        <td>${r.txId}</td>
+                        <td><span class="status-badge ${r.status}">${r.status}</span></td>
+                        <td>
+                            ${r.status === 'pending' ? `
+                                <button class="admin-btn admin-btn-approve" onclick="approveDeposit(${idx})">Approve</button>
+                                <button class="admin-btn admin-btn-reject" onclick="rejectDeposit(${idx})">Reject</button>
+                            ` : '-'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Render Withdrawals Table
+            const withTbody = document.getElementById('adminWithdrawTable');
+            withTbody.innerHTML = '';
+            withdrawRequests.forEach((r, idx) => {
+                withTbody.innerHTML += `
+                    <tr>
+                        <td>${r.phone}</td>
+                        <td>${r.method}<br>${r.acc}</td>
+                        <td>ETB ${r.netAmount.toFixed(2)}</td>
+                        <td><span class="status-badge ${r.status}">${r.status}</span></td>
+                        <td>
+                            ${r.status === 'pending' ? `
+                                <button class="admin-btn admin-btn-approve" onclick="approveWithdraw(${idx})">Approve</button>
+                                <button class="admin-btn admin-btn-reject" onclick="rejectWithdraw(${idx})">Reject</button>
+                            ` : '-'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Render Member Select Dropdown for Editor
+            const selectEl = document.getElementById('adminEditUserSelect');
+            selectEl.innerHTML = '<option value="">-- select member --</option>';
+            membersList.forEach(m => {
+                selectEl.innerHTML += `<option value="${m.phone}">${m.phone} (VIP ${m.vip}) - ETB ${m.balance.toFixed(2)}</option>`;
+            });
+
+            // Render Registered Members Directory Table
+            const memTbody = document.getElementById('adminMembersTable');
+            memTbody.innerHTML = '';
+            membersList.forEach(m => {
+                memTbody.innerHTML += `
+                    <tr>
+                        <td>${m.phone}</td>
+                        <td>VIP ${m.vip}</td>
+                        <td>ETB ${m.balance.toFixed(2)}</td>
+                        <td>ETB ${(m.deposit || 0).toFixed(2)}</td>
+                        <td>ETB ${(m.withdraw || 0).toFixed(2)}</td>
+                        <td>
+                            <button class="admin-btn" style="background:#0284c7;" onclick="selectMemberToEdit('${m.phone}')">Edit</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function createAdminRedeemCode() {
+            const name = document.getElementById('adminRedeemCodeName').value.trim().toUpperCase();
+            const amt = parseFloat(document.getElementById('adminRedeemAmount').value);
+            const maxUses = parseInt(document.getElementById('adminRedeemMaxUses').value);
+
+            if (!name || isNaN(amt) || isNaN(maxUses)) {
+                alert("እባክዎን ሁሉንም የ Redeem Code መረጃዎች ያስገቡ!");
+                return;
+            }
+
+            if (redeemCodes.some(r => r.code === name)) {
+                alert("ይህ ኮድ አስቀድሞ አለ!");
+                return;
+            }
+
+            redeemCodes.push({ code: name, amount: amt, maxUses: maxUses, usedBy: [] });
+            saveRedeemCodes();
+            renderAdminRedeemTable();
+            alert("አዲስ Redeem Code በተሳካ ሁኔታ ተፈጥሯል!");
+        }
+
+        function renderAdminRedeemTable() {
+            const tbody = document.getElementById('adminRedeemTable');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            redeemCodes.forEach((r, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${r.code}</strong></td>
+                        <td>${r.amount} ETB</td>
+                        <td>${r.usedBy.length}/${r.maxUses}</td>
+                        <td><button class="admin-btn admin-btn-reject" onclick="deleteRedeemCode(${idx})">Del</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteRedeemCode(idx) {
+            if(confirm("ይህንን Redeem Code ለማጥፋት እርግጠኛ ነዎት?")) {
+                redeemCodes.splice(idx, 1);
+                saveRedeemCodes();
+                renderAdminRedeemTable();
+            }
+        }
+
+        function approveDeposit(idx) {
+            const req = depositRequests[idx];
+            let member = membersList.find(m => m.phone === req.phone);
+            if (member) {
+                if (member.vip < req.vipLevel) {
+                    member.vip = req.vipLevel;
+                }
+                member.deposit = (member.deposit || 0) + req.amount;
+
+                // Commission distribution L1 (15%), L2 (3%), L3 (2%)
+                if (member.referredBy) {
+                    let parentL1 = membersList.find(m => m.inviteCode === member.referredBy);
+                    if (parentL1) {
+                        const commL1 = req.amount * 0.15;
+                        parentL1.balance += commL1;
+                        parentL1.teamCommission = (parentL1.teamCommission || 0) + commL1;
+
+                        if (parentL1.referredBy) {
+                            let parentL2 = membersList.find(m => m.inviteCode === parentL1.referredBy);
+                            if (parentL2) {
+                                const commL2 = req.amount * 0.03;
+                                parentL2.balance += commL2;
+                                parentL2.teamCommission = (parentL2.teamCommission || 0) + commL2;
+
+                                if (parentL2.referredBy) {
+                                    let parentL3 = membersList.find(m => m.inviteCode === parentL2.referredBy);
+                                    if (parentL3) {
+                                        const commL3 = req.amount * 0.02;
+                                        parentL3.balance += commL3;
+                                        parentL3.teamCommission = (parentL3.teamCommission || 0) + commL3;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                saveMembersList();
+            }
+            req.status = 'approved';
+            saveRequests();
+            renderAdminTables();
+            renderVIPs();
+            alert("Deposit Approved successfully!");
+        }
+
+        function rejectDeposit(idx) {
+            depositRequests[idx].status = 'rejected';
+            saveRequests();
+            renderAdminTables();
+        }
+
+        function approveWithdraw(idx) {
+            const req = withdrawRequests[idx];
+            let member = membersList.find(m => m.phone === req.phone);
+            if (member) {
+                member.withdraw = (member.withdraw || 0) + req.grossAmount;
+                saveMembersList();
+            }
+            req.status = 'approved';
+            saveRequests();
+            renderAdminTables();
+            alert("Withdrawal Approved successfully!");
+        }
+
+        function rejectWithdraw(idx) {
+            const req = withdrawRequests[idx];
+            let member = membersList.find(m => m.phone === req.phone);
+            if (member) {
+                member.balance += req.grossAmount;
+                saveMembersList();
+            }
+            req.status = 'rejected';
+            saveRequests();
+            renderAdminTables();
+        }
+
+        function selectMemberToEdit(phone) {
+            const selectEl = document.getElementById('adminEditUserSelect');
+            selectEl.value = phone;
+            onAdminSelectMemberChange();
+        }
+
+        function onAdminSelectMemberChange() {
+            const phone = document.getElementById('adminEditUserSelect').value;
+            let member = membersList.find(m => m.phone === phone);
+            if (member) {
+                document.getElementById('adminEditBalance').value = member.balance;
+                document.getElementById('adminEditVipLevel').value = member.vip;
+                document.getElementById('adminEditDeposit').value = member.deposit || 0;
+                document.getElementById('adminEditWithdraw').value = member.withdraw || 0;
+                document.getElementById('adminEditTodayEarned').value = member.todayEarned || 0;
+                document.getElementById('adminEditTeamComm').value = member.teamCommission || 0;
+            }
+        }
+
+        function saveMemberFinancialRecord() {
+            const phone = document.getElementById('adminEditUserSelect').value;
+            let member = membersList.find(m => m.phone === phone);
+            if (member) {
+                member.balance = parseFloat(document.getElementById('adminEditBalance').value) || 0;
+                member.vip = parseInt(document.getElementById('adminEditVipLevel').value) || 0;
+                member.deposit = parseFloat(document.getElementById('adminEditDeposit').value) || 0;
+                member.withdraw = parseFloat(document.getElementById('adminEditWithdraw').value) || 0;
+                member.todayEarned = parseFloat(document.getElementById('adminEditTodayEarned').value) || 0;
+                member.teamCommission = parseFloat(document.getElementById('adminEditTeamComm').value) || 0;
+
+                saveMembersList();
+                renderAdminTables();
+                if (phone === userPhone) {
+                    userBalance = member.balance;
+                    currentVip = member.vip;
+                    todayEarned = member.todayEarned;
+                    updateTaskDashboardUI();
+                    renderVIPs();
+                }
+                alert("የአባሉ የፋይናንስ መረጃ በተሳካ ሁኔታ ተስተካክሏል!");
+            }
         }
     </script>
 </body>
