@@ -316,8 +316,12 @@
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .btn-start-task:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-start-task:disabled { opacity: 0.7; cursor: not-allowed; background: #64748b; }
 
         /* Generic Card */
         .page-card {
@@ -461,7 +465,6 @@
         .fin-icon.blue { background: #e0f2fe; color: #0284c7; }
         .fin-icon.purple { background: #f3e8ff; color: #a855f7; }
         .fin-icon.red { background: #ffe4e6; color: #f43f5e; }
-        .fin-icon.snowflake { background: #e0f2fe; color: #0369a1; }
 
         .fin-info { display: flex; flex-direction: column; }
         .fin-label { font-size: 10px; color: #64748b; font-weight: 600; }
@@ -704,17 +707,6 @@
             margin-bottom: 8px;
         }
 
-        /* Notice Box for Withdraw Source */
-        .withdraw-source-info {
-            background: #f0fdf4;
-            border: 1px solid #86efac;
-            color: #166534;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            margin-bottom: 10px;
-        }
-
         /* History Table Items */
         .history-item {
             background: #f8fafc;
@@ -861,7 +853,7 @@
                 <div class="income-val" id="todayIncome">ETB 0.00</div>
             </div>
             <div class="income-card">
-                <div class="income-title" id="txt-bal">የሚወጣ ቀሪ ሂሳብ</div>
+                <div class="income-title" id="txt-bal">ቀሪ ሂሳብ</div>
                 <div class="income-val" id="taskBalance">ETB 0.00</div>
             </div>
         </div>
@@ -870,7 +862,7 @@
             <div class="video-task-header">
                 <i class="fas fa-play-circle"></i> <span id="txt-vid-task">የቪዲዮ ታስክ</span>
             </div>
-            <div class="video-task-sub" id="txt-vid-sub">ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ (VIP 1+)</div>
+            <div class="video-task-sub" id="txt-vid-sub">ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ (VIP 1+) (በቀን 2 ታስክ)</div>
 
             <div class="task-display-box">
                 <div class="box-instruction" id="boxText">ታስክ ለመጀመር ከታች ቁልፉን ይጫኑ</div>
@@ -945,21 +937,14 @@
             <div class="fin-grid-title"><i class="fas fa-chart-pie"></i> <span id="txt-fin-title">የሂሳብ መረጃዎች</span></div>
             <div class="financial-grid">
                 <div class="fin-card highlight">
-                    <div class="fin-icon green"><i class="fas fa-wallet"></i></div>
+                    <div class="fin-icon"><i class="fas fa-wallet"></i></div>
                     <div class="fin-info">
-                        <span class="fin-label">ሊወጣ የሚችል ሂሳብ (Withdrawable)</span>
-                        <strong class="fin-value" id="gridWithdrawableBalance">ETB 0.00</strong>
+                        <span class="fin-label" id="txt-tot-bal">ጠቅላላ ሂሳብ</span>
+                        <strong class="fin-value" id="gridTotalBalance">ETB 0.00</strong>
                     </div>
                 </div>
                 <div class="fin-card">
-                    <div class="fin-icon snowflake"><i class="fas fa-snowflake"></i></div>
-                    <div class="fin-info">
-                        <span class="fin-label">የታገደ VIP ተቀማጭ (Frozen)</span>
-                        <strong class="fin-value" id="gridFrozenBalance">ETB 0.00</strong>
-                    </div>
-                </div>
-                <div class="fin-card">
-                    <div class="fin-icon"><i class="fas fa-coins"></i></div>
+                    <div class="fin-icon green"><i class="fas fa-coins"></i></div>
                     <div class="fin-info">
                         <span class="fin-label" id="txt-tod-earn">የዛሬ ገቢ</span>
                         <strong class="fin-value" id="gridTodayEarned">ETB 0.00</strong>
@@ -1018,7 +1003,7 @@
             <!-- ADMIN PANEL SECTION -->
             <div class="admin-panel-card" id="adminPanelSection">
                 <div class="admin-panel-title">
-                    <i class="fas fa-user-shield"></i> System Admin Control Center 🔔 (Sound Enabled)
+                    <i class="fas fa-user-shield"></i> System Admin Control Center
                 </div>
 
                 <!-- Redeem Code Admin Section -->
@@ -1125,12 +1110,8 @@
                             <select id="adminEditUserSelect" onchange="onAdminSelectMemberChange()"></select>
                         </div>
                         <div class="admin-input-group">
-                            <label>ሊወጣ የሚችል ገቢ (Withdrawable ETB):</label>
-                            <input type="number" id="adminEditWithdrawableBalance" placeholder="0.00" step="0.01">
-                        </div>
-                        <div class="admin-input-group">
-                            <label>የታገደ ተቀማጭ (Frozen ETB):</label>
-                            <input type="number" id="adminEditFrozenBalance" placeholder="0.00" step="0.01">
+                            <label>ቀሪ ሂሳብ (Balance ETB):</label>
+                            <input type="number" id="adminEditBalance" placeholder="0.00" step="0.01">
                         </div>
                         <div class="admin-input-group">
                             <label>የ VIP ደረጃ (VIP Level):</label>
@@ -1167,9 +1148,8 @@
                                 <tr>
                                     <th>Phone</th>
                                     <th>VIP</th>
-                                    <th>Referred By</th>
-                                    <th>Withdrawable</th>
-                                    <th>Frozen</th>
+                                    <th>Referred By (የጋበዘው አካል)</th>
+                                    <th>Balance</th>
                                     <th>Deposit</th>
                                     <th>Withdraw</th>
                                     <th>Action</th>
@@ -1207,7 +1187,7 @@
     <div id="redeemModal" class="modal">
         <div class="modal-body">
             <h3><i class="fas fa-gift" style="color:var(--primary-orange);"></i> <span id="txt-modal-redeem">የመቤዠት ኮድ (Redeem Code)</span></h3>
-            <p style="font-size:12px; color:#64748b; margin: 8px 0;">የተሰጠዎትን ልዩ የቦነስ ኮድ እዚህ ያስገቡና ወዲያውኑ ወደ የሚወጣ ሂሳብዎ ገቢ ያድርጉ።</p>
+            <p style="font-size:12px; color:#64748b; margin: 8px 0;">የተሰጠዎትን ልዩ የቦነስ ኮድ እዚህ ያስገቡና ወዲያውኑ ወደ ሂሳብዎ ገቢ ያድርጉ።</p>
             <input type="text" id="redeemCodeInput" placeholder="ኮዱን ያስገቡ (ምሳሌ፡ FREEBIRR50)" style="text-transform:uppercase;">
             <button class="modal-btn" onclick="submitRedeemCode()">ቦነስ ውሰድ (Redeem)</button>
             <button class="modal-btn" style="background:#ef4444;" onclick="closeModals()">ዝጋ</button>
@@ -1263,10 +1243,7 @@
             <div class="time-notice">
                 <i class="far fa-clock"></i> <strong>የማውጫ ሰዓት:</strong> ከጠዋቱ 3:00am - 6:00pm (03:00 - 18:00) ብቻ።
             </div>
-            <div class="withdraw-source-info">
-                ℹ️ <strong>የማውጫ ህግ:</strong> ማውጣት የሚቻለው ከ <strong>Task</strong>፣ ከ <strong>Daily Reward</strong>፣ ከ <strong>Referral Commission</strong> እና ከ <strong>Redeem Code</strong> የተገኘን ገቢ ብቻ ነው። Deposit ተደርጎ VIP የተገዛበት ገንዘብ አይወጣም (Frozen)።
-            </div>
-            <p style="font-size:12px; margin-bottom:5px;">ማውጣት የሚችሉት ቀሪ ሂሳብ: <strong id="balanceDisplay" style="color:#10b981;">ETB 0.00</strong></p>
+            <p style="font-size:12px; margin-bottom:5px;">ቀሪ ሂሳብዎ: <strong id="balanceDisplay">ETB 0.00</strong></p>
             <select id="withdrawMethod">
                 <option value="CBE">CBE Bank</option>
                 <option value="Telebirr">Telebirr</option>
@@ -1302,34 +1279,6 @@
     <script>
         const DEFAULT_ADMIN_PHONE = "913347992";
         const DEFAULT_ADMIN_PASS = "314297";
-
-        // SOUND NOTIFICATION ENGINE USING WEB AUDIO API
-        function playNotificationSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (!AudioContext) return;
-                const ctx = new AudioContext();
-                
-                // Play double chime
-                const playChime = (freq, startTime, duration) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
-                    gain.gain.setValueAtTime(0.3, ctx.currentTime + startTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + startTime + duration);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(ctx.currentTime + startTime);
-                    osc.stop(ctx.currentTime + startTime + duration);
-                };
-
-                playChime(587.33, 0, 0.15);  // D5 note
-                playChime(880.00, 0.15, 0.35); // A5 note
-            } catch (e) {
-                console.log("Audio play suppressed or not supported:", e);
-            }
-        }
 
         // VIP Setup
         const vipList = [
@@ -1372,15 +1321,15 @@
                 process: "ሂደት",
                 completed: "የተጠናቀቀ",
                 todayInc: "የዛሬ ገቢ",
-                bal: "የሚወጣ ቀሪ ሂሳብ",
+                bal: "ቀሪ ሂሳብ",
                 vidTask: "የቪዲዮ ታስክ",
-                vidSub: "ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ (VIP 1+)",
+                vidSub: "ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ (VIP 1+) (በቀን 2 ታስክ)",
                 teamPageTitle: "የቡድን መረጃ",
                 lblInvCode: "🔑 የእርስዎ መጋበዣ ኮድ (Invitation Code):",
                 lblInvLink: "🔗 የእርስዎ መጋበዣ ሊንክ (Referral Link):",
                 copyLink: "ሊንክ ኮፒ አድርግ",
                 finTitle: "የሂሳብ መረጃዎች",
-                totBal: "ሊወጣ የሚችል ሂሳብ",
+                totBal: "ጠቅላላ ሂሳብ",
                 todEarn: "የዛሬ ገቢ",
                 teamComm: "የቡድን ኮሚሽን",
                 totDep: "ጠቅላላ ገቢ ተደረገ",
@@ -1410,15 +1359,15 @@
                 process: "Progress",
                 completed: "Completed",
                 todayInc: "Today Income",
-                bal: "Withdrawable Balance",
+                bal: "Balance",
                 vidTask: "Video Task",
-                vidSub: "Watch videos to claim earnings (VIP 1+)",
+                vidSub: "Watch videos to claim earnings (VIP 1+) (2 tasks/day)",
                 teamPageTitle: "Team Statistics",
                 lblInvCode: "🔑 Your Invitation Code:",
                 lblInvLink: "🔗 Your Referral Link:",
                 copyLink: "Copy Link",
                 finTitle: "Financial Overview",
-                totBal: "Withdrawable Balance",
+                totBal: "Total Balance",
                 todEarn: "Today Earned",
                 teamComm: "Team Commission",
                 totDep: "Total Deposit",
@@ -1433,6 +1382,82 @@
                 modalDep: "Deposit Funds",
                 modalWith: "Withdraw Funds",
                 logout: "Logout"
+            },
+            ar: {
+                sub: "انضم إلى Free Birr وحقق دخلاً مستقرًا | إدارة الأمان الذكية",
+                dep: "إيداع",
+                with: "سحب",
+                tasks: "المهام",
+                team: "الفريق",
+                rewardHead: "المكافأة اليومية المجانية",
+                claimBtn: "احصل على 1 ETB",
+                vipTitle: "⭐ مستويات العضوية (VIP 1 - 18)",
+                taskHead: "مهام الفيديو اليومية",
+                uncompleted: "غير مكتمل",
+                process: "التقدم",
+                completed: "مكتمل",
+                todayInc: "دخل اليوم",
+                bal: "الرصيد",
+                vidTask: "مهمة الفيديو",
+                vidSub: "شاهد الفيديو لجمع الأرباح (VIP 1+)",
+                teamPageTitle: "معلومات الفريق",
+                lblInvCode: "🔑 رمز الدعوة الخاص بك:",
+                lblInvLink: "🔗 رابط الإحالة الخاص بك:",
+                copyLink: "نسخ الرابط",
+                finTitle: "الملخص المالي",
+                totBal: "إجمالي الرصيد",
+                todEarn: "أرباح اليوم",
+                teamComm: "عمولة الفريق",
+                totDep: "إجمالي الإيداع",
+                totWith: "إجمالي السحوبات",
+                menuBank: "بطاقة الحساب البنكي",
+                menuPwd: "تغيير كلمة المرور",
+                menuInvite: "دعوة الأصدقاء",
+                navHome: "الرئيسية",
+                navTask: "المهام",
+                navTeam: "الفريق",
+                navMe: "حسابي",
+                modalDep: "إيداع الأموال",
+                modalWith: "سحب الأموال",
+                logout: "تسجيل الخروج"
+            },
+            zh: {
+                sub: "加入 Free Birr，建立稳定收入 | 智能安全管理",
+                dep: "充值",
+                with: "提现",
+                tasks: "任务",
+                team: "团队",
+                rewardHead: "每日免费奖励",
+                claimBtn: "领取 1 ETB",
+                vipTitle: "⭐ VIP 会员等级 (VIP 1 - 18)",
+                taskHead: "每日视频任务",
+                uncompleted: "未完成",
+                process: "进度",
+                completed: "已完成",
+                todayInc: "今日收益",
+                bal: "账户余额",
+                vidTask: "视频任务",
+                vidSub: "观看视频获取收益 (VIP 1+)",
+                teamPageTitle: "团队信息",
+                lblInvCode: "🔑 您的邀请码:",
+                lblInvLink: "🔗 您的推广链接:",
+                copyLink: "复制链接",
+                finTitle: "财务概览",
+                totBal: "总余额",
+                todEarn: "今日收益",
+                teamComm: "团队佣金",
+                totDep: "累计充值",
+                totWith: "累计提现",
+                menuBank: "银行卡信息",
+                menuPwd: "修改密码",
+                menuInvite: "邀请好友",
+                navHome: "首页",
+                navTask: "任务",
+                navTeam: "团队",
+                navMe: "我的",
+                modalDep: "充值",
+                modalWith: "提现",
+                logout: "退出登录"
             }
         };
 
@@ -1458,9 +1483,7 @@
                 password: DEFAULT_ADMIN_PASS, 
                 inviteCode: 'FREEBIRR-9999',
                 referredBy: 'Direct',
-                withdrawableBalance: 0.00,
-                depositBalance: 0.00,
-                frozenBalance: 0.00,
+                balance: 0.00, 
                 vip: 0, 
                 approvedVips: [],
                 purchasedVips: [],
@@ -1487,10 +1510,6 @@
         let depositRequests = JSON.parse(localStorage.getItem('depositRequests')) || [];
         let withdrawRequests = JSON.parse(localStorage.getItem('withdrawRequests')) || [];
 
-        // Admin Request Polling state to sound alert on new requests
-        let lastDepCount = depositRequests.filter(r => r.status === 'pending').length;
-        let lastWithCount = withdrawRequests.filter(r => r.status === 'pending').length;
-
         function checkDailyResetForUser(user) {
             const todayStr = getTodayDateString();
             if (!user.lastResetDate || user.lastResetDate !== todayStr) {
@@ -1510,9 +1529,7 @@
                     password: userPassword,
                     inviteCode: userInviteCode,
                     referredBy: userReferredBy || 'Direct',
-                    withdrawableBalance: 0.00,
-                    depositBalance: 0.00,
-                    frozenBalance: 0.00,
+                    balance: 0.00,
                     vip: 0,
                     approvedVips: [],
                     purchasedVips: [],
@@ -1530,9 +1547,6 @@
                 membersList.push(user);
                 saveMembersList();
             }
-            if(user.withdrawableBalance === undefined) user.withdrawableBalance = 0.00;
-            if(user.depositBalance === undefined) user.depositBalance = 0.00;
-            if(user.frozenBalance === undefined) user.frozenBalance = 0.00;
             if(!user.usedRedeemCodes) user.usedRedeemCodes = [];
             if(!user.approvedVips) user.approvedVips = [];
             if(!user.purchasedVips) user.purchasedVips = [];
@@ -1558,8 +1572,17 @@
             renderAdminTables();
         }
 
-        // Active State
+        // Active Proxy State
         let currentUser = getCurrentUser();
+        let userBalance = currentUser.balance || 0.00;
+        let currentVip = currentUser.vip || 0;
+        let completedTasks = currentUser.completedTasks || 0;
+        let todayEarned = currentUser.todayEarned || 0.00;
+        let totalDepositAmt = currentUser.deposit || 0.00;
+        let totalWithdrawnAmt = currentUser.withdraw || 0.00;
+        let teamCommissionAmt = currentUser.teamCommission || 0.00;
+        let lastRewardClaimDate = currentUser.lastRewardClaimDate || "";
+        let rewardStreak = currentUser.rewardStreak || 0;
 
         // Dynamic System Bank Details
         let sysCbeHolder = localStorage.getItem('sysCbeHolder') || 'Chalachew Haymanot';
@@ -1568,29 +1591,24 @@
         let sysTeleAcc = localStorage.getItem('sysTeleAcc') || '0924099009';
 
         let currentSelectedLevel = 1;
+        let isTaskRunning = false;
 
         window.addEventListener('load', () => {
             updateClock();
             setInterval(updateClock, 1000);
             
             setInterval(() => {
-                const newDepReqs = JSON.parse(localStorage.getItem('depositRequests')) || [];
-                const newWithReqs = JSON.parse(localStorage.getItem('withdrawRequests')) || [];
-                
-                const curDepCount = newDepReqs.filter(r => r.status === 'pending').length;
-                const curWithCount = newWithReqs.filter(r => r.status === 'pending').length;
-
-                // Sound notification when a new pending deposit or withdrawal arrives
-                if (curDepCount > lastDepCount || curWithCount > lastWithCount) {
-                    playNotificationSound();
-                }
-                lastDepCount = curDepCount;
-                lastWithCount = curWithCount;
-
-                depositRequests = newDepReqs;
-                withdrawRequests = newWithReqs;
+                depositRequests = JSON.parse(localStorage.getItem('depositRequests')) || [];
+                withdrawRequests = JSON.parse(localStorage.getItem('withdrawRequests')) || [];
                 membersList = JSON.parse(localStorage.getItem('membersList')) || [];
                 currentUser = getCurrentUser();
+                userBalance = currentUser.balance;
+                currentVip = currentUser.vip;
+                completedTasks = currentUser.completedTasks;
+                todayEarned = currentUser.todayEarned;
+                totalDepositAmt = currentUser.deposit;
+                totalWithdrawnAmt = currentUser.withdraw;
+                teamCommissionAmt = currentUser.teamCommission;
                 
                 updateTaskDashboardUI();
                 renderAdminTables();
@@ -1619,6 +1637,10 @@
             const todayStr = getTodayDateString();
             if (currentUser && currentUser.lastResetDate !== todayStr) {
                 checkDailyResetForUser(currentUser);
+                userBalance = currentUser.balance;
+                currentVip = currentUser.vip;
+                completedTasks = currentUser.completedTasks;
+                todayEarned = currentUser.todayEarned;
                 checkDailyRewardStatus();
                 updateTaskDashboardUI();
             }
@@ -1654,6 +1676,7 @@
             setTxt('txt-lbl-invlink', dict.lblInvLink);
             setTxt('txt-copy-link', dict.copyLink);
             setTxt('txt-fin-title', dict.finTitle);
+            setTxt('txt-tot-bal', dict.totBal);
             setTxt('txt-tod-earn', dict.todEarn);
             setTxt('txt-team-comm', dict.teamComm);
             setTxt('txt-tot-dep', dict.totDep);
@@ -1711,6 +1734,16 @@
         }
 
         function syncUserToDatabase() {
+            currentUser.balance = userBalance;
+            currentUser.vip = currentVip;
+            currentUser.completedTasks = completedTasks;
+            currentUser.todayEarned = todayEarned;
+            currentUser.deposit = totalDepositAmt;
+            currentUser.withdraw = totalWithdrawnAmt;
+            currentUser.teamCommission = teamCommissionAmt;
+            currentUser.lastRewardClaimDate = lastRewardClaimDate;
+            currentUser.rewardStreak = rewardStreak;
+
             let idx = membersList.findIndex(m => m.phone === userPhone);
             if (idx !== -1) {
                 membersList[idx] = currentUser;
@@ -1738,6 +1771,12 @@
                 localStorage.setItem('userReferredBy', userReferredBy);
 
                 currentUser = getCurrentUser();
+                userBalance = currentUser.balance || 0;
+                currentVip = currentUser.vip || 0;
+                completedTasks = currentUser.completedTasks || 0;
+                todayEarned = currentUser.todayEarned || 0;
+                totalDepositAmt = currentUser.deposit || 0;
+                totalWithdrawnAmt = currentUser.withdraw || 0;
 
                 checkAuthStatus();
                 renderVIPs();
@@ -1773,9 +1812,7 @@
                 password: pass,
                 inviteCode: newCode,
                 referredBy: refCode ? refCode : 'Direct',
-                withdrawableBalance: 0.00,
-                depositBalance: 0.00,
-                frozenBalance: 0.00,
+                balance: 0.00,
                 vip: 0,
                 approvedVips: [],
                 purchasedVips: [],
@@ -1807,6 +1844,12 @@
             localStorage.setItem('userReferredBy', userReferredBy);
 
             currentUser = newUser;
+            userBalance = 0;
+            currentVip = 0;
+            completedTasks = 0;
+            todayEarned = 0;
+            totalDepositAmt = 0;
+            totalWithdrawnAmt = 0;
 
             checkAuthStatus();
             renderVIPs();
@@ -1923,382 +1966,487 @@
             localStorage.setItem('sysTeleAcc', sysTeleAcc);
 
             updateSystemBankDisplay();
-            alert("የሲስተም ባንክ መረጃዎች በተሳካ ሁኔታ ተቀይረዋል!");
+            alert("የባንክ መረጃዎች በተሳካ ሁኔታ ተቀይረዋል!");
         }
 
+        function checkDailyRewardStatus() {
+            const todayStr = getTodayDateString();
+            const claimBtn = document.getElementById('claimRewardBtn');
+            const rewardSub = document.getElementById('dailyRewardSub');
+            if (!claimBtn) return;
+
+            if (currentUser.lastRewardClaimDate === todayStr) {
+                claimBtn.disabled = true;
+                claimBtn.textContent = "የዛሬው ተወስዷል (Claimed)";
+                if(rewardSub) rewardSub.textContent = "የዛሬውን ቦነስ ወስደዋል! ነገ ተመልሰው ይውሰዱ።";
+            } else {
+                claimBtn.disabled = false;
+                claimBtn.textContent = "1 ETB ውሰድ";
+                if(rewardSub) rewardSub.textContent = `በየቀኑ ነፃ ስጦታዎን ይውሰዱ (Day ${rewardStreak + 1})`;
+            }
+        }
+
+        function claimDailyReward() {
+            const todayStr = getTodayDateString();
+            if (currentUser.lastRewardClaimDate === todayStr) {
+                alert("የዛሬውን ቦነስ አስቀድመው ወስደዋል!");
+                return;
+            }
+            currentUser.lastRewardClaimDate = todayStr;
+            rewardStreak += 1;
+            currentUser.rewardStreak = rewardStreak;
+            userBalance += 1;
+            currentUser.balance = userBalance;
+            syncUserToDatabase();
+            checkDailyRewardStatus();
+            updateTaskDashboardUI();
+            alert("🎉 እንኳን ደስ አለዎት! 1 ETB ቦነስ ተቀብለዋል።");
+        }
+
+        // TASK SYSTEM (Max 2 tasks/day, reset at 00:00, Completed badge)
         function updateTaskDashboardUI() {
             const user = getCurrentUser();
+            const maxTasks = 2; // Fixed strictly at 2 tasks per day
             const completed = user.completedTasks || 0;
-            const remaining = Math.max(0, 2 - completed);
-            const progress = (completed / 2) * 100;
+            const uncompleted = Math.max(0, maxTasks - completed);
+            const progress = Math.min(100, Math.round((completed / maxTasks) * 100));
 
-            document.getElementById('uncompletedCount').textContent = remaining;
             document.getElementById('completedCount').textContent = completed;
-            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
-            document.getElementById('todayIncome').textContent = `ETB ${(user.todayEarned || 0).toFixed(2)}`;
-            document.getElementById('taskBalance').textContent = `ETB ${(user.withdrawableBalance || 0).toFixed(2)}`;
+            document.getElementById('uncompletedCount').textContent = uncompleted;
+            document.getElementById('progressPercent').textContent = progress + '%';
 
-            document.getElementById('gridWithdrawableBalance').textContent = `ETB ${(user.withdrawableBalance || 0).toFixed(2)}`;
-            document.getElementById('gridFrozenBalance').textContent = `ETB ${(user.frozenBalance || 0).toFixed(2)}`;
+            document.getElementById('todayIncome').textContent = `ETB ${(user.todayEarned || 0).toFixed(2)}`;
+            document.getElementById('taskBalance').textContent = `ETB ${(user.balance || 0).toFixed(2)}`;
+            document.getElementById('gridTotalBalance').textContent = `ETB ${(user.balance || 0).toFixed(2)}`;
+            document.getElementById('balanceDisplay').textContent = `ETB ${(user.balance || 0).toFixed(2)}`;
             document.getElementById('gridTodayEarned').textContent = `ETB ${(user.todayEarned || 0).toFixed(2)}`;
             document.getElementById('gridTeamCommission').textContent = `ETB ${(user.teamCommission || 0).toFixed(2)}`;
             document.getElementById('gridTotalDeposit').textContent = `ETB ${(user.deposit || 0).toFixed(2)}`;
             document.getElementById('gridTotalWithdrawn').textContent = `ETB ${(user.withdraw || 0).toFixed(2)}`;
 
+            document.getElementById('userPhoneDisplay').textContent = user.phone ? `+251 ${user.phone}` : '+251 ...';
+            document.getElementById('userUidDisplay').textContent = user.inviteCode ? user.inviteCode.replace('FREEBIRR-', '') : '100284';
             document.getElementById('userVipBadge').textContent = `VIP ${user.vip}`;
             document.getElementById('meVipBadge').textContent = `VIP ${user.vip}`;
-            document.getElementById('userPhoneDisplay').textContent = user.phone;
-            document.getElementById('userUidDisplay').textContent = user.inviteCode.replace('FREEBIRR-', '');
 
             const startBtn = document.getElementById('startTaskBtn');
-            if (user.vip === 0) {
-                document.getElementById('boxText').textContent = "ቪዲዮ ታስክ ለመስራት እባክዎን VIP ደረጃ ይግዙ!";
-                if (startBtn) startBtn.disabled = true;
-            } else if (remaining === 0) {
-                document.getElementById('boxText').textContent = "የዛሬዎቹን 2 ታስኮች በሙሉ አጠናቀዋል! ነገ ይመለሱ።";
-                if (startBtn) startBtn.disabled = true;
-            } else {
-                document.getElementById('boxText').textContent = "ታስክ ለመጀመር ከታች ቁልፉን ይጫኑ";
-                if (startBtn) startBtn.disabled = false;
+            const boxText = document.getElementById('boxText');
+
+            if (!isTaskRunning) {
+                if (user.vip === 0) {
+                    startBtn.disabled = true;
+                    startBtn.innerHTML = '<i class="fas fa-lock"></i> VIP 1+ ያስፈልጋል';
+                    boxText.textContent = 'ታስክ ለመስራት እባክዎን VIP 1 ወይም ከዚያ በላይ ይግዙ';
+                } else if (completed >= maxTasks) {
+                    startBtn.disabled = true;
+                    startBtn.innerHTML = '<i class="fas fa-check-circle"></i> Completed (የተጠናቀቀ)';
+                    boxText.textContent = 'የዛሬውን 2 ታስኮች በሙሉ አጠናቀዋል! በየ 0:00 Reset ይሆናል።';
+                } else {
+                    startBtn.disabled = false;
+                    startBtn.innerHTML = `<i class="fas fa-play"></i> ታስክ ጀምር (${completed + 1}/2)`;
+                    boxText.textContent = `ታስክ ${completed + 1}/2 ለመጀመር ከታች ቁልፉን ይጫኑ`;
+                }
             }
         }
 
-        let isTaskRunning = false;
         function runVideoTask() {
             const user = getCurrentUser();
             if (user.vip === 0) {
-                alert("ታስክ ለመስራት አስቀድመው VIP ደረጃ መግዛት አለብዎት!");
+                alert("ታስክ ለመስራት እባክዎን VIP 1 ወይም ከዚያ በላይ ደረጃ ይግዙ!");
                 return;
             }
             if (user.completedTasks >= 2) {
-                alert("የዛሬውን ዕለታዊ ታስክ ጨርሰዋል!");
+                alert("የዛሬውን 2 ታስኮች አጠናቀዋል! ነገ (በየ 0:00 Reset ሲሆን) ይመለሱ።");
                 return;
             }
             if (isTaskRunning) return;
 
             isTaskRunning = true;
             const startBtn = document.getElementById('startTaskBtn');
+            const timerDisplay = document.getElementById('taskTimerDisplay');
+            const boxText = document.getElementById('boxText');
+
             startBtn.disabled = true;
+            boxText.textContent = "ቪዲዮ በመመልከት ላይ... እባክዎን ይጠብቁ";
 
             let timeLeft = 10;
-            const timerDisplay = document.getElementById('taskTimerDisplay');
-            timerDisplay.textContent = `00:10`;
+            timerDisplay.textContent = `00:${timeLeft < 10 ? '0' + timeLeft : timeLeft}`;
 
             const interval = setInterval(() => {
                 timeLeft--;
-                timerDisplay.textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
+                timerDisplay.textContent = `00:${timeLeft < 10 ? '0' + timeLeft : timeLeft}`;
+
                 if (timeLeft <= 0) {
                     clearInterval(interval);
                     isTaskRunning = false;
 
-                    const vipData = vipList.find(v => v.level === user.vip) || { taskPrice: 50 };
-                    const reward = vipData.taskPrice;
+                    const currentVipObj = vipList.find(v => v.level === user.vip);
+                    const reward = currentVipObj ? currentVipObj.taskPrice : 50;
 
                     user.completedTasks = (user.completedTasks || 0) + 1;
                     user.todayEarned = (user.todayEarned || 0) + reward;
-                    
-                    // Task earnings go directly to withdrawableBalance
-                    user.withdrawableBalance = (user.withdrawableBalance || 0) + reward;
+                    user.balance = (user.balance || 0) + reward;
+
+                    currentUser = user;
+                    userBalance = user.balance;
+                    completedTasks = user.completedTasks;
+                    todayEarned = user.todayEarned;
 
                     syncUserToDatabase();
                     updateTaskDashboardUI();
 
-                    alert(`🎉 ታስክ ተጠናቋል! ${reward} ETB ወደ የሚወጣ ሂሳብዎ ተጨምሯል።`);
+                    alert(`🎉 Task Completed! ${reward} ETB ወደ ሂሳብዎ ተጨምሯል።`);
+                    timerDisplay.textContent = "00:10";
                 }
             }, 1000);
         }
 
-        function checkDailyRewardStatus() {
-            const user = getCurrentUser();
-            const todayStr = getTodayDateString();
-            const claimBtn = document.getElementById('claimRewardBtn');
-            const sub = document.getElementById('dailyRewardSub');
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
-            if (user.lastRewardClaimDate === todayStr) {
-                if (claimBtn) {
-                    claimBtn.disabled = true;
-                    claimBtn.innerHTML = `<span>የዛሬ ተወስዷል</span>`;
-                }
-                if (sub) sub.textContent = "የዛሬውን ቦነስ ወስደዋል! ነገ ድጋሚ ይመለሱ።";
-            } else {
-                if (claimBtn) {
-                    claimBtn.disabled = false;
-                    claimBtn.innerHTML = `<span id="txt-claim-btn">1 ETB ውሰድ</span>`;
-                }
-                if (sub) sub.textContent = `በየቀኑ ነፃ ስጦታዎን ይውሰዱ (Day ${(user.rewardStreak || 0) + 1})`;
-            }
+            document.getElementById(`tab-${tabName}`).classList.add('active-tab');
+            const navEl = document.getElementById(`nav-${tabName}`);
+            if (navEl) navEl.classList.add('active');
+
+            if (tabName === 'team') updateTeamUI();
+            if (tabName === 'task') updateTaskDashboardUI();
         }
 
-        function claimDailyReward() {
-            const user = getCurrentUser();
-            const todayStr = getTodayDateString();
+        function switchLevelTab(lvl) {
+            currentSelectedLevel = lvl;
+            document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tabLvl${lvl}`).classList.add('active');
+            document.getElementById('levelListTitle').textContent = `Level ${lvl} Members List`;
+            renderMemberList();
+        }
 
-            if (user.lastRewardClaimDate === todayStr) {
-                alert("የዛሬውን ነፃ ቦነስ አስቀድመው ወስደዋል!");
+        function updateTeamUI() {
+            const user = getCurrentUser();
+            document.getElementById('userInviteCode').textContent = user.inviteCode;
+            document.getElementById('userInviteLink').textContent = `https://free-birr.github.io/?ref=${user.inviteCode}`;
+
+            // Calculate level counts
+            let l1 = membersList.filter(m => m.referredBy === user.inviteCode);
+            let l2 = membersList.filter(m => l1.some(x => x.inviteCode === m.referredBy));
+            let l3 = membersList.filter(m => l2.some(x => x.inviteCode === m.referredBy));
+
+            document.getElementById('countLvl1').textContent = l1.length;
+            document.getElementById('countLvl2').textContent = l2.length;
+            document.getElementById('countLvl3').textContent = l3.length;
+
+            renderMemberList();
+        }
+
+        function renderMemberList() {
+            const container = document.getElementById('memberListContainer');
+            if(!container) return;
+            container.innerHTML = '';
+
+            const user = getCurrentUser();
+            let members = [];
+
+            let l1 = membersList.filter(m => m.referredBy === user.inviteCode);
+            let l2 = membersList.filter(m => l1.some(x => x.inviteCode === m.referredBy));
+            let l3 = membersList.filter(m => l2.some(x => x.inviteCode === m.referredBy));
+
+            if (currentSelectedLevel === 1) members = l1;
+            else if (currentSelectedLevel === 2) members = l2;
+            else if (currentSelectedLevel === 3) members = l3;
+
+            if (members.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:12px; padding:15px;">ምንም አባል አልተገኘም (No Members)</div>`;
                 return;
             }
 
-            user.lastRewardClaimDate = todayStr;
-            user.rewardStreak = (user.rewardStreak || 0) + 1;
-            
-            // Daily reward goes to withdrawableBalance
-            user.withdrawableBalance = (user.withdrawableBalance || 0) + 1.00;
-            user.todayEarned = (user.todayEarned || 0) + 1.00;
-
-            syncUserToDatabase();
-            checkDailyRewardStatus();
-            updateTaskDashboardUI();
-            alert("🎁 1 ETB ዕለታዊ ቦነስ ወደ የሚወጣ ሂሳብዎ ተጨምሯል!");
+            members.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>+251 ${m.phone}</strong>
+                        <div style="font-size:10px; color:#64748b;">VIP ${m.vip} | Reg: ${m.regDate || 'N/A'}</div>
+                    </div>
+                    <div>
+                        <span class="status-badge approved">Deposit: ${m.deposit} ETB</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
         }
 
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        }
+
+        function copyText(txt) {
+            navigator.clipboard.writeText(txt).then(() => {
+                alert("ተኮፒ አድርጓል (Copied): " + txt);
+            }).catch(() => {
+                alert("ኮፒ ተደርጓል: " + txt);
+            });
+        }
+
+        function openCustomerService() {
+            window.open('https://t.me/cryptopmt', '_blank');
+        }
+
+        // REDEEM CODE SYSTEM
         function submitRedeemCode() {
-            const input = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
-            if (!input) {
-                alert("እባክዎን Redeem code ያስገቡ!");
+            const codeVal = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
+            if (!codeVal) {
+                alert("እባክዎን Redeem Code ያስገቡ!");
                 return;
             }
 
-            const codeObj = redeemCodes.find(c => c.code === input);
-            if (!codeObj) {
-                alert("የተሳሳተ የ Redeem Code!");
+            let found = redeemCodes.find(r => r.code === codeVal);
+            if (!found) {
+                alert("የተሳሳተ ወይም የማይሰራ Redeem Code!");
                 return;
             }
 
-            if (codeObj.usedBy.length >= codeObj.maxUses) {
-                alert("ይህ Redeem Code የመጠቀሚያ ገደቡ አልቋል!");
-                return;
-            }
-
-            const user = getCurrentUser();
-            if (user.usedRedeemCodes && user.usedRedeemCodes.includes(input)) {
+            if (currentUser.usedRedeemCodes && currentUser.usedRedeemCodes.includes(codeVal)) {
                 alert("ይህንን Redeem Code አስቀድመው ተጠቅመውበታል!");
                 return;
             }
 
-            // Grant bonus directly to withdrawableBalance
-            user.withdrawableBalance = (user.withdrawableBalance || 0) + codeObj.amount;
-            user.usedRedeemCodes.push(input);
-            codeObj.usedBy.push(user.phone);
+            if (found.usedBy.length >= found.maxUses) {
+                alert("ይህ Code የሰው ብዛት ገደቡ አልቋል!");
+                return;
+            }
+
+            found.usedBy.push(currentUser.phone);
+            currentUser.usedRedeemCodes.push(codeVal);
+            userBalance += found.amount;
+            currentUser.balance = userBalance;
+
+            saveRedeemCodes();
+            syncUserToDatabase();
+            closeModals();
+            updateTaskDashboardUI();
+            alert(`🎉 ተሳክቷል! ${found.amount} ETB ቦነስ ተጨምሮልዎታል!`);
+        }
+
+        function createAdminRedeemCode() {
+            const name = document.getElementById('adminRedeemCodeName').value.trim().toUpperCase();
+            const amt = parseFloat(document.getElementById('adminRedeemAmount').value);
+            const max = parseInt(document.getElementById('adminRedeemMaxUses').value);
+
+            if (!name || isNaN(amt) || isNaN(max)) {
+                alert("እባክዎን ሁሉንም መረጃዎች በአግባቡ ይሙሉ!");
+                return;
+            }
+
+            if (redeemCodes.some(r => r.code === name)) {
+                alert("ይህ Code Name አስቀድሞ አለ!");
+                return;
+            }
+
+            redeemCodes.push({ code: name, amount: amt, maxUses: max, usedBy: [] });
+            saveRedeemCodes();
+            renderAdminRedeemTable();
+            alert("አዲስ Redeem Code ተፈጥሯል!");
+
+            document.getElementById('adminRedeemCodeName').value = '';
+            document.getElementById('adminRedeemAmount').value = '';
+            document.getElementById('adminRedeemMaxUses').value = '';
+        }
+
+        function deleteAdminRedeemCode(idx) {
+            if (confirm("እርግጠኛ ነዎት ይህንን Redeem code ማጥፋት ይፈልጋሉ?")) {
+                redeemCodes.splice(idx, 1);
+                saveRedeemCodes();
+                renderAdminRedeemTable();
+            }
+        }
+
+        function renderAdminRedeemTable() {
+            const tbody = document.getElementById('adminRedeemTable');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            redeemCodes.forEach((r, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${r.code}</strong></td>
+                    <td>${r.amount} ETB</td>
+                    <td>${r.usedBy.length}/${r.maxUses}</td>
+                    <td><button class="admin-btn-reject" onclick="deleteAdminRedeemCode(${idx})">Delete</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function submitPasswordChange() {
+            const oldP = document.getElementById('oldPasswordInput').value.trim();
+            const newP = document.getElementById('newPasswordInput').value.trim();
+            const confP = document.getElementById('confirmPasswordInput').value.trim();
+
+            if (oldP !== currentUser.password) {
+                alert("የድሮው ይለፍ ቃል የተሳሳተ ነው!");
+                return;
+            }
+            if (newP !== confP) {
+                alert("አዲሱ ይለፍ ቃል አይመሳሰልም!");
+                return;
+            }
+
+            currentUser.password = newP;
+            userPassword = newP;
+            localStorage.setItem('userPassword', newP);
+            syncUserToDatabase();
+            closeModals();
+            alert("ይለፍ ቃልዎ ተቀይሯል!");
+        }
+
+        function saveBankCardDetails() {
+            currentUser.cbeName = document.getElementById('cbeHolderName').value.trim();
+            currentUser.cbeAcc = document.getElementById('cbeAccNumber').value.trim();
+            currentUser.teleName = document.getElementById('telebirrHolderName').value.trim();
+            currentUser.teleAcc = document.getElementById('telebirrAccNumber').value.trim();
 
             syncUserToDatabase();
-            saveRedeemCodes();
-            updateTaskDashboardUI();
             closeModals();
-            alert(`🎉 እንኳን ደስ አለዎት! ${codeObj.amount} ETB ቦነስ ወደ የሚወጣ ሂሳብዎ ገቢ ሆኗል።`);
+            alert("የባንክ መረጃዎ ተመዝግቧል!");
         }
 
         function submitDeposit() {
             const level = parseInt(document.getElementById('depVipSelect').value);
-            const txId = document.getElementById('txId').value.trim();
+            const tx = document.getElementById('txId').value.trim();
 
-            if (!txId) {
+            if (!tx) {
                 alert("እባክዎን Transaction ID (TxID) ያስገቡ!");
                 return;
             }
 
-            const user = getCurrentUser();
-            const vipData = vipList.find(v => v.level === level);
-
-            const newReq = {
+            const vipObj = vipList.find(v => v.level === level);
+            const req = {
                 id: Date.now(),
-                phone: user.phone,
+                phone: currentUser.phone,
                 vipLevel: level,
-                amount: vipData.price,
-                txId: txId,
+                amount: vipObj ? vipObj.price : 1000,
+                txId: tx,
                 status: 'pending',
                 date: new Date().toLocaleString()
             };
 
-            depositRequests.push(newReq);
+            depositRequests.push(req);
             saveRequests();
-            
-            // Trigger sound notification for sound test / local admin aware
-            playNotificationSound();
-
             closeModals();
-            alert("📥 የ deposit ጥያቄዎ ለአድሚን ተልኳል! ፍተሻ ተደርጎ ወዲያውኑ VIP የሚነቃ ይሆናል።");
-        }
-
-        function submitWithdraw() {
-            const now = new Date();
-            const currentHour = now.getHours();
-            if (currentHour < 3 || currentHour >= 18) {
-                alert("⚠️ ማውጣት የሚቻለው ከጠዋቱ 3:00am - 6:00pm (03:00 - 18:00) ብቻ ነው!");
-                return;
-            }
-
-            const method = document.getElementById('withdrawMethod').value;
-            const name = document.getElementById('withdrawName').value.trim();
-            const acc = document.getElementById('withdrawAcc').value.trim();
-            const amt = parseFloat(document.getElementById('withdrawAmt').value);
-
-            if (!name || !acc || isNaN(amt)) {
-                alert("እባክዎን ሁሉንም የወጪ መረጃዎች በትክክል ይሙሉ!");
-                return;
-            }
-
-            if (amt < 200) {
-                alert("አነስተኛው የማውጫ መጠን 200 ETB ነው!");
-                return;
-            }
-
-            const user = getCurrentUser();
-
-            // STRICT REQUIREMENT: Only withdrawableBalance (Task, daily reward, referral, redeem code) can be withdrawn!
-            if (amt > user.withdrawableBalance) {
-                alert(`⚠️ ገንዘብ ማውጣት የሚቻለው ከ Task, Daily Reward, Referral reward እና Redeem Code የተገኘን ገቢ ብቻ ነው!\n\nሊወጣ የሚችል ቀሪ ሂሳብዎ: ETB ${user.withdrawableBalance.toFixed(2)}`);
-                return;
-            }
-
-            const fee = amt * 0.15;
-            const net = amt - fee;
-
-            // Deduct directly from withdrawableBalance
-            user.withdrawableBalance -= amt;
-            user.withdraw = (user.withdraw || 0) + amt;
-
-            const newReq = {
-                id: Date.now(),
-                phone: user.phone,
-                method: method,
-                name: name,
-                acc: acc,
-                grossAmount: amt,
-                netAmount: net,
-                status: 'pending',
-                date: new Date().toLocaleString()
-            };
-
-            withdrawRequests.push(newReq);
-            syncUserToDatabase();
-            saveRequests();
-
-            // Trigger sound notification
-            playNotificationSound();
-
-            updateTaskDashboardUI();
-            closeModals();
-            alert(`📤 የ ${amt} ETB የወጪ ጥያቄዎ ለአድሚን ተልኳል! በቅርብ ሰዓት ወደ ባንክዎ ገቢ ይደረጋል።`);
+            alert("የ Deposit ጥያቄዎ ለአድሚን ተልኳል። ሲረጋገጥ አካውንትዎ Upgrade ይሆናል።");
+            document.getElementById('txId').value = '';
         }
 
         function calculateWithdrawFee() {
             const amt = parseFloat(document.getElementById('withdrawAmt').value) || 0;
             const fee = amt * 0.15;
-            const net = Math.max(0, amt - fee);
+            const net = amt - fee;
 
             document.getElementById('feeAmount').textContent = `ETB ${fee.toFixed(2)}`;
-            document.getElementById('netAmount').textContent = `ETB ${net.toFixed(2)}`;
-            
-            const user = getCurrentUser();
-            document.getElementById('balanceDisplay').textContent = `ETB ${(user.withdrawableBalance || 0).toFixed(2)}`;
+            document.getElementById('netAmount').textContent = `ETB ${(net > 0 ? net : 0).toFixed(2)}`;
         }
 
-        // Admin Actions
-        function approveDeposit(id) {
-            const req = depositRequests.find(r => r.id === id);
-            if (!req) return;
+        function submitWithdraw() {
+            const amt = parseFloat(document.getElementById('withdrawAmt').value);
+            const method = document.getElementById('withdrawMethod').value;
+            const name = document.getElementById('withdrawName').value.trim();
+            const acc = document.getElementById('withdrawAcc').value.trim();
 
-            req.status = 'approved';
-            
-            let user = membersList.find(m => m.phone === req.phone);
-            if (user) {
-                user.deposit = (user.deposit || 0) + req.amount;
-                user.depositBalance = (user.depositBalance || 0) + req.amount;
-
-                // STRICT REQUIREMENT: Deposit money used for VIP level purchase is FROZEN!
-                if (req.vipLevel > user.vip) {
-                    user.vip = req.vipLevel;
-                    // Move deposit amount to frozen balance
-                    const freezeAmt = Math.min(user.depositBalance, req.amount);
-                    user.depositBalance -= freezeAmt;
-                    user.frozenBalance = (user.frozenBalance || 0) + freezeAmt;
-                }
-
-                // Commission Distro (15%, 3%, 2%) goes to Withdrawable Balance of referrers
-                distributeReferralCommissions(user, req.amount);
+            if (isNaN(amt) || amt < 200) {
+                alert("አነስተኛው የማውጫ መጠን 200 ETB ነው!");
+                return;
+            }
+            if (amt > userBalance) {
+                alert("በቂ ቀሪ ሂሳብ የሎትም!");
+                return;
+            }
+            if (!name || !acc) {
+                alert("እባክዎን የባንክ ስም እና አካውንት ቁጥር ይሙሉ!");
+                return;
             }
 
-            saveMembersList();
+            const req = {
+                id: Date.now(),
+                phone: currentUser.phone,
+                method: method,
+                name: name,
+                acc: acc,
+                grossAmount: amt,
+                fee: amt * 0.15,
+                netAmount: amt * 0.85,
+                status: 'pending',
+                date: new Date().toLocaleString()
+            };
+
+            userBalance -= amt;
+            currentUser.balance = userBalance;
+            syncUserToDatabase();
+
+            withdrawRequests.push(req);
             saveRequests();
-            alert("Deposit ጸድቋል! VIP ተነቅቷል፤ የተቀማጭ ገንዘቡም ተግዷል (Frozen)።");
+            closeModals();
+            updateTaskDashboardUI();
+            alert("የመውጣት ጥያቄዎ ተልኳል! በአጭር ጊዜ ውስጥ ይላክልዎታል።");
         }
 
-        function rejectDeposit(id) {
-            const req = depositRequests.find(r => r.id === id);
-            if (!req) return;
-            req.status = 'rejected';
-            saveRequests();
-            alert("Deposit ውድቅ ተደርጓል!");
-        }
+        function openRecordsModal() {
+            openModal('userRecordsModal');
 
-        function approveWithdraw(id) {
-            const req = withdrawRequests.find(r => r.id === id);
-            if (!req) return;
-            req.status = 'approved';
-            saveRequests();
-            alert("የወጪ ጥያቄው ጸድቋል!");
-        }
+            const depCont = document.getElementById('userDepositRecordsContainer');
+            const withCont = document.getElementById('userWithdrawRecordsContainer');
 
-        function rejectWithdraw(id) {
-            const req = withdrawRequests.find(r => r.id === id);
-            if (!req) return;
+            depCont.innerHTML = '';
+            withCont.innerHTML = '';
 
-            req.status = 'rejected';
-            let user = membersList.find(m => m.phone === req.phone);
-            if (user) {
-                // Return amount back to withdrawableBalance
-                user.withdrawableBalance = (user.withdrawableBalance || 0) + req.grossAmount;
-                user.withdraw = Math.max(0, (user.withdraw || 0) - req.grossAmount);
-                saveMembersList();
+            const myDeps = depositRequests.filter(r => r.phone === currentUser.phone);
+            const myWiths = withdrawRequests.filter(r => r.phone === currentUser.phone);
+
+            if (myDeps.length === 0) depCont.innerHTML = `<div style="font-size:11px; color:#94a3b8;">ምንም Deposit Record የለም</div>`;
+            else {
+                myDeps.forEach(r => {
+                    depCont.innerHTML += `
+                        <div class="history-item">
+                            <div>
+                                <strong>VIP ${r.vipLevel} (${r.amount} ETB)</strong>
+                                <div style="font-size:10px; color:#64748b;">TxID: ${r.txId} | ${r.date}</div>
+                            </div>
+                            <span class="status-badge ${r.status}">${r.status}</span>
+                        </div>
+                    `;
+                });
             }
 
-            saveRequests();
-            alert("የወጪ ጥያቄው ውድቅ ተደርጓል! ገንዘቡ ወደ አባሉ ሊወጣ የሚችል ሂሳብ ተመልሷል።");
-        }
-
-        function distributeReferralCommissions(user, depositAmount) {
-            if (!user.referredBy || user.referredBy === 'Direct') return;
-
-            // Level 1 Referrer
-            let l1User = membersList.find(m => m.inviteCode === user.referredBy);
-            if (l1User) {
-                const comm1 = depositAmount * 0.15;
-                l1User.teamCommission = (l1User.teamCommission || 0) + comm1;
-                // Commission is earned money -> goes to withdrawableBalance
-                l1User.withdrawableBalance = (l1User.withdrawableBalance || 0) + comm1;
-
-                // Level 2 Referrer
-                if (l1User.referredBy && l1User.referredBy !== 'Direct') {
-                    let l2User = membersList.find(m => m.inviteCode === l1User.referredBy);
-                    if (l2User) {
-                        const comm2 = depositAmount * 0.03;
-                        l2User.teamCommission = (l2User.teamCommission || 0) + comm2;
-                        l2User.withdrawableBalance = (l2User.withdrawableBalance || 0) + comm2;
-
-                        // Level 3 Referrer
-                        if (l2User.referredBy && l2User.referredBy !== 'Direct') {
-                            let l3User = membersList.find(m => m.inviteCode === l2User.referredBy);
-                            if (l3User) {
-                                const comm3 = depositAmount * 0.02;
-                                l3User.teamCommission = (l3User.teamCommission || 0) + comm3;
-                                l3User.withdrawableBalance = (l3User.withdrawableBalance || 0) + comm3;
-                            }
-                        }
-                    }
-                }
+            if (myWiths.length === 0) withCont.innerHTML = `<div style="font-size:11px; color:#94a3b8;">ምንም Withdrawal Record የለም</div>`;
+            else {
+                myWiths.forEach(r => {
+                    withCont.innerHTML += `
+                        <div class="history-item">
+                            <div>
+                                <strong>${r.netAmount} ETB (${r.method})</strong>
+                                <div style="font-size:10px; color:#64748b;">Acc: ${r.acc} | ${r.date}</div>
+                            </div>
+                            <span class="status-badge ${r.status}">${r.status}</span>
+                        </div>
+                    `;
+                });
             }
         }
 
+        // ADMIN FUNCTIONS
         function renderAdminTables() {
-            const depTbody = document.getElementById('adminDepositTable');
-            const withTbody = document.getElementById('adminWithdrawTable');
-            const memTbody = document.getElementById('adminMembersTable');
-            const selectEl = document.getElementById('adminEditUserSelect');
+            const depTable = document.getElementById('adminDepositTable');
+            const withTable = document.getElementById('adminWithdrawTable');
+            const memTable = document.getElementById('adminMembersTable');
+            const userSelect = document.getElementById('adminEditUserSelect');
 
-            if (depTbody) {
-                depTbody.innerHTML = '';
+            if (depTable) {
+                depTable.innerHTML = '';
                 depositRequests.forEach(r => {
-                    depTbody.innerHTML += `
+                    depTable.innerHTML += `
                         <tr>
                             <td>${r.phone}</td>
                             <td>VIP ${r.vipLevel} (${r.amount} ETB)</td>
@@ -2315,14 +2463,14 @@
                 });
             }
 
-            if (withTbody) {
-                withTbody.innerHTML = '';
+            if (withTable) {
+                withTable.innerHTML = '';
                 withdrawRequests.forEach(r => {
-                    withTbody.innerHTML += `
+                    withTable.innerHTML += `
                         <tr>
                             <td>${r.phone}</td>
-                            <td>${r.method} - ${r.acc}</td>
-                            <td>${r.netAmount.toFixed(2)} ETB</td>
+                            <td>${r.method} / ${r.acc}</td>
+                            <td>${r.netAmount} ETB</td>
                             <td><span class="status-badge ${r.status}">${r.status}</span></td>
                             <td>
                                 ${r.status === 'pending' ? `
@@ -2335,302 +2483,170 @@
                 });
             }
 
-            if (memTbody) {
-                memTbody.innerHTML = '';
-                if(selectEl) selectEl.innerHTML = '';
-
-                membersList.forEach((m, idx) => {
-                    memTbody.innerHTML += `
+            if (memTable) {
+                memTable.innerHTML = '';
+                membersList.forEach(m => {
+                    memTable.innerHTML += `
                         <tr>
-                            <td>${m.phone}</td>
+                            <td>+251 ${m.phone}</td>
                             <td>VIP ${m.vip}</td>
-                            <td>${m.referredBy}</td>
-                            <td>${(m.withdrawableBalance || 0).toFixed(2)} ETB</td>
-                            <td>${(m.frozenBalance || 0).toFixed(2)} ETB</td>
-                            <td>${(m.deposit || 0).toFixed(2)} ETB</td>
-                            <td>${(m.withdraw || 0).toFixed(2)} ETB</td>
-                            <td><button class="admin-btn-approve" onclick="selectMemberForEdit('${m.phone}')">Edit</button></td>
+                            <td>${m.referredBy || 'Direct'}</td>
+                            <td>${m.balance} ETB</td>
+                            <td>${m.deposit} ETB</td>
+                            <td>${m.withdraw} ETB</td>
+                            <td>
+                                <button class="admin-btn-reject" onclick="deleteMember('${m.phone}')">Delete</button>
+                            </td>
                         </tr>
                     `;
-
-                    if(selectEl) {
-                        const opt = document.createElement('option');
-                        opt.value = m.phone;
-                        opt.textContent = `${m.phone} (VIP ${m.vip})`;
-                        selectEl.appendChild(opt);
-                    }
                 });
+            }
 
-                if (selectEl && selectEl.value) {
-                    onAdminSelectMemberChange();
+            if (userSelect) {
+                const currentSel = userSelect.value;
+                userSelect.innerHTML = '<option value="">-- አባል ይምረጡ --</option>';
+                membersList.forEach(m => {
+                    userSelect.innerHTML += `<option value="${m.phone}">+251 ${m.phone} (VIP ${m.vip})</option>`;
+                });
+                if(currentSel) userSelect.value = currentSel;
+            }
+        }
+
+        function approveDeposit(reqId) {
+            let req = depositRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+
+            req.status = 'approved';
+
+            let user = membersList.find(m => m.phone === req.phone);
+            if (user) {
+                user.vip = Math.max(user.vip, req.vipLevel);
+                user.deposit = (user.deposit || 0) + req.amount;
+
+                // Commission distribution (L1: 15%, L2: 3%, L3: 2%)
+                if (user.referredBy && user.referredBy !== 'Direct') {
+                    let l1 = membersList.find(m => m.inviteCode === user.referredBy);
+                    if (l1) {
+                        let bonus1 = req.amount * 0.15;
+                        l1.balance = (l1.balance || 0) + bonus1;
+                        l1.teamCommission = (l1.teamCommission || 0) + bonus1;
+
+                        if (l1.referredBy && l1.referredBy !== 'Direct') {
+                            let l2 = membersList.find(m => m.inviteCode === l1.referredBy);
+                            if (l2) {
+                                let bonus2 = req.amount * 0.03;
+                                l2.balance = (l2.balance || 0) + bonus2;
+                                l2.teamCommission = (l2.teamCommission || 0) + bonus2;
+
+                                if (l2.referredBy && l2.referredBy !== 'Direct') {
+                                    let l3 = membersList.find(m => m.inviteCode === l2.referredBy);
+                                    if (l3) {
+                                        let bonus3 = req.amount * 0.02;
+                                        l3.balance = (l3.balance || 0) + bonus3;
+                                        l3.teamCommission = (l3.teamCommission || 0) + bonus3;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
+            saveMembersList();
+            saveRequests();
+            renderVIPs();
+            updateTaskDashboardUI();
+            alert("Deposit Approved!");
         }
 
-        function createAdminRedeemCode() {
-            const code = document.getElementById('adminRedeemCodeName').value.trim().toUpperCase();
-            const reward = parseFloat(document.getElementById('adminRedeemAmount').value);
-            const maxUses = parseInt(document.getElementById('adminRedeemMaxUses').value);
+        function rejectDeposit(reqId) {
+            let req = depositRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+            req.status = 'rejected';
+            saveRequests();
+            alert("Deposit Rejected!");
+        }
 
-            if (!code || isNaN(reward) || isNaN(maxUses)) {
-                alert("እባክዎን ሁሉንም የ Redeem code መረጃዎች በትክክል ይሙሉ!");
-                return;
+        function approveWithdraw(reqId) {
+            let req = withdrawRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+
+            req.status = 'approved';
+            let user = membersList.find(m => m.phone === req.phone);
+            if (user) {
+                user.withdraw = (user.withdraw || 0) + req.grossAmount;
             }
 
-            if (redeemCodes.some(c => c.code === code)) {
-                alert("ይህ የ Redeem code ስም አስቀድሞ አለ!");
-                return;
+            saveMembersList();
+            saveRequests();
+            alert("Withdrawal Approved!");
+        }
+
+        function rejectWithdraw(reqId) {
+            let req = withdrawRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+
+            req.status = 'rejected';
+            let user = membersList.find(m => m.phone === req.phone);
+            if (user) {
+                user.balance = (user.balance || 0) + req.grossAmount;
             }
 
-            redeemCodes.push({
-                code: code,
-                amount: reward,
-                maxUses: maxUses,
-                usedBy: []
-            });
-
-            saveRedeemCodes();
-            renderAdminRedeemTable();
-            alert(`🎉 አዲስ Redeem code (${code}) ተፈጥሯል!`);
-        }
-
-        function renderAdminRedeemTable() {
-            const tbody = document.getElementById('adminRedeemTable');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            redeemCodes.forEach((c, idx) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${c.code}</strong></td>
-                        <td>${c.amount} ETB</td>
-                        <td>${c.usedBy.length} / ${c.maxUses}</td>
-                        <td><button class="admin-btn-reject" onclick="deleteRedeemCode(${idx})">Delete</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteRedeemCode(index) {
-            redeemCodes.splice(index, 1);
-            saveRedeemCodes();
-            renderAdminRedeemTable();
-        }
-
-        function selectMemberForEdit(phone) {
-            const selectEl = document.getElementById('adminEditUserSelect');
-            if (selectEl) {
-                selectEl.value = phone;
-                onAdminSelectMemberChange();
-            }
+            saveMembersList();
+            saveRequests();
+            updateTaskDashboardUI();
+            alert("Withdrawal Rejected & Funds Refunded!");
         }
 
         function onAdminSelectMemberChange() {
             const phone = document.getElementById('adminEditUserSelect').value;
-            const m = membersList.find(x => x.phone === phone);
-            if (!m) return;
+            if (!phone) return;
 
-            document.getElementById('adminEditWithdrawableBalance').value = m.withdrawableBalance || 0;
-            document.getElementById('adminEditFrozenBalance').value = m.frozenBalance || 0;
-            document.getElementById('adminEditVipLevel').value = m.vip || 0;
-            document.getElementById('adminEditDeposit').value = m.deposit || 0;
-            document.getElementById('adminEditWithdraw').value = m.withdraw || 0;
-            document.getElementById('adminEditTodayEarned').value = m.todayEarned || 0;
-            document.getElementById('adminEditTeamComm').value = m.teamCommission || 0;
+            let user = membersList.find(m => m.phone === phone);
+            if (!user) return;
+
+            document.getElementById('adminEditBalance').value = user.balance || 0;
+            document.getElementById('adminEditVipLevel').value = user.vip || 0;
+            document.getElementById('adminEditDeposit').value = user.deposit || 0;
+            document.getElementById('adminEditWithdraw').value = user.withdraw || 0;
+            document.getElementById('adminEditTodayEarned').value = user.todayEarned || 0;
+            document.getElementById('adminEditTeamComm').value = user.teamCommission || 0;
         }
 
         function saveMemberFinancialRecord() {
             const phone = document.getElementById('adminEditUserSelect').value;
-            let m = membersList.find(x => x.phone === phone);
-            if (!m) return;
+            if (!phone) {
+                alert("እባክዎን አባል ይምረጡ!");
+                return;
+            }
 
-            m.withdrawableBalance = parseFloat(document.getElementById('adminEditWithdrawableBalance').value) || 0;
-            m.frozenBalance = parseFloat(document.getElementById('adminEditFrozenBalance').value) || 0;
-            m.vip = parseInt(document.getElementById('adminEditVipLevel').value) || 0;
-            m.deposit = parseFloat(document.getElementById('adminEditDeposit').value) || 0;
-            m.withdraw = parseFloat(document.getElementById('adminEditWithdraw').value) || 0;
-            m.todayEarned = parseFloat(document.getElementById('adminEditTodayEarned').value) || 0;
-            m.teamCommission = parseFloat(document.getElementById('adminEditTeamComm').value) || 0;
+            let user = membersList.find(m => m.phone === phone);
+            if (!user) return;
+
+            user.balance = parseFloat(document.getElementById('adminEditBalance').value) || 0;
+            user.vip = parseInt(document.getElementById('adminEditVipLevel').value) || 0;
+            user.deposit = parseFloat(document.getElementById('adminEditDeposit').value) || 0;
+            user.withdraw = parseFloat(document.getElementById('adminEditWithdraw').value) || 0;
+            user.todayEarned = parseFloat(document.getElementById('adminEditTodayEarned').value) || 0;
+            user.teamCommission = parseFloat(document.getElementById('adminEditTeamComm').value) || 0;
 
             saveMembersList();
             renderAdminTables();
+            renderVIPs();
             updateTaskDashboardUI();
-            alert(`የአባል ${phone} የፋይናንስ መረጃ በተሳካ ሁኔታ ተስተካክሏል!`);
+            alert("የአባሉ የፋይናንስ መረጃዎች ተቀይረዋል!");
         }
 
-        function updateTeamUI() {
-            const user = getCurrentUser();
-            document.getElementById('userInviteCode').textContent = user.inviteCode;
-            document.getElementById('userInviteLink').textContent = `https://free-birr.github.io/?ref=${user.inviteCode}`;
-
-            const lvl1 = membersList.filter(m => m.referredBy === user.inviteCode);
-            document.getElementById('countLvl1').textContent = lvl1.length;
-
-            let lvl2Count = 0;
-            lvl1.forEach(l1 => {
-                const sub = membersList.filter(m => m.referredBy === l1.inviteCode);
-                lvl2Count += sub.length;
-            });
-            document.getElementById('countLvl2').textContent = lvl2Count;
-
-            let lvl3Count = 0;
-            lvl1.forEach(l1 => {
-                const sub1 = membersList.filter(m => m.referredBy === l1.inviteCode);
-                sub1.forEach(l2 => {
-                    const sub2 = membersList.filter(m => m.referredBy === l2.inviteCode);
-                    lvl3Count += sub2.length;
-                });
-            });
-            document.getElementById('countLvl3').textContent = lvl3Count;
-
-            renderMemberListForLevel(currentSelectedLevel);
-        }
-
-        function switchLevelTab(lvl) {
-            currentSelectedLevel = lvl;
-            document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(`tabLvl${lvl}`).classList.add('active');
-            document.getElementById('levelListTitle').textContent = `Level ${lvl} Members List`;
-            renderMemberListForLevel(lvl);
-        }
-
-        function renderMemberListForLevel(lvl) {
-            const user = getCurrentUser();
-            const container = document.getElementById('memberListContainer');
-            if(!container) return;
-            container.innerHTML = '';
-
-            let list = [];
-            const lvl1 = membersList.filter(m => m.referredBy === user.inviteCode);
-
-            if (lvl === 1) {
-                list = lvl1;
-            } else if (lvl === 2) {
-                lvl1.forEach(l1 => {
-                    const sub = membersList.filter(m => m.referredBy === l1.inviteCode);
-                    list = list.concat(sub);
-                });
-            } else if (lvl === 3) {
-                lvl1.forEach(l1 => {
-                    const sub1 = membersList.filter(m => m.referredBy === l1.inviteCode);
-                    sub1.forEach(l2 => {
-                        const sub2 = membersList.filter(m => m.referredBy === l2.inviteCode);
-                        list = list.concat(sub2);
-                    });
-                });
-            }
-
-            if (list.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:12px; padding:15px;">ምንም የተመዘገበ አባል የለም</div>`;
+        function deleteMember(phone) {
+            if (phone === DEFAULT_ADMIN_PHONE) {
+                alert("Main Admin ን ማጥፋት አይችሉም!");
                 return;
             }
-
-            list.forEach(m => {
-                container.innerHTML += `
-                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
-                        <div>
-                            <strong>${m.phone}</strong>
-                            <div style="font-size:10px; color:#64748b;">VIP ${m.vip} | Reg: ${m.regDate || 'N/A'}</div>
-                        </div>
-                        <div style="font-weight:bold; color:#ea580c;">
-                            ${(m.deposit || 0).toFixed(2)} ETB
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function openRecordsModal() {
-            const user = getCurrentUser();
-            const depContainer = document.getElementById('userDepositRecordsContainer');
-            const withContainer = document.getElementById('userWithdrawRecordsContainer');
-
-            const myDeposits = depositRequests.filter(r => r.phone === user.phone);
-            const myWithdraws = withdrawRequests.filter(r => r.phone === user.phone);
-
-            depContainer.innerHTML = myDeposits.length ? '' : '<div style="font-size:11px; color:#94a3b8;">ምንም የdeposit ታሪክ የለም</div>';
-            myDeposits.forEach(r => {
-                depContainer.innerHTML += `
-                    <div class="history-item">
-                        <div>
-                            <strong>VIP ${r.vipLevel} (${r.amount} ETB)</strong>
-                            <div style="font-size:10px; color:#64748b;">TxID: ${r.txId} | ${r.date}</div>
-                        </div>
-                        <span class="status-badge ${r.status}">${r.status}</span>
-                    </div>
-                `;
-            });
-
-            withContainer.innerHTML = myWithdraws.length ? '' : '<div style="font-size:11px; color:#94a3b8;">ምንም የወጪ ታሪክ የለም</div>';
-            myWithdraws.forEach(r => {
-                withContainer.innerHTML += `
-                    <div class="history-item">
-                        <div>
-                            <strong>${r.grossAmount} ETB (${r.method})</strong>
-                            <div style="font-size:10px; color:#64748b;">Net: ${r.netAmount.toFixed(2)} ETB | ${r.date}</div>
-                        </div>
-                        <span class="status-badge ${r.status}">${r.status}</span>
-                    </div>
-                `;
-            });
-
-            openModal('userRecordsModal');
-        }
-
-        function submitPasswordChange() {
-            const oldP = document.getElementById('oldPasswordInput').value.trim();
-            const newP = document.getElementById('newPasswordInput').value.trim();
-            const confP = document.getElementById('confirmPasswordInput').value.trim();
-
-            const user = getCurrentUser();
-            if (oldP !== user.password) {
-                alert("የድሮው ይለፍ ቃል የተሳሳተ ነው!");
-                return;
+            if (confirm(`እርግጠኛ ነዎት +251 ${phone} ከአባልነት ማጥፋት ይፈልጋሉ?`)) {
+                membersList = membersList.filter(m => m.phone !== phone);
+                saveMembersList();
+                renderAdminTables();
             }
-            if (newP !== confP) {
-                alert("አዲሱ ይለፍ ቃል አይመሳሰልም!");
-                return;
-            }
-
-            user.password = newP;
-            userPassword = newP;
-            localStorage.setItem('userPassword', newP);
-            syncUserToDatabase();
-            closeModals();
-            alert("ይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል!");
-        }
-
-        function saveBankCardDetails() {
-            alert("የባንክ መረጃዎችዎ በደህና ተመዝግበዋል!");
-            closeModals();
-        }
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-            document.getElementById(`tab-${tabName}`).classList.add('active-tab');
-            document.getElementById(`nav-${tabName}`).classList.add('active');
-
-            if (tabName === 'task') updateTaskDashboardUI();
-            if (tabName === 'team') updateTeamUI();
-        }
-
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-        }
-
-        function closeModals() {
-            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-        }
-
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert("ተኮፒ አድርጓል: " + text);
-            });
-        }
-
-        function openCustomerService() {
-            window.open('https://t.me/cryptopmt', '_blank');
         }
     </script>
 </body>
