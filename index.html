@@ -1,0 +1,2683 @@
+<!DOCTYPE html>
+<html lang="am" id="htmlTag" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREE BIRR VIP - Ultimate Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-orange: #f97316;
+            --dark-orange: #ea580c;
+            --bg-light: #f8fafc;
+            --card-dark: #111827;
+            --text-dark: #0f172a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-light); padding-bottom: 80px; color: var(--text-dark); }
+
+        /* Realtime Floating Admin Sound & Banner Alert */
+        #adminRealtimeAlertContainer {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 480px;
+            z-index: 99999;
+            display: none;
+            animation: pulseBanner 0.8s infinite alternate;
+        }
+        @keyframes pulseBanner {
+            0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.7); }
+            100% { box-shadow: 0 0 25px rgba(239, 68, 68, 1); }
+        }
+        .admin-alert-card {
+            background: #0f172a;
+            color: #ffffff;
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .admin-alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fca5a5;
+            margin-bottom: 8px;
+        }
+        .admin-alert-body {
+            font-size: 13px;
+            color: #e2e8f0;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .admin-alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .admin-alert-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+            color: white;
+            text-align: center;
+        }
+        .btn-approve-fast { background: #10b981; }
+        .btn-reject-fast { background: #ef4444; }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-badge.pending { background: #fef3c7; color: #d97706; }
+        .status-badge.approved { background: #dcfce7; color: #15803d; }
+        .status-badge.rejected { background: #fee2e2; color: #b91c1c; }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: var(--dark-orange);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .lang-select {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 12px;
+            outline: none;
+            cursor: pointer;
+        }
+        .lang-select option { color: #000; }
+
+        /* RSS News Feed */
+        .rss-ticker {
+            background: #1e293b;
+            color: #fbbf24;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .rss-ticker-title {
+            background: #f97316;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-right: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .rss-ticker-content {
+            display: inline-block;
+            animation: marquee 18s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Tab Content Control */
+        .tab-content { display: none; }
+        .tab-content.active-tab { display: block; }
+
+        /* Header Layout (Home) */
+        .header-main {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 20px 15px 30px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            text-align: center;
+        }
+
+        .header-title { font-size: 24px; font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .header-sub { font-size: 12px; opacity: 0.9; margin-bottom: 15px; }
+
+        .action-btns { display: flex; gap: 10px; justify-content: center; }
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .btn-deposit { background: #fff3e0; color: #d97706; }
+        .btn-withdraw { background: #10b981; color: white; }
+
+        /* Daily Reward Box */
+        .daily-reward-box {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+        .daily-reward-title { font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .daily-reward-sub { font-size: 11px; opacity: 0.9; margin-top: 2px; }
+        .btn-claim-reward {
+            background: #ffffff;
+            color: #059669;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        .btn-claim-reward:disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Container & Grid */
+        .container { padding: 0 15px; margin-top: -15px; }
+        .quick-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .quick-card {
+            background: white;
+            padding: 15px 10px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
+            cursor: pointer;
+        }
+        .quick-card i { font-size: 22px; color: var(--primary-orange); display: block; margin-bottom: 5px; }
+
+        /* VIP List */
+        .section-title { font-size: 15px; font-weight: bold; margin: 15px 0 10px; color: #334155; display: flex; justify-content: space-between; align-items: center; }
+        .vip-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            border: 1px solid #f1f5f9;
+        }
+        .vip-badge {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            min-width: 65px;
+            text-align: center;
+        }
+        .vip-card.coming-soon {
+            opacity: 0.85;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+        }
+        .vip-card.coming-soon .vip-badge { background: #64748b; }
+        .vip-details { flex: 1; margin: 0 12px; font-size: 11px; color: #64748b; }
+        .vip-details strong { color: #0f172a; }
+        .vip-btn {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Task Page Header */
+        .task-header {
+            background: linear-gradient(135deg, #ea580c, #f97316);
+            color: white;
+            padding: 25px 15px 40px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            text-align: center;
+        }
+        .task-header h2 { font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+        
+        .task-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr 1fr;
+            gap: 8px;
+            align-items: center;
+        }
+        .stat-card-white {
+            background: white;
+            border-radius: 16px;
+            padding: 12px 5px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            font-size: 16px;
+        }
+        .stat-icon.orange { border: 2px solid #f97316; color: #f97316; }
+        .stat-icon.green { border: 2px solid #10b981; color: #10b981; }
+
+        .stat-num { font-size: 20px; font-weight: bold; color: #ea580c; }
+        .stat-label { font-size: 10px; color: #ea580c; font-weight: 600; }
+
+        .circle-progress {
+            background: rgba(255,255,255,0.25);
+            border: 4px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .circle-num { font-size: 22px; font-weight: 800; }
+        .circle-label { font-size: 11px; }
+
+        /* Income Boxes */
+        .income-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: -20px 15px 15px;
+        }
+        .income-card {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .income-title { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: 600; }
+        .income-val { font-size: 15px; font-weight: 800; color: #f97316; }
+
+        /* Video Task Main Card */
+        .video-task-card {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 0 15px 20px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .video-task-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .video-task-header i { color: #ea580c; font-size: 22px; }
+        .video-task-sub { font-size: 11px; color: #64748b; margin-bottom: 12px; }
+
+        .task-display-box {
+            background: #0d131d;
+            border-radius: 14px;
+            padding: 20px 15px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .box-instruction { font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+        .timer-text { font-size: 32px; font-weight: 800; color: #38bdf8; margin-bottom: 15px; }
+        .btn-start-task {
+            background: linear-gradient(90deg, #ea580c, #f97316);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Generic Card */
+        .page-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* TEAM PAGE STYLES */
+        .invite-box {
+            background: #fff7ed;
+            border: 1px dashed var(--primary-orange);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .invite-code-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #fed7aa;
+            margin-top: 6px;
+            font-weight: bold;
+            color: #c2410c;
+        }
+        .team-levels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .level-tab {
+            background: #f1f5f9;
+            padding: 10px 5px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+        .level-tab.active {
+            background: white;
+            border-color: var(--primary-orange);
+            box-shadow: 0 2px 6px rgba(249, 115, 22, 0.15);
+        }
+        .level-tab-title { font-size: 11px; color: #64748b; font-weight: bold; }
+        .level-tab-count { font-size: 16px; font-weight: 800; color: var(--primary-orange); margin-top: 2px; }
+
+        /* ME PAGE STYLES */
+        .profile-header {
+            background: linear-gradient(135deg, #ea580c, #f97316);
+            color: white;
+            padding: 25px 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        .avatar-box {
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .user-phone { font-size: 16px; font-weight: bold; }
+        .user-uid-box {
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 3px;
+        }
+        .user-vip-pill {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        /* FINANCIAL GRID STYLES */
+        .fin-grid-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #334155;
+            margin: 15px 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .fin-card {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid #f1f5f9;
+        }
+        .fin-card.highlight-withdrawable {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+            border-color: #86efac;
+        }
+        .fin-card.highlight-deposit {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #fff7ed, #ffedd5);
+            border-color: #fed7aa;
+        }
+        .fin-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #fff3e0;
+            color: #f97316;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .fin-icon.green { background: #dcfce7; color: #10b981; }
+        .fin-icon.blue { background: #e0f2fe; color: #0284c7; }
+        .fin-icon.purple { background: #f3e8ff; color: #a855f7; }
+        .fin-icon.red { background: #ffe4e6; color: #f43f5e; }
+
+        .fin-info { display: flex; flex-direction: column; }
+        .fin-label { font-size: 10px; color: #64748b; font-weight: 600; }
+        .fin-value { font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 1px; }
+
+        .menu-list {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f1f5f9;
+            margin-top: 15px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 15px;
+            border-bottom: 1px solid #f8fafc;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-left { display: flex; align-items: center; gap: 12px; }
+        .menu-left i { font-size: 16px; width: 20px; text-align: center; }
+        
+        .icon-blue { color: #0284c7; }
+        .icon-orange { color: #f97316; }
+        .icon-green { color: #10b981; }
+        .icon-purple { color: #8b5cf6; }
+
+        /* ADMIN PANEL STYLES */
+        .admin-panel-card {
+            background: #1e293b;
+            color: white;
+            border-radius: 14px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 2px solid #ef4444;
+            display: none;
+        }
+        .admin-panel-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #fca5a5;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 6px;
+        }
+        .admin-section {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .admin-section h4 {
+            font-size: 13px;
+            color: #fbbf24;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #475569;
+            padding-bottom: 4px;
+        }
+        .admin-controls-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .admin-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .admin-input-group.full-width { grid-column: span 2; }
+        .admin-input-group label { font-size: 11px; color: #94a3b8; }
+        .admin-input-group input, .admin-input-group select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background: #1e293b;
+            color: white;
+            font-size: 12px;
+        }
+        .admin-search-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #f97316;
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 13px;
+            outline: none;
+        }
+        .admin-search-input::placeholder {
+            color: #94a3b8;
+        }
+        .admin-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .admin-btn-save { background: #10b981; }
+        .admin-btn-approve { background: #10b981; margin-right: 4px; padding: 4px 8px; font-size: 11px; border-radius: 4px; border: none; color: white; cursor: pointer; }
+        .admin-btn-reject { background: #ef4444; padding: 4px 8px; font-size: 11px; border-radius: 4px; border: none; color: white; cursor: pointer; }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            color: white;
+            margin-top: 8px;
+        }
+        .admin-table th, .admin-table td {
+            border: 1px solid #334155;
+            padding: 6px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        .admin-table th { background: #1e293b; color: #cbd5e1; }
+        .admin-table-container { overflow-x: auto; }
+
+        /* Screenshot Preview Thumbnail */
+        .admin-screenshot-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 2px solid #f97316;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .admin-screenshot-thumb:hover { transform: scale(1.1); }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 6px;
+            border-top: 1px solid #e2e8f0;
+            z-index: 100;
+        }
+        .nav-item { text-align: center; font-size: 11px; color: #94a3b8; text-decoration: none; cursor: pointer; flex: 1; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+        .nav-item.active { color: var(--primary-orange); font-weight: bold; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index: 1000; }
+        .modal-body { background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; max-height: 90vh; overflow-y: auto; }
+        .modal-body input, .modal-body select { width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px; font-size:13px; }
+        .modal-btn { width:100%; padding:10px; background:var(--primary-orange); color:white; border:none; border-radius:6px; font-weight:bold; margin-top:5px; cursor:pointer; }
+        
+        .bank-info-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        .copy-btn {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .fee-calc-box {
+            background: #fff7ed;
+            border: 1px solid #ffedd5;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #9a3412;
+        }
+        .fee-calc-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .fee-calc-row.total { border-top: 1px dashed #fdba74; padding-top: 6px; margin-top: 6px; font-weight: bold; font-size: 13px; color: #ea580c; }
+
+        /* Auth Overlay */
+        #authOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #111827;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .login-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 360px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .login-card h2 { color: var(--dark-orange); margin-bottom: 5px; font-size: 20px; }
+        .phone-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: #fff;
+            overflow: hidden;
+        }
+        .phone-prefix {
+            background: #f1f5f9;
+            color: #334155;
+            padding: 12px 10px;
+            font-size: 13px;
+            font-weight: bold;
+            border-right: 1px solid #cbd5e1;
+        }
+        .phone-input-wrapper input { border: none; margin: 0; padding: 12px; flex: 1; outline: none; font-size: 13px; }
+        .login-card input:not([type="tel"]) { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; }
+        .auth-switch { font-size: 12px; color: var(--primary-orange); cursor: pointer; margin-top: 12px; display: inline-block; font-weight: bold; }
+        
+        .time-notice {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- REALTIME FLOATING ADMIN NOTIFICATION ALERT -->
+    <div id="adminRealtimeAlertContainer">
+        <div class="admin-alert-card">
+            <div class="admin-alert-header">
+                <span><i class="fas fa-bell fa-bounce"></i> 🚨 አዲስ ጥያቄ ገብቷል! (Realtime Instant)</span>
+                <i class="fas fa-times" style="cursor:pointer;" onclick="dismissAlertBanner()"></i>
+            </div>
+            <div class="admin-alert-body" id="adminAlertText">
+                ማሳወቂያ በመጫን ላይ...
+            </div>
+            <div class="admin-alert-actions">
+                <button class="admin-alert-btn btn-approve-fast" id="btnFastApprove" onclick="executeFastAction('approve')"><i class="fas fa-check"></i> Approve (ፍቀድ)</button>
+                <button class="admin-alert-btn btn-reject-fast" id="btnFastReject" onclick="executeFastAction('reject')"><i class="fas fa-times"></i> Reject (ከልክል)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION OVERLAY -->
+    <div id="authOverlay">
+        <div class="login-card" id="loginBox">
+            <h2><i class="fas fa-gem"></i> FREE BIRR VIP</h2>
+            <p id="txt-login-sub" style="color:#64748b; font-size:12px; margin-bottom:15px;">ወደ አካውንትዎ ለመግባት ስልክ እና ይለፍ ቃል ያስገቡ</p>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="phone-input-wrapper">
+                    <span class="phone-prefix">+251</span>
+                    <input type="tel" id="loginPhone" placeholder="9... ወይም 7..." required oninput="formatPhoneInput(this)">
+                </div>
+                <input type="password" id="loginPassword" placeholder="የይለፍ ቃል" required>
+                <button type="submit" class="modal-btn" id="txt-login-btn">ይግቡ (Login)</button>
+            </form>
+            <span class="auth-switch" onclick="toggleAuthMode('signup')" id="txt-goto-signup">አዲስ አካውንት የሎትም? ይመዝገቡ (Sign Up)</span>
+        </div>
+
+        <div class="login-card" id="signupBox" style="display: none;">
+            <h2><i class="fas fa-user-plus"></i> <span id="txt-signup-head">መመዝገቢያ</span></h2>
+            <p style="color:#64748b; font-size:12px; margin-bottom:15px;" id="txt-signup-sub">አዲስ የ FREE BIRR አካውንት ይክፈቱ</p>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="phone-input-wrapper">
+                    <span class="phone-prefix">+251</span>
+                    <input type="tel" id="signupPhone" placeholder="9... ወይም 7..." required oninput="formatPhoneInput(this)">
+                </div>
+                <input type="password" id="signupPassword" placeholder="አዲስ ይለፍ ቃል" required>
+                <input type="password" id="signupConfirmPassword" placeholder="ይለፍ ቃል ድጋሚ ያስገቡ" required>
+                <input type="text" id="signupInviteCode" placeholder="የመጋበዣ ኮድ (Referral Code)">
+                <button type="submit" class="modal-btn" id="txt-signup-btn">ተመዝገብ (Sign Up)</button>
+            </form>
+            <span class="auth-switch" onclick="toggleAuthMode('login')" id="txt-goto-login">አካውንት አለዎት? ይግቡ (Login)</span>
+        </div>
+    </div>
+
+    <!-- Top Bar with 4 Languages -->
+    <div class="top-bar">
+        <span><i class="far fa-clock"></i> <span id="clock">00:00:00</span></span>
+        <div>
+            🌐 
+            <select class="lang-select" id="languageSelector" onchange="changeLanguage(this.value)">
+                <option value="am">አማርኛ</option>
+                <option value="en">English</option>
+                <option value="ar">العربية</option>
+                <option value="zh">中文</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- RSS Feed -->
+    <div class="rss-ticker">
+        <div class="rss-ticker-title"><i class="fas fa-rss"></i> <span id="txt-rss-head">RSS NEWS</span></div>
+        <div class="rss-ticker-content" id="rssMessageFeed">
+            🔥 እንኳን ወደ FREE BIRR VIP በደህና መጡ! | Telegram Support: @cryptopmt | በየቀኑ ነፃ ቦነስ ይውሰዱ! | እባክዎትን ሌሎችን ይጋብዙ!
+        </div>
+    </div>
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content active-tab">
+        <div class="header-main">
+            <div class="header-title"><i class="fas fa-gem"></i> FREE BIRR VIP</div>
+            <div class="header-sub" id="txt-sub">ፍሪ ብርን ይቀላቀሉ እና የተረጋጋ ገቢ ይፍጠሩ | ስማርት ደህንነት አስተዳደር</div>
+            <div class="action-btns">
+                <button class="action-btn btn-deposit" onclick="openModal('depositModal')"><i class="fas fa-arrow-down"></i> <span id="txt-dep">ገንዘብ ማስገቢያ</span></button>
+                <button class="action-btn btn-withdraw" onclick="openModal('withdrawModal')"><i class="fas fa-arrow-up"></i> <span id="txt-with">ገንዘብ ማውጣት</span></button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="quick-nav" style="margin-top:15px;">
+                <div class="quick-card" onclick="switchTab('task')">
+                    <i class="fas fa-list-check"></i> <span id="txt-tasks">ታስኮች</span>
+                </div>
+                <div class="quick-card" onclick="openModal('redeemModal')">
+                    <i class="fas fa-gift"></i> <span id="txt-quick-redeem">ኮድ ማስገቢያ</span>
+                </div>
+                <div class="quick-card" onclick="openCustomerService()">
+                    <i class="fab fa-telegram" style="color: #0088cc;"></i> Telegram
+                </div>
+            </div>
+
+            <!-- DAILY REWARD BOX -->
+            <div class="daily-reward-box">
+                <div>
+                    <div class="daily-reward-title"><i class="fas fa-gift"></i> <span id="txt-reward-head">ዕለታዊ ነፃ ቦነስ</span></div>
+                    <div class="daily-reward-sub" id="dailyRewardSub">በየቀኑ ነፃ ስጦታዎን ይውሰዱ</div>
+                </div>
+                <button class="btn-claim-reward" id="claimRewardBtn" onclick="claimDailyReward()">
+                    <span id="txt-claim-btn">1 ETB ውሰድ</span>
+                </button>
+            </div>
+
+            <div class="section-title">
+                <span id="txt-vip-title">⭐ የአባልነት ደረጃዎች (VIP 1 - 20)</span>
+                <span style="font-size:10px; background:#e2e8f0; padding:2px 6px; border-radius:4px;" id="userVipBadge">VIP 0</span>
+            </div>
+
+            <div id="vipContainer"></div>
+        </div>
+    </div>
+
+    <!-- TASK TAB -->
+    <div id="tab-task" class="tab-content">
+        <div class="task-header">
+            <h2 id="txt-task-head">ዕለታዊ የቪዲዮ ታስኮች</h2>
+            
+            <div class="task-stats-grid">
+                <div class="stat-card-white">
+                    <div class="stat-icon orange"><i class="far fa-clock"></i></div>
+                    <div class="stat-num" id="uncompletedCount">2</div>
+                    <div class="stat-label" id="txt-uncompleted">ያልተጠናቀቀ</div>
+                </div>
+
+                <div class="circle-progress">
+                    <div class="circle-num" id="progressPercent">0%</div>
+                    <div class="circle-label" id="txt-process">ሂደት</div>
+                </div>
+
+                <div class="stat-card-white">
+                    <div class="stat-icon green"><i class="far fa-check-circle"></i></div>
+                    <div class="stat-num" id="completedCount" style="color:#10b981;">0</div>
+                    <div class="stat-label" id="txt-completed" style="color:#10b981;">የተጠናቀቀ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="income-grid">
+            <div class="income-card">
+                <div class="income-title" id="txt-today-inc">የዛሬ ገቢ</div>
+                <div class="income-val" id="todayIncome">ETB 0.00</div>
+            </div>
+            <div class="income-card">
+                <div class="income-title" id="txt-bal">ለወጪ ዝግጁ ሂሳብ</div>
+                <div class="income-val" id="taskBalance">ETB 0.00</div>
+            </div>
+        </div>
+
+        <div class="video-task-card">
+            <div class="video-task-header">
+                <i class="fas fa-play-circle"></i> <span id="txt-vid-task">የቪዲዮ ታስክ</span>
+            </div>
+            <div class="video-task-sub" id="txt-vid-sub">ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ (VIP 1+)</div>
+
+            <div class="task-display-box">
+                <div class="box-instruction" id="boxText">ታስክ ለመጀመር ከታች ቁልፉን ይጫኑ</div>
+                <div class="timer-text" id="taskTimerDisplay">00:10</div>
+                <button class="btn-start-task" id="startTaskBtn" onclick="runVideoTask()">ታስክ ጀምር</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEAM TAB -->
+    <div id="tab-team" class="tab-content">
+        <div class="header-main" style="padding-bottom:15px;">
+            <div class="header-title" id="txt-team-page-title"><i class="fas fa-users"></i> የቡድን መረጃ</div>
+        </div>
+        
+        <div class="page-card">
+            <div class="invite-box">
+                <span style="font-size:11px; color:#9a3412; font-weight:bold;" id="txt-lbl-invcode">🔑 የእርስዎ መጋበዣ ኮድ (Invitation Code):</span>
+                <div class="invite-code-display">
+                    <span id="userInviteCode">FREEBIRR-XXXX</span>
+                    <button class="copy-btn" onclick="copyText(document.getElementById('userInviteCode').innerText)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+
+                <span style="font-size:11px; color:#9a3412; font-weight:bold; display:block; margin-top:10px;" id="txt-lbl-invlink">🔗 የእርስዎ መጋበዣ ሊንክ (Referral Link):</span>
+                <div style="margin-top:4px; background:white; padding:8px; border-radius:6px; border:1px solid #fed7aa; font-size:11px; word-break:break-all;" id="userInviteLink">
+                    https://free-birr.github.io/?ref=FREEBIRR-XXXX
+                </div>
+                <button class="modal-btn" style="margin-top:8px;" onclick="copyText(document.getElementById('userInviteLink').innerText)" id="txt-copy-link">ሊንክ ኮፒ አድርግ</button>
+            </div>
+
+            <div style="font-size:11px; background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:8px; border-radius:6px; margin-bottom:12px;" id="txt-referral-bonus-info">
+                🎁 <strong>የጋበዟቸው ሰዎች የመጀመሪያ ገንዘብ (First Deposit) ሲያደርጉ ብቻ የሚከፈል ኮሚሽን (ወዲያውኑ ለወጪ ዝግጁ ይሆናል):</strong><br>
+                • Level 1 (15%) | • Level 2 (3%) | • Level 3 (2%)
+            </div>
+
+            <div class="team-levels-grid">
+                <div class="level-tab active" id="tabLvl1" onclick="switchLevelTab(1)">
+                    <div class="level-tab-title">L1 (15%)</div>
+                    <div class="level-tab-count" id="countLvl1">0</div>
+                </div>
+                <div class="level-tab" id="tabLvl2" onclick="switchLevelTab(2)">
+                    <div class="level-tab-title">L2 (3%)</div>
+                    <div class="level-tab-count" id="countLvl2">0</div>
+                </div>
+                <div class="level-tab" id="tabLvl3" onclick="switchLevelTab(3)">
+                    <div class="level-tab-title">L3 (2%)</div>
+                    <div class="level-tab-count" id="countLvl3">0</div>
+                </div>
+            </div>
+
+            <h4 style="font-size:13px; color:#334155; margin-bottom:8px;" id="levelListTitle">Level 1 Members List</h4>
+            <div id="memberListContainer"></div>
+        </div>
+    </div>
+
+    <!-- ME TAB -->
+    <div id="tab-me" class="tab-content">
+        <div class="profile-header">
+            <div class="avatar-box"><i class="fas fa-user-astronaut"></i></div>
+            <div class="user-info-text">
+                <div class="user-phone" id="userPhoneDisplay">+251 9...</div>
+                <div class="user-uid-box">
+                    <span>UID: <strong id="userUidDisplay">100284</strong></span>
+                    <i class="fas fa-copy" style="cursor:pointer;" onclick="copyText(document.getElementById('userUidDisplay').innerText)"></i>
+                </div>
+                <br>
+                <div class="user-vip-pill" id="meVipBadge">VIP 0</div>
+            </div>
+        </div>
+
+        <div class="container" style="margin-top: 15px;">
+            <div class="action-btns" style="margin-bottom: 15px;">
+                <button class="action-btn btn-deposit" onclick="openModal('depositModal')"><i class="fas fa-arrow-down"></i> <span id="txt-dep-me">ገንዘብ ማስገቢያ</span></button>
+                <button class="action-btn btn-withdraw" onclick="openModal('withdrawModal')"><i class="fas fa-arrow-up"></i> <span id="txt-with-me">ገንዘብ ማውጣት</span></button>
+            </div>
+
+            <div class="fin-grid-title"><i class="fas fa-chart-pie"></i> <span id="txt-fin-title">የሂሳብ መረጃዎች</span></div>
+            <div class="financial-grid">
+                
+                <div class="fin-card highlight-withdrawable">
+                    <div class="fin-icon green"><i class="fas fa-wallet"></i></div>
+                    <div class="fin-info">
+                        <span class="fin-label" style="color:#15803d; font-weight:bold;" id="txt-tot-bal">💰 ለወጪ ዝግጁ የሆነ ሂሳብ (Withdrawable Balance)</span>
+                        <span style="font-size:9px; color:#166534;">(Daily Tasks + Referral + Redeem Code + Bonus)</span>
+                        <strong class="fin-value" id="gridTotalBalance" style="color:#15803d; font-size:16px;">ETB 0.00</strong>
+                    </div>
+                </div>
+
+                <div class="fin-card highlight-deposit">
+                    <div class="fin-icon"><i class="fas fa-crown"></i></div>
+                    <div class="fin-info">
+                        <span class="fin-label" style="color:#c2410c; font-weight:bold;">🔒 የተቀማጭ ሂሳብ (Deposit Balance)</span>
+                        <span style="font-size:9px; color:#9a3412;">(ለ VIP ደረጃ መግዣ ብቻ የሚውል)</span>
+                        <strong class="fin-value" id="gridDepositBalance" style="color:#ea580c; font-size:15px;">ETB 0.00</strong>
+                    </div>
+                </div>
+
+                <div class="fin-card">
+                    <div class="fin-icon green"><i class="fas fa-coins"></i></div>
+                    <div class="fin-info">
+                        <span class="fin-label" id="txt-tod-earn">የዛሬ ገቢ</span>
+                        <strong class="fin-value" id="gridTodayEarned">ETB 0.00</strong>
+                    </div>
+                </div>
+                <div class="fin-card">
+                    <div class="fin-icon blue"><i class="fas fa-users-cog"></i></div>
+                    <div class="fin-info">
+                        <span class="fin-label" id="txt-team-comm">የቡድን ኮሚሽን</span>
+                        <strong class="fin-value" id="gridTeamCommission">ETB 0.00</strong>
+                    </div>
+                </div>
+                <div class="fin-card">
+                    <div class="fin-icon purple"><i class="fas fa-arrow-circle-down"></i></div>
+                    <div class="fin-info">
+                        <span class="fin-label" id="txt-tot-dep">ጠቅላላ ገቢ ተደረገ</span>
+                        <strong class="fin-value" id="gridTotalDeposit">ETB 0.00</strong>
+                    </div>
+                </div>
+                <div class="fin-card">
+                    <div class="fin-icon red"><i class="fas fa-arrow-circle-up"></i></div>
+                    <div class="fin-info">
+                        <span class="fin-label" id="txt-tot-with">ጠቅላላ የወጣ</span>
+                        <strong class="fin-value" id="gridTotalWithdrawn">ETB 0.00</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-list">
+                <div class="menu-item" onclick="openRecordsModal()">
+                    <div class="menu-left"><i class="fas fa-history icon-blue"></i> <span>የገንዘብ ገቢ/ወጪ ታሪክ (Records)</span></div>
+                    <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
+                </div>
+                <div class="menu-item" onclick="openModal('redeemModal')">
+                    <div class="menu-left"><i class="fas fa-gift icon-orange"></i> <span id="txt-menu-redeem">ኮድ ማስገቢያ (Redeem Code)</span></div>
+                    <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
+                </div>
+                <div class="menu-item" onclick="openModal('bankCardModal')">
+                    <div class="menu-left"><i class="fas fa-credit-card icon-purple"></i> <span id="txt-menu-bank">የባንክ መረጃ / Bank Card</span></div>
+                    <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
+                </div>
+                <div class="menu-item" onclick="openModal('changePasswordModal')">
+                    <div class="menu-left"><i class="fas fa-key icon-green"></i> <span id="txt-menu-pwd">ይለፍ ቃል ቀይር</span></div>
+                    <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
+                </div>
+                <div class="menu-item" onclick="switchTab('team')">
+                    <div class="menu-left"><i class="fas fa-user-plus icon-orange"></i> <span id="txt-menu-invite">ጓደኞችን ይጋብዙ</span></div>
+                    <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
+                </div>
+                <div class="menu-item" onclick="openCustomerService()">
+                    <div class="menu-left"><i class="fab fa-telegram icon-blue"></i> <span> Telegram Support</span></div>
+                    <i class="fas fa-chevron-right" style="font-size:11px; color:#cbd5e1;"></i>
+                </div>
+            </div>
+
+            <!-- ADMIN PANEL SECTION -->
+            <div class="admin-panel-card" id="adminPanelSection">
+                <div class="admin-panel-title">
+                    <i class="fas fa-user-shield"></i> System Admin Control Center
+                </div>
+
+                <!-- NEW: AUTOMATIC FINANCIAL CALCULATOR DASHBOARD -->
+                <div class="admin-section">
+                    <h4><i class="fas fa-calculator"></i> የሲስተም አውቶማቲክ ወጪና ገቢ ሂሳብ ማጠቃለያ (Live Financial Summary)</h4>
+                    <div class="admin-controls-grid">
+                        <div class="fin-card" style="background:#0f172a; border:1px solid #10b981;">
+                            <div class="fin-icon green"><i class="fas fa-arrow-down"></i></div>
+                            <div class="fin-info">
+                                <span class="fin-label" style="color:#6ee7b7;">ጠቅላላ የፀደቀ ገቢ (Total Income)</span>
+                                <strong class="fin-value" id="adminCalcApprovedDeposits" style="color:#34d399;">ETB 0.00</strong>
+                            </div>
+                        </div>
+                        <div class="fin-card" style="background:#0f172a; border:1px solid #ef4444;">
+                            <div class="fin-icon red"><i class="fas fa-arrow-up"></i></div>
+                            <div class="fin-info">
+                                <span class="fin-label" style="color:#fca5a5;">ጠቅላላ የፀደቀ ወጪ (Total Expense)</span>
+                                <strong class="fin-value" id="adminCalcApprovedWithdraws" style="color:#f87171;">ETB 0.00</strong>
+                            </div>
+                        </div>
+                        <div class="fin-card" style="background:#0f172a; border:1px solid #38bdf8;">
+                            <div class="fin-icon blue"><i class="fas fa-clock"></i></div>
+                            <div class="fin-info">
+                                <span class="fin-label" style="color:#7dd3fc;">የተንጠለቀሉ ጥያቄዎች (Pending)</span>
+                                <strong class="fin-value" id="adminCalcPendingSummary" style="color:#38bdf8; font-size:12px;">Dep: 0 | With: 0</strong>
+                            </div>
+                        </div>
+                        <div class="fin-card" style="background:#0f172a; border:1px solid #fbbf24;">
+                            <div class="fin-icon" style="background:#451a03; color:#fbbf24;"><i class="fas fa-balance-scale"></i></div>
+                            <div class="fin-info">
+                                <span class="fin-label" style="color:#fde68a;">የተጣራ የሲስተም ትርፍ (Net Profit)</span>
+                                <strong class="fin-value" id="adminCalcNetProfit" style="color:#fbbf24;">ETB 0.00</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h4><i class="fas fa-ticket-alt"></i> የ Redeem Code ማነሻና ማስተዳደሪያ</h4>
+                    <div class="admin-controls-grid">
+                        <div class="admin-input-group">
+                            <label>የኮድ ስም (Code Name):</label>
+                            <input type="text" id="adminRedeemCodeName" placeholder="ምሳሌ: FREEBIRR50" style="text-transform:uppercase;">
+                        </div>
+                        <div class="admin-input-group">
+                            <label>የቦነስ መጠን (Reward ETB):</label>
+                            <input type="number" id="adminRedeemAmount" placeholder="50">
+                        </div>
+                        <div class="admin-input-group full-width">
+                            <label>የሰው ብዛት ገደብ (Max Uses):</label>
+                            <input type="number" id="adminRedeemMaxUses" placeholder="100">
+                        </div>
+                        <div class="admin-input-group full-width">
+                            <button class="admin-btn admin-btn-save" onclick="createAdminRedeemCode()"><i class="fas fa-plus-circle"></i> አዲስ Redeem Code ፍጠር</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Reward</th>
+                                    <th>Used/Max</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminRedeemTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h4><i class="fas fa-university"></i> System Bank Accounts Management</h4>
+                    <div class="admin-input-group" style="margin-bottom:8px;">
+                        <label>CBE Holder Name:</label>
+                        <input type="text" id="adminCbeName">
+                    </div>
+                    <div class="admin-input-group" style="margin-bottom:8px;">
+                        <label>CBE Account Number:</label>
+                        <input type="text" id="adminCbeAcc">
+                    </div>
+                    <div class="admin-input-group" style="margin-bottom:8px;">
+                        <label>Telebirr Holder Name:</label>
+                        <input type="text" id="adminTeleName">
+                    </div>
+                    <div class="admin-input-group" style="margin-bottom:8px;">
+                        <label>Telebirr Phone Number:</label>
+                        <input type="text" id="adminTeleAcc">
+                    </div>
+                    <button class="admin-btn" style="background:#0284c7;" onclick="saveAdminSystemBank()">የባንክ መረጃዎችን መዝግብ (Save System Bank)</button>
+                </div>
+
+                <!-- DEPOSIT REQUESTS WITH SCREENSHOT PREVIEW -->
+                <div class="admin-section">
+                    <h4><i class="fas fa-arrow-down"></i> Deposit Requests (Approve / Reject)</h4>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>VIP / Amt</th>
+                                    <th>TxID / Screenshot</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminDepositTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h4><i class="fas fa-arrow-up"></i> Withdrawal Requests (Approve / Reject)</h4>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Method/Acc</th>
+                                    <th>Net Amt</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminWithdrawTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h4><i class="fas fa-edit"></i> Member Financial Record Editor</h4>
+                    <div class="admin-controls-grid">
+                        <div class="admin-input-group full-width">
+                            <label>ለማስተካከል አባል ይምረጡ (Select Member):</label>
+                            <select id="adminEditUserSelect" onchange="onAdminSelectMemberChange()"></select>
+                        </div>
+                        <div class="admin-input-group">
+                            <label>ለወጪ ዝግጁ ሂሳብ (Withdrawable ETB):</label>
+                            <input type="number" id="adminEditBalance" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="admin-input-group">
+                            <label>የተቀማጭ ሂሳብ (Deposit Balance ETB):</label>
+                            <input type="number" id="adminEditDepositBalance" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="admin-input-group">
+                            <label>የ VIP ደረጃ (VIP Level):</label>
+                            <select id="adminEditVipLevel"></select>
+                        </div>
+                        <div class="admin-input-group">
+                            <label>ጠቅላላ ገቢ ተደረገ (Total Deposit):</label>
+                            <input type="number" id="adminEditDeposit" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="admin-input-group">
+                            <label>ጠቅላላ የወጣ (Total Withdrawn):</label>
+                            <input type="number" id="adminEditWithdraw" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="admin-input-group">
+                            <label>የዛሬ ገቢ (Today Earned):</label>
+                            <input type="number" id="adminEditTodayEarned" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="admin-input-group">
+                            <label>የቡድን ኮሚሽን (Team Commission):</label>
+                            <input type="number" id="adminEditTeamComm" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="admin-input-group full-width">
+                            <button class="admin-btn admin-btn-save" onclick="saveMemberFinancialRecord()"><i class="fas fa-save"></i> የፋይናንስ መረጃዎቹን ቀይር (Save Record Changes)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h4><i class="fas fa-users"></i> Registered Members Directory</h4>
+                    <div class="admin-input-group full-width" style="margin-bottom: 10px;">
+                        <input type="text" class="admin-search-input" id="adminMemberSearchInput" placeholder="🔍 የአባል ስልክ ቁጥር እዚህ ይፈልጉ..." oninput="renderAdminTables()">
+                    </div>
+
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Phone</th>
+                                    <th>VIP</th>
+                                    <th>Referred By</th>
+                                    <th>Withdrawable</th>
+                                    <th>Deposit Bal</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminMembersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="modal-btn" style="background:#ef4444; margin-top:20px; border-radius:10px; padding:12px;" onclick="handleLogout()" id="txt-logout-btn">ውጣ (Logout)</button>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="userRecordsModal" class="modal">
+        <div class="modal-body">
+            <h3><i class="fas fa-list-alt" style="color:var(--primary-orange);"></i> የገንዘብ ገቢ/ወጪ ታሪክ (Records)</h3>
+            <p style="font-size:11px; color:#64748b; margin-bottom:10px;">የእርስዎ የተቀበሏቸው እና የጠየቋቸው የተቀማጭ እና የወጪ መረጃዎች ከታች ተዘርዝረዋል።</p>
+            
+            <h4 style="font-size:12px; color:#ea580c; margin-top:10px; margin-bottom:5px;">📥 የገንዘብ ማስገባት ታሪክ (Deposit Records)</h4>
+            <div id="userDepositRecordsContainer"></div>
+
+            <h4 style="font-size:12px; color:#ea580c; margin-top:15px; margin-bottom:5px;">📤 የገንዘብ ማውጣት ታሪክ (Withdrawal Records)</h4>
+            <div id="userWithdrawRecordsContainer"></div>
+
+            <button class="modal-btn" style="background:#ef4444; margin-top:15px;" onclick="closeModals()">ዝጋ</button>
+        </div>
+    </div>
+
+    <div id="redeemModal" class="modal">
+        <div class="modal-body">
+            <h3><i class="fas fa-gift" style="color:var(--primary-orange);"></i> <span id="txt-modal-redeem">የመቤዠት ኮድ (Redeem Code)</span></h3>
+            <p style="font-size:12px; color:#64748b; margin: 8px 0;">የተሰጠዎትን ልዩ የቦነስ ኮድ እዚህ ያስገቡና ወዲያውኑ ወደ ወጪ ሂሳብዎ ገቢ ያድርጉ።</p>
+            <input type="text" id="redeemCodeInput" placeholder="ኮዱን ያስገቡ (ምሳሌ፡ FREEBIRR50)" style="text-transform:uppercase;">
+            <button class="modal-btn" onclick="submitRedeemCode()">ቦነስ ውሰድ (Redeem)</button>
+            <button class="modal-btn" style="background:#ef4444;" onclick="closeModals()">ዝጋ</button>
+        </div>
+    </div>
+
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-body">
+            <h3><i class="fas fa-lock"></i> <span id="txt-modal-pwd-title">ይለፍ ቃል መቀየሪያ</span></h3>
+            <input type="password" id="oldPasswordInput" placeholder="የድሮውን ይለፍ ቃል ያስገቡ">
+            <input type="password" id="newPasswordInput" placeholder="አዲስ ይለፍ ቃል ያስገቡ">
+            <input type="password" id="confirmPasswordInput" placeholder="አዲሱን ይለፍ ቃል ድጋሚ ያስገቡ">
+            <button class="modal-btn" onclick="submitPasswordChange()">ቀይር (Update Password)</button>
+            <button class="modal-btn" style="background:#ef4444;" onclick="closeModals()">ዝጋ</button>
+        </div>
+    </div>
+
+    <div id="bankCardModal" class="modal">
+        <div class="modal-body">
+            <h3><i class="fas fa-university"></i> User Bank Details</h3>
+            <div style="font-weight:bold; margin-top:8px; font-size:12px; color:#ea580c;">🏦 Commercial Bank of Ethiopia (CBE)</div>
+            <input type="text" id="cbeHolderName" placeholder="CBE Account Holder Name">
+            <input type="text" id="cbeAccNumber" placeholder="CBE Account Number">
+
+            <div style="font-weight:bold; margin-top:8px; font-size:12px; color:#ea580c;">📱 Telebirr</div>
+            <input type="text" id="telebirrHolderName" placeholder="Telebirr Account Holder Name">
+            <input type="text" id="telebirrAccNumber" placeholder="Telebirr Phone Number">
+
+            <button class="modal-btn" onclick="saveBankCardDetails()">አስቀምጥ (Save)</button>
+            <button class="modal-btn" style="background:#ef4444;" onclick="closeModals()">ዝጋ</button>
+        </div>
+    </div>
+
+    <div id="depositModal" class="modal">
+        <div class="modal-body">
+            <h3 id="txt-modal-dep">ገንዘብ ማስገቢያ (Deposit)</h3>
+            <p style="font-size:11px; color:#64748b; margin-top:4px;">⚠️ የተቀማጭ ገንዘብ ለ VIP ደረጃ መግዣ ብቻ የሚያገለግል ሲሆን ለወጪ (Withdrawal) አይገኝም።</p>
+            <div class="bank-info-card">
+                <div><strong>📌 Account Holder Name:</strong> <span id="displayCbeHolder">Chalachew Haymanot</span> <button class="copy-btn" onclick="copyText(document.getElementById('displayCbeHolder').innerText)">Copy</button></div>
+                <div style="margin-top:4px;"><strong>📌 CBE Account:</strong> <span id="displayCbeAcc">1000092937449</span> <button class="copy-btn" onclick="copyText(document.getElementById('displayCbeAcc').innerText)">Copy</button></div>
+                <div style="margin-top:4px;"><strong>📌 Telebirr Holder:</strong> <span id="displayTeleHolder">Chalachew Haymanot</span></div>
+                <div style="margin-top:4px;"><strong>📌 Telebirr No:</strong> <span id="displayTeleAcc">0924099009</span> <button class="copy-btn" onclick="copyText(document.getElementById('displayTeleAcc').innerText)">Copy</button></div>
+            </div>
+            <select id="depVipSelect"></select>
+            <input type="text" id="txId" placeholder="Transaction ID (TxID) *" required>
+            <div style="margin: 8px 0; text-align: left;">
+                <label style="font-size: 11px; font-weight: bold; color: #475569;">የክፍያ ስክሪንሽኦት ይጫኑ (Payment Screenshot) *:</label>
+                <input type="file" id="depScreenshot" accept="image/*" style="width: 100%; padding: 6px; font-size: 12px; margin-top: 4px;">
+            </div>
+            <button class="modal-btn" type="button" onclick="submitDeposit()" id="txt-btn-dep-submit">ላክ (Submit)</button>
+            <button class="modal-btn" style="background:#ef4444;" onclick="closeModals()">ዝጋ</button>
+        </div>
+    </div>
+
+    <div id="withdrawModal" class="modal">
+        <div class="modal-body">
+            <h3 id="txt-modal-with">ገንዘብ ማውጫ (Withdrawal)</h3>
+            <div class="time-notice">
+                <i class="far fa-clock"></i> <strong>የማውጫ ሰዓት:</strong> ከጠዋቱ 3:00am - 6:00pm (03:00 - 18:00) ብቻ።
+            </div>
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:10px; border-radius:8px; margin-bottom:10px; font-size:12px; color:#166534;">
+                💵 <strong>ለወጪ ዝግጁ የሆነ ሂሳብ (Withdrawable):</strong> <br>
+                <span style="font-size:16px; font-weight:800;" id="withdrawBalanceDisplay">ETB 0.00</span><br>
+                <span style="font-size:10px; opacity:0.8;">(Daily Task + Invitation Rewards + Redeem Codes + Daily Bonus)</span>
+            </div>
+            <select id="withdrawMethod" onchange="updateWithdrawFields()">
+                <option value="CBE">CBE Bank</option>
+                <option value="Telebirr">Telebirr</option>
+            </select>
+
+            <div id="registeredAccBox" class="bank-info-card" style="display:none; background:#f1f5f9; border-color:#cbd5e1; margin:8px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span style="font-size:10px; color:#64748b; font-weight:bold;">የተመዘገበ አካውንት ቁጥር:</span><br>
+                        <strong id="registeredAccNumDisplay" style="font-size:13px; color:#0f172a;">-</strong>
+                    </div>
+                    <button class="copy-btn" type="button" onclick="copyRegisteredAcc()"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+
+            <input type="text" id="withdrawName" placeholder="Account Name">
+            <input type="text" id="withdrawAcc" placeholder="Account No / Phone">
+            <input type="number" id="withdrawAmt" placeholder="የማውጫ መጠን (Min 200 ETB)" oninput="calculateWithdrawFee()">
+            <div class="fee-calc-box">
+                <div class="fee-calc-row"><span>Fee (15%):</span> <strong id="feeAmount">ETB 0.00</strong></div>
+                <div class="fee-calc-row total"><span>Net Amount:</span> <strong id="netAmount">ETB 0.00</strong></div>
+            </div>
+            <button class="modal-btn" onclick="submitWithdraw()">ወደ ባንክ/ቴሌብር ላክ (Withdraw)</button>
+            <button class="modal-btn" style="background:#ef4444;" onclick="closeModals()">ዝጋ</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+            <i class="fas fa-home"></i> <span id="nav-lbl-home">መነሻ</span>
+        </div>
+        <div class="nav-item" id="nav-task" onclick="switchTab('task')">
+            <i class="fas fa-list-check"></i> <span id="nav-lbl-task">ታስኮች</span>
+        </div>
+        <div class="nav-item" id="nav-team" onclick="switchTab('team')">
+            <i class="fas fa-users"></i> <span id="nav-lbl-team">ቡድን</span>
+        </div>
+        <div class="nav-item" id="nav-me" onclick="switchTab('me')">
+            <i class="fas fa-user"></i> <span id="nav-lbl-me">እኔ</span>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_ADMIN_PHONE = "913347992";
+        const DEFAULT_ADMIN_PASS = "314297";
+
+        const vipList = [
+            { level: 1, price: 1000, taskPrice: 50 },
+            { level: 2, price: 2000, taskPrice: 100 },
+            { level: 3, price: 3000, taskPrice: 150 },
+            { level: 4, price: 5000, taskPrice: 250 },
+            { level: 5, price: 8000, taskPrice: 400 },
+            { level: 6, price: 12000, taskPrice: 600 },
+            { level: 7, price: 18000, taskPrice: 900 },
+            { level: 8, price: 25000, taskPrice: 1250 },
+            { level: 9, price: 35000, taskPrice: 1750 },
+            { level: 10, price: 50000, taskPrice: 2500 },
+            { level: 11, price: 75000, taskPrice: 3750 },
+            { level: 12, price: 100000, taskPrice: 5000 },
+            { level: 13, price: 150000, taskPrice: 7500 },
+            { level: 14, price: 200000, taskPrice: 10000 },
+            { level: 15, price: 300000, taskPrice: 15000 },
+            { level: 16, price: 400000, taskPrice: 20000 },
+            { level: 17, price: 500000, taskPrice: 25000 },
+            { level: 18, price: 700000, taskPrice: 35000 },
+            { level: 19, price: 1000000, taskPrice: 50000 },
+            { level: 20, price: 1500000, taskPrice: 75000 }
+        ];
+
+        const translations = {
+            am: {
+                sub: "ፍሪ ብርን ይቀላቀሉ እና የተረጋጋ ገቢ ይፍጠሩ | ስማርት ደህንነት አስተዳደር",
+                dep: "ገንዘብ ማስገቢያ", with: "ገንዘብ ማውጣት", tasks: "ታስኮች", team: "ቡድን",
+                rewardHead: "ዕለታዊ ነፃ ቦነስ", claimBtn: "1 ETB ውሰድ", vipTitle: "⭐ የአባልነት ደረጃዎች (VIP 1 - 20)",
+                taskHead: "ዕለታዊ የቪዲዮ ታስኮች", uncompleted: "ያልተጠናቀቀ", process: "ሂደት", completed: "የተጠናቀቀ",
+                todayInc: "የዛሬ ገቢ", bal: "ለወጪ ዝግጁ ሂሳብ", vidTask: "የቪዲዮ ታስክ", vidSub: "ቪዲዮውን በመመልከት ገቢዎን ይሰብስቡ (VIP 1+)",
+                teamPageTitle: "የቡድን መረጃ", lblInvCode: "🔑 የእርስዎ መጋበዣ ኮድ (Invitation Code):", lblInvLink: "🔗 የእርስዎ መጋበዣ ሊንክ (Referral Link):",
+                copyLink: "ሊንክ ኮፒ አድርግ", finTitle: "የሂሳብ መረጃዎች", totBal: "💰 ለወጪ ዝግጁ የሆነ ሂሳብ", todEarn: "የዛሬ ገቢ",
+                teamComm: "የቡድን ኮሚሽን", totDep: "ጠቅላላ ገቢ ተደረገ", totWith: "ጠቅላላ የወጣ", menuBank: "የባንክ መረጃ / Bank Card",
+                menuPwd: "ይለፍ ቃል ቀይር", menuInvite: "ጓደኞችን ይጋብዙ", menuRedeem: "ኮድ ማስገቢያ (Redeem Code)", quickRedeem: "ኮድ ማስገቢያ",
+                navHome: "መነሻ", navTask: "ታስኮች", navTeam: "ቡድን", navMe: "እኔ", modalDep: "ገንዘብ ማስገቢያ", modalWith: "ገንዘብ ማውጫ", logout: "ውጣ (Logout)",
+                rssMsg: "🔥 እንኳን ወደ FREE BIRR VIP በደህና መጡ! | Telegram Support: @cryptopmt | በየቀኑ ነፃ ቦነስ ይውሰዱ! | እባክዎትን ሌሎችን ይጋብዙ!"
+            },
+            en: {
+                sub: "Join Free Birr and build stable income | Smart Security Management",
+                dep: "Deposit", with: "Withdraw", tasks: "Tasks", team: "Team",
+                rewardHead: "Daily Free Bonus", claimBtn: "Claim 1 ETB", vipTitle: "⭐ VIP Membership Levels (VIP 1 - 20)",
+                taskHead: "Daily Video Tasks", uncompleted: "Uncompleted", process: "Progress", completed: "Completed",
+                todayInc: "Today Income", bal: "Withdrawable Balance", vidTask: "Video Task", vidSub: "Watch videos to claim earnings (VIP 1+)",
+                teamPageTitle: "Team Statistics", lblInvCode: "🔑 Your Invitation Code:", lblInvLink: "🔗 Your Referral Link:",
+                copyLink: "Copy Link", finTitle: "Financial Overview", totBal: "💰 Withdrawable Balance", todEarn: "Today Earned",
+                teamComm: "Team Commission", totDep: "Total Deposit", totWith: "Total Withdrawn", menuBank: "Bank Details Card",
+                menuPwd: "Change Password", menuInvite: "Invite Friends", menuRedeem: "Redeem Code", quickRedeem: "Redeem Code",
+                navHome: "Home", navTask: "Tasks", navTeam: "Team", navMe: "Me", modalDep: "Deposit Funds", modalWith: "Withdraw Funds", logout: "Logout",
+                rssMsg: "🔥 Welcome to FREE BIRR VIP! | Telegram Support: @cryptopmt | Claim daily free bonus! | Please invite friends!"
+            },
+            ar: {
+                sub: "انضم إلى Free Birr وحقق دخلاً مستقراً | إدارة أمان ذكية",
+                dep: "إيداع", with: "سحب", tasks: "المهام", team: "الفريق",
+                rewardHead: "مكافأة يومية مجانية", claimBtn: "احصل على 1 ETB", vipTitle: "⭐ مستويات العضوية (VIP 1 - 20)",
+                taskHead: "مهام الفيديو اليومية", uncompleted: "غير مكتمل", process: "التقدم", completed: "مكتمل",
+                todayInc: "دخل اليوم", bal: "الرصيد المتاح للسحب", vidTask: "مهمة الفيديو", vidSub: "شاهد الفيديوهات للحصول على الأرباح (VIP 1+)",
+                teamPageTitle: "إحصائيات الفريق", lblInvCode: "🔑 رمز الدعوة الخاص بك:", lblInvLink: "🔗 رابط الإحالة الخاص بك:",
+                copyLink: "نسخ الرابط", finTitle: "النظرة المالية العامة", totBal: "💰 الرصيد المتاح للسحب", todEarn: "أرباح اليوم",
+                teamComm: "عمولة الفريق", totDep: "إجمالي الإيداع", totWith: "إجمالي المسحوبات", menuBank: "تفاصيل الحساب البنكي",
+                menuPwd: "تغيير كلمة المرور", menuInvite: "دعوة الأصدقاء", menuRedeem: "إدخال الرمز", quickRedeem: "إدخال الرمز",
+                navHome: "الرئيسية", navTask: "المهام", navTeam: "الفريق", navMe: "حسابي", modalDep: "إيداع الأموال", modalWith: "سحب الأموال", logout: "تسجيل الخروج",
+                rssMsg: "🔥 أهلاً بك في FREE BIRR VIP! | الدعم عبر تلغرام: @cryptopmt | احصل على مكافأتك اليومية! | يرجى دعوة الأصدقاء!"
+            },
+            zh: {
+                sub: "加入 Free Birr，建立稳定收入 | 智能安全管理",
+                dep: "充值", with: "提现", tasks: "任务", team: "团队",
+                rewardHead: "每日免费奖励", claimBtn: "领取 1 ETB", vipTitle: "⭐ VIP 会员等级 (VIP 1 - 20)",
+                taskHead: "每日视频任务", uncompleted: "未完成", process: "进度", completed: "已完成",
+                todayInc: "今日收益", bal: "可提现余额", vidTask: "视频任务", vidSub: "观看视频获取收益 (VIP 1+)",
+                teamPageTitle: "团队数据", lblInvCode: "🔑 您的邀请码:", lblInvLink: "🔗 您的推广链接:",
+                copyLink: "复制链接", finTitle: "财务总览", totBal: "💰 可提现余额", todEarn: "今日已赚",
+                teamComm: "团队佣金", totDep: "累计充值", totWith: "累计提现", menuBank: "银行卡信息",
+                menuPwd: "修改密码", menuInvite: "邀请好友", menuRedeem: "兑换码", quickRedeem: "兑换码",
+                navHome: "首页", navTask: "任务", navTeam: "团队", navMe: "我的", modalDep: "账户充值", modalWith: "账户提现", logout: "退出登录",
+                rssMsg: "🔥 欢迎来到 FREE BIRR VIP！| Telegram 客服: @cryptopmt | 每天领取免费奖励！| 欢迎邀请好友！"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const dict = translations[lang] || translations.am;
+            document.getElementById('htmlTag').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+            const setTxt = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+            
+            setTxt('txt-sub', dict.sub); setTxt('txt-dep', dict.dep); setTxt('txt-dep-me', dict.dep);
+            setTxt('txt-with', dict.with); setTxt('txt-with-me', dict.with);
+            setTxt('txt-tasks', dict.tasks); setTxt('txt-team', dict.team); setTxt('txt-reward-head', dict.rewardHead);
+            setTxt('txt-claim-btn', dict.claimBtn); setTxt('txt-vip-title', dict.vipTitle); setTxt('txt-task-head', dict.taskHead);
+            setTxt('txt-uncompleted', dict.uncompleted); setTxt('txt-process', dict.process); setTxt('txt-completed', dict.completed);
+            setTxt('txt-today-inc', dict.todayInc); setTxt('txt-bal', dict.bal); setTxt('txt-vid-task', dict.vidTask);
+            setTxt('txt-vid-sub', dict.vidSub); setTxt('txt-team-page-title', dict.teamPageTitle); setTxt('txt-lbl-invcode', dict.lblInvCode);
+            setTxt('txt-lbl-invlink', dict.lblInvLink); setTxt('txt-copy-link', dict.copyLink); setTxt('txt-fin-title', dict.finTitle);
+            setTxt('txt-tot-bal', dict.totBal); setTxt('txt-tod-earn', dict.todEarn); setTxt('txt-team-comm', dict.teamComm);
+            setTxt('txt-tot-dep', dict.totDep); setTxt('txt-tot-with', dict.totWith); setTxt('txt-menu-bank', dict.menuBank);
+            setTxt('txt-menu-pwd', dict.menuPwd); setTxt('txt-menu-invite', dict.menuInvite); setTxt('txt-menu-redeem', dict.menuRedeem);
+            setTxt('txt-quick-redeem', dict.quickRedeem); setTxt('nav-lbl-home', dict.navHome); setTxt('nav-lbl-task', dict.navTask);
+            setTxt('nav-lbl-team', dict.navTeam); setTxt('nav-lbl-me', dict.navMe); setTxt('txt-modal-dep', dict.modalDep);
+            setTxt('txt-modal-with', dict.modalWith); setTxt('txt-logout-btn', dict.logout); setTxt('rssMessageFeed', dict.rssMsg);
+        }
+
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        let userPhone = localStorage.getItem('userPhone') || DEFAULT_ADMIN_PHONE;
+        let userPassword = localStorage.getItem('userPassword') || DEFAULT_ADMIN_PASS;
+        let userInviteCode = localStorage.getItem('userInviteCode') || ('FREEBIRR-' + Math.floor(1000 + Math.random() * 9000));
+        let userReferredBy = localStorage.getItem('userReferredBy') || "";
+
+        function getTodayDateString() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        let membersList = JSON.parse(localStorage.getItem('membersList')) || [
+            { 
+                phone: DEFAULT_ADMIN_PHONE, password: DEFAULT_ADMIN_PASS, inviteCode: 'FREEBIRR-9999',
+                referredBy: 'Direct', withdrawableBalance: 0.00, depositBalance: 0.00, vip: 0, 
+                approvedVips: [], purchasedVips: [], deposit: 0.00, withdraw: 0.00, todayEarned: 0.00, 
+                teamCommission: 0.00, completedTasks: 0, lastRewardClaimDate: '', lastResetDate: getTodayDateString(),
+                rewardStreak: 0, usedRedeemCodes: [], regDate: '2026-01-01', hasDeposited: true,
+                cbeName: '', cbeAcc: '', teleName: '', teleAcc: ''
+            }
+        ];
+
+        let redeemCodes = JSON.parse(localStorage.getItem('redeemCodes')) || [
+            { code: "FREEBIRR50", amount: 50, maxUses: 100, usedBy: [] }
+        ];
+
+        let depositRequests = JSON.parse(localStorage.getItem('depositRequests')) || [];
+        let withdrawRequests = JSON.parse(localStorage.getItem('withdrawRequests')) || [];
+
+        function getCurrentUser() {
+            let user = membersList.find(m => m.phone === userPhone);
+            if (!user) {
+                user = {
+                    phone: userPhone, password: userPassword, inviteCode: userInviteCode,
+                    referredBy: userReferredBy || 'Direct', withdrawableBalance: 0.00, depositBalance: 0.00, vip: 0,
+                    approvedVips: [], purchasedVips: [], deposit: 0.00, withdraw: 0.00,
+                    todayEarned: 0.00, teamCommission: 0.00, completedTasks: 0,
+                    lastRewardClaimDate: '', lastResetDate: getTodayDateString(),
+                    rewardStreak: 0, usedRedeemCodes: [], regDate: getTodayDateString(),
+                    hasDeposited: false, cbeName: '', cbeAcc: '', teleName: '', teleAcc: ''
+                };
+                membersList.push(user);
+                saveMembersList();
+            }
+            if (user.withdrawableBalance === undefined) user.withdrawableBalance = user.balance || 0.00;
+            if (user.depositBalance === undefined) user.depositBalance = 0.00;
+            if(!user.usedRedeemCodes) user.usedRedeemCodes = [];
+            if(!user.approvedVips) user.approvedVips = [];
+            if(!user.purchasedVips) user.purchasedVips = [];
+            if(user.hasDeposited === undefined) user.hasDeposited = (user.deposit > 0);
+            return user;
+        }
+
+        function saveMembersList() { localStorage.setItem('membersList', JSON.stringify(membersList)); }
+        function saveRedeemCodes() { localStorage.setItem('redeemCodes', JSON.stringify(redeemCodes)); }
+
+        const adminBroadcastChannel = new BroadcastChannel('admin_realtime_notifications');
+
+        function saveRequests() {
+            localStorage.setItem('depositRequests', JSON.stringify(depositRequests));
+            localStorage.setItem('withdrawRequests', JSON.stringify(withdrawRequests));
+            renderAdminTables();
+            checkRealtimeAdminNotifications();
+            adminBroadcastChannel.postMessage({ type: 'UPDATE_REQUESTS' });
+        }
+
+        adminBroadcastChannel.onmessage = (event) => {
+            if (event.data && event.data.type === 'UPDATE_REQUESTS') {
+                depositRequests = JSON.parse(localStorage.getItem('depositRequests')) || [];
+                withdrawRequests = JSON.parse(localStorage.getItem('withdrawRequests')) || [];
+                membersList = JSON.parse(localStorage.getItem('membersList')) || [];
+                renderAdminTables();
+                checkRealtimeAdminNotifications();
+            }
+        };
+
+        let currentUser = getCurrentUser();
+        let userWithdrawableBalance = currentUser.withdrawableBalance || 0.00;
+        let userDepositBalance = currentUser.depositBalance || 0.00;
+        let currentVip = currentUser.vip || 0;
+        let completedTasks = currentUser.completedTasks || 0;
+        let todayEarned = currentUser.todayEarned || 0.00;
+        let totalDepositAmt = currentUser.deposit || 0.00;
+        let totalWithdrawnAmt = currentUser.withdraw || 0.00;
+        let teamCommissionAmt = currentUser.teamCommission || 0.00;
+
+        let activeAlertRequest = null;
+
+        function openModal(id) {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+            const target = document.getElementById(id);
+            if (target) {
+                target.style.display = 'flex';
+                if (id === 'bankCardModal') {
+                    document.getElementById('cbeHolderName').value = currentUser.cbeName || '';
+                    document.getElementById('cbeAccNumber').value = currentUser.cbeAcc || '';
+                    document.getElementById('telebirrHolderName').value = currentUser.teleName || '';
+                    document.getElementById('telebirrAccNumber').value = currentUser.teleAcc || '';
+                } else if (id === 'withdrawModal') {
+                    updateWithdrawFields();
+                } else if (id === 'depositModal') {
+                    renderVIPs(); 
+                }
+            }
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        }
+
+        function copyText(text) {
+            if(!text) return;
+            navigator.clipboard.writeText(text);
+            alert("ኮፒ ተደርጓል: " + text);
+        }
+
+        function openCustomerService() {
+            window.open('https://t.me/cryptopmt', '_blank');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            const targetTab = document.getElementById('tab-' + tabId);
+            const targetNav = document.getElementById('nav-' + tabId);
+            if (targetTab) targetTab.classList.add('active-tab');
+            if (targetNav) targetNav.classList.add('active');
+        }
+
+        function saveBankCardDetails() {
+            currentUser.cbeName = document.getElementById('cbeHolderName').value.trim();
+            currentUser.cbeAcc = document.getElementById('cbeAccNumber').value.trim();
+            currentUser.teleName = document.getElementById('telebirrHolderName').value.trim();
+            currentUser.teleAcc = document.getElementById('telebirrAccNumber').value.trim();
+            
+            syncUserToDatabase();
+            closeModals();
+            alert("የባንክ መረጃዎ በተሳካ ሁኔታ ተመዝግቧል!");
+        }
+
+        function updateWithdrawFields() {
+            const method = document.getElementById('withdrawMethod').value;
+            let accName = '';
+            let accNo = '';
+
+            if (method === 'CBE') {
+                accName = currentUser.cbeName || '';
+                accNo = currentUser.cbeAcc || '';
+            } else if (method === 'Telebirr') {
+                accName = currentUser.teleName || '';
+                accNo = currentUser.teleAcc || '';
+            }
+
+            document.getElementById('withdrawName').value = accName;
+            document.getElementById('withdrawAcc').value = accNo;
+
+            const registeredBox = document.getElementById('registeredAccBox');
+            const registeredNumDisplay = document.getElementById('registeredAccNumDisplay');
+
+            if (accNo) {
+                if (registeredBox) registeredBox.style.display = 'block';
+                if (registeredNumDisplay) registeredNumDisplay.textContent = `${method}: ${accNo} (${accName})`;
+            } else {
+                if (registeredBox) registeredBox.style.display = 'none';
+            }
+        }
+
+        function copyRegisteredAcc() {
+            const accNo = document.getElementById('withdrawAcc').value;
+            if (accNo) {
+                copyText(accNo);
+            } else {
+                alert("የተመዘገበ አካውንት አልተገኘም!");
+            }
+        }
+
+        function checkRealtimeAdminNotifications() {
+            if (userPhone !== DEFAULT_ADMIN_PHONE) return;
+
+            const pendingDep = depositRequests.find(r => r.status === 'pending');
+            const pendingWith = withdrawRequests.find(r => r.status === 'pending');
+
+            const alertContainer = document.getElementById('adminRealtimeAlertContainer');
+            const alertText = document.getElementById('adminAlertText');
+
+            if (pendingDep) {
+                activeAlertRequest = { type: 'deposit', id: pendingDep.id };
+                alertText.innerHTML = `📥 <strong>አዲስ የ Deposit ጥያቄ!</strong><br>አባል: <strong>+251 ${pendingDep.phone}</strong><br>ደረጃ/መጠን: <strong>VIP ${pendingDep.vipLevel} (${pendingDep.amount} ETB)</strong><br>TxID: <strong>${pendingDep.txId}</strong>`;
+                alertContainer.style.display = 'block';
+            } else if (pendingWith) {
+                activeAlertRequest = { type: 'withdraw', id: pendingWith.id };
+                alertText.innerHTML = `📤 <strong>አዲስ የ Withdraw ጥያቄ!</strong><br>አባል: <strong>+251 ${pendingWith.phone}</strong><br>ዘዴ: <strong>${pendingWith.method} (${pendingWith.accountNo})</strong><br>Net: <strong>${pendingWith.netAmount} ETB</strong>`;
+                alertContainer.style.display = 'block';
+            } else {
+                alertContainer.style.display = 'none';
+                activeAlertRequest = null;
+            }
+        }
+
+        function dismissAlertBanner() {
+            document.getElementById('adminRealtimeAlertContainer').style.display = 'none';
+        }
+
+        function executeFastAction(action) {
+            if (!activeAlertRequest) return;
+            if (activeAlertRequest.type === 'deposit') {
+                if (action === 'approve') approveDeposit(activeAlertRequest.id);
+                else rejectDeposit(activeAlertRequest.id);
+            } else if (activeAlertRequest.type === 'withdraw') {
+                if (action === 'approve') approveWithdraw(activeAlertRequest.id);
+                else rejectWithdraw(activeAlertRequest.id);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCodeParam = urlParams.get('ref');
+            if (refCodeParam) {
+                const signupInvite = document.getElementById('signupInviteCode');
+                if (signupInvite) signupInvite.value = refCodeParam;
+                if (!isLoggedIn) {
+                    toggleAuthMode('signup');
+                }
+            }
+
+            checkAuthStatus();
+            renderVIPs();
+            populateAdminVipOptions();
+            updateTaskDashboardUI();
+            updateTeamUI();
+            renderAdminTables();
+        });
+
+        function updateClock() {
+            document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+            updateDailyRewardUI();
+        }
+
+        function checkAuthStatus() {
+            const authOverlay = document.getElementById('authOverlay');
+            const adminSection = document.getElementById('adminPanelSection');
+            if (isLoggedIn) {
+                authOverlay.style.display = 'none';
+                if (userPhone === DEFAULT_ADMIN_PHONE) {
+                    adminSection.style.display = 'block';
+                    renderAdminTables();
+                } else {
+                    adminSection.style.display = 'none';
+                }
+            } else {
+                authOverlay.style.display = 'flex';
+                adminSection.style.display = 'none';
+            }
+        }
+
+        function toggleAuthMode(mode) {
+            document.getElementById('loginBox').style.display = mode === 'signup' ? 'none' : 'block';
+            document.getElementById('signupBox').style.display = mode === 'signup' ? 'block' : 'none';
+        }
+
+        function formatPhoneInput(input) { input.value = input.value.replace(/[^0-9]/g, ''); }
+
+        function syncUserToDatabase() {
+            currentUser.withdrawableBalance = userWithdrawableBalance;
+            currentUser.depositBalance = userDepositBalance;
+            currentUser.vip = currentVip;
+            currentUser.completedTasks = completedTasks;
+            currentUser.todayEarned = todayEarned;
+            currentUser.deposit = totalDepositAmt;
+            currentUser.withdraw = totalWithdrawnAmt;
+            currentUser.teamCommission = teamCommissionAmt;
+            let idx = membersList.findIndex(m => m.phone === userPhone);
+            if (idx !== -1) { membersList[idx] = currentUser; saveMembersList(); }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const phone = document.getElementById('loginPhone').value.trim();
+            const pass = document.getElementById('loginPassword').value.trim();
+
+            let member = membersList.find(m => m.phone === phone);
+            if (member && member.password === pass) {
+                isLoggedIn = true;
+                userPhone = phone;
+                userPassword = pass;
+                userInviteCode = member.inviteCode;
+                userReferredBy = member.referredBy || 'Direct';
+
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userPhone', userPhone);
+                localStorage.setItem('userPassword', userPassword);
+                localStorage.setItem('userInviteCode', userInviteCode);
+                localStorage.setItem('userReferredBy', userReferredBy);
+
+                currentUser = getCurrentUser();
+                userWithdrawableBalance = currentUser.withdrawableBalance || 0;
+                userDepositBalance = currentUser.depositBalance || 0;
+                currentVip = currentUser.vip || 0;
+
+                checkAuthStatus();
+                renderVIPs();
+                updateTaskDashboardUI();
+                updateTeamUI();
+                alert("ተሳክቷል! እንኳን በደህና መጡ።");
+            } else {
+                alert("የተሳሳተ ስልክ ቁጥር ወይም ይለፍ ቃል!");
+            }
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const pass = document.getElementById('signupPassword').value.trim();
+            const confirmPass = document.getElementById('signupConfirmPassword').value.trim();
+            const refCode = document.getElementById('signupInviteCode').value.trim();
+
+            if (pass !== confirmPass) { alert("የተመዘገበው ይለፍ ቃል አይመሳሰልም!"); return; }
+            if (membersList.some(m => m.phone === phone)) { alert("ይህ ስልክ ቁጥር አስቀድሞ ተመዝግቧል!"); return; }
+
+            const newCode = 'FREEBIRR-' + Math.floor(1000 + Math.random() * 9000);
+            const newUser = {
+                phone: phone, password: pass, inviteCode: newCode,
+                referredBy: refCode ? refCode : 'Direct', withdrawableBalance: 0.00, depositBalance: 0.00, vip: 0,
+                approvedVips: [], purchasedVips: [], deposit: 0.00, withdraw: 0.00,
+                todayEarned: 0.00, teamCommission: 0.00, completedTasks: 0,
+                lastRewardClaimDate: '', lastResetDate: getTodayDateString(),
+                rewardStreak: 0, usedRedeemCodes: [], regDate: getTodayDateString(),
+                hasDeposited: false, cbeName: '', cbeAcc: '', teleName: '', teleAcc: ''
+            };
+
+            membersList.push(newUser);
+            saveMembersList();
+
+            isLoggedIn = true; userPhone = phone; userPassword = pass; userInviteCode = newCode;
+            localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('userPhone', userPhone);
+            localStorage.setItem('userPassword', userPassword); localStorage.setItem('userInviteCode', userInviteCode);
+
+            currentUser = newUser;
+            checkAuthStatus(); renderVIPs(); updateTaskDashboardUI(); updateTeamUI();
+            alert("ምዝገባው ተጠናቋል!");
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('isLoggedIn');
+            isLoggedIn = false;
+            checkAuthStatus();
+        }
+
+        function updateDailyRewardUI() {
+            const user = getCurrentUser();
+            const claimBtn = document.getElementById('claimRewardBtn');
+            const claimBtnTxt = document.getElementById('txt-claim-btn');
+            const rewardSub = document.getElementById('dailyRewardSub');
+            
+            if (!claimBtn || !claimBtnTxt || !rewardSub) return;
+
+            const todayStr = getTodayDateString();
+            let streak = user.rewardStreak || 0;
+            let lastClaimStr = user.lastRewardClaimDate;
+
+            if (lastClaimStr === todayStr) {
+                claimBtn.disabled = true;
+                claimBtnTxt.textContent = "Today claimed";
+                rewardSub.innerHTML = `ዛሬ የቀን ${streak} ቦነስ ወስደዋል!`;
+            } else {
+                claimBtn.disabled = false;
+                claimBtnTxt.textContent = `1 ETB ውሰድ`;
+            }
+        }
+
+        function claimDailyReward() {
+            const user = getCurrentUser();
+            const todayStr = getTodayDateString();
+
+            if (user.lastRewardClaimDate === todayStr) {
+                alert("ዛሬ አስቀድመው ቦነስ ወስደዋል!");
+                return;
+            }
+
+            userWithdrawableBalance += 1;
+            user.withdrawableBalance = userWithdrawableBalance;
+            user.lastRewardClaimDate = todayStr;
+
+            syncUserToDatabase();
+            updateDailyRewardUI();
+            updateTaskDashboardUI();
+
+            alert(`🎉 እንኳን ደስ አለዎት! 1 ETB ወደ ወጪ ሂሳብዎ ተጨምሯል።`);
+        }
+
+        function renderVIPs() {
+            const container = document.getElementById('vipContainer');
+            const depSelect = document.getElementById('depVipSelect');
+            if(!container) return;
+            container.innerHTML = '';
+            if(depSelect) depSelect.innerHTML = '';
+
+            const user = getCurrentUser();
+
+            vipList.forEach(v => {
+                const div = document.createElement('div');
+                const isComingSoon = v.level >= 16;
+                div.className = 'vip-card' + (isComingSoon ? ' coming-soon' : '');
+
+                let btnHtml = '';
+                if (isComingSoon) {
+                    btnHtml = `<button class="vip-btn" style="background:#64748b; cursor:not-allowed;" disabled>Coming Soon</button>`;
+                } else if (user.vip >= v.level) {
+                    btnHtml = `<button class="vip-btn" style="background:#10b981;" disabled><i class="fas fa-check-circle"></i> Active</button>`;
+                } else {
+                    btnHtml = `<button class="vip-btn" onclick="openDepositModalForLevel(${v.level})">ከፈት</button>`;
+                }
+
+                div.innerHTML = `
+                    <div class="vip-badge">VIP ${v.level}</div>
+                    <div class="vip-details">
+                        <div>ዋጋ: <strong>${v.price.toLocaleString()} ETB</strong></div>
+                        <div>ዕለታዊ ገቢ: <strong>${(v.taskPrice * 2).toLocaleString()} ETB</strong></div>
+                    </div>
+                    ${btnHtml}
+                `;
+                container.appendChild(div);
+
+                if (depSelect && !isComingSoon) {
+                    const opt = document.createElement('option');
+                    opt.value = v.level;
+                    opt.textContent = `VIP ${v.level} (${v.price.toLocaleString()} ETB)`;
+                    depSelect.appendChild(opt);
+                }
+            });
+        }
+
+        function openDepositModalForLevel(level) {
+            const depSelect = document.getElementById('depVipSelect');
+            if (depSelect) depSelect.value = level;
+            openModal('depositModal');
+        }
+
+        function populateAdminVipOptions() {
+            const select = document.getElementById('adminEditVipLevel');
+            if (!select) return;
+            select.innerHTML = '<option value="0">VIP 0</option>';
+            vipList.forEach(v => {
+                select.innerHTML += `<option value="${v.level}">VIP ${v.level}</option>`;
+            });
+        }
+
+        function updateTaskDashboardUI() {
+            const user = getCurrentUser();
+            document.getElementById('userVipBadge').textContent = `VIP ${user.vip}`;
+            document.getElementById('meVipBadge').textContent = `VIP ${user.vip}`;
+            document.getElementById('userPhoneDisplay').textContent = `+251 ${user.phone}`;
+            document.getElementById('userUidDisplay').textContent = user.inviteCode.replace('FREEBIRR-', '');
+            
+            document.getElementById('taskBalance').textContent = `ETB ${userWithdrawableBalance.toFixed(2)}`;
+            document.getElementById('withdrawBalanceDisplay').textContent = `ETB ${userWithdrawableBalance.toFixed(2)}`;
+            document.getElementById('todayIncome').textContent = `ETB ${todayEarned.toFixed(2)}`;
+            
+            document.getElementById('gridTotalBalance').textContent = `ETB ${userWithdrawableBalance.toFixed(2)}`;
+            document.getElementById('gridDepositBalance').textContent = `ETB ${userDepositBalance.toFixed(2)}`;
+            document.getElementById('gridTodayEarned').textContent = `ETB ${todayEarned.toFixed(2)}`;
+            document.getElementById('gridTeamCommission').textContent = `ETB ${(user.teamCommission || 0).toFixed(2)}`;
+            document.getElementById('gridTotalDeposit').textContent = `ETB ${(user.deposit || 0).toFixed(2)}`;
+            document.getElementById('gridTotalWithdrawn').textContent = `ETB ${(user.withdraw || 0).toFixed(2)}`;
+        }
+
+        let isTaskRunning = false;
+        function runVideoTask() {
+            const user = getCurrentUser();
+            if (user.vip < 1) {
+                alert("ታስክ ለመስራት ቢያንስ VIP 1 መሆን አለብዎት!");
+                return;
+            }
+            if (completedTasks >= 2) {
+                alert("የዛሬውን ታስክ አጠናቀዋል!");
+                return;
+            }
+            if (isTaskRunning) return;
+
+            isTaskRunning = true;
+            let seconds = 10;
+            const btn = document.getElementById('startTaskBtn');
+            const timerDisplay = document.getElementById('taskTimerDisplay');
+            btn.disabled = true;
+
+            const vipInfo = vipList.find(v => v.level === user.vip) || vipList[0];
+            const rewardPerTask = vipInfo.taskPrice;
+
+            const interval = setInterval(() => {
+                seconds--;
+                timerDisplay.textContent = `00:${seconds < 10 ? '0' + seconds : seconds}`;
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    isTaskRunning = false;
+                    btn.disabled = false;
+                    timerDisplay.textContent = '00:10';
+
+                    completedTasks++;
+                    todayEarned += rewardPerTask;
+                    userWithdrawableBalance += rewardPerTask;
+
+                    syncUserToDatabase();
+                    updateTaskDashboardUI();
+                    alert(`🎉 ታስኩ ተጠናቋል! ${rewardPerTask} ETB ወደ ወጪ ሂሳብዎ ተጨምሯል።`);
+                }
+            }, 1000);
+        }
+
+        /* DEPOSIT SUBMIT */
+        function submitDeposit() {
+            try {
+                const depVipEl = document.getElementById('depVipSelect');
+                const txIdEl = document.getElementById('txId');
+                const fileInput = document.getElementById('depScreenshot');
+                const submitBtn = document.getElementById('txt-btn-dep-submit');
+
+                if (!depVipEl || !txIdEl) {
+                    alert("የሲስተም ስህተት፡ እባክዎ ገጹን Reload ያድርጉ!");
+                    return;
+                }
+
+                const vipLvl = parseInt(depVipEl.value) || 1;
+                const txId = txIdEl.value.trim();
+
+                if (!txId) {
+                    alert("እባክዎን የ Transaction ID (TxID) ያስገቡ!");
+                    return;
+                }
+
+                if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                    alert("እባክዎን የክፍያ ስክሪንሽኦት (Screenshot) ይጫኑ!");
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "እየላከ ነው...";
+
+                const vipInfo = vipList.find(v => v.level === vipLvl);
+                const amt = vipInfo ? vipInfo.price : 1000;
+
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const screenshotBase64 = e.target.result;
+
+                    const newDepositReq = {
+                        id: Date.now(),
+                        phone: userPhone,
+                        vipLevel: vipLvl,
+                        amount: amt,
+                        txId: txId,
+                        screenshot: screenshotBase64,
+                        status: 'pending',
+                        date: new Date().toLocaleString()
+                    };
+
+                    depositRequests.push(newDepositReq);
+                    saveRequests();
+
+                    txIdEl.value = '';
+                    fileInput.value = '';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "ላክ (Submit)";
+
+                    closeModals();
+                    alert("✅ የገንዘብ ማስገቢያ ጥያቄዎ (Deposit Request) ከ TxID እና Screenshot ጋር በተሳካ ሁኔታ ተልኳል! የአድሚን ፍቃድ ይጠብቁ።");
+                };
+
+                reader.onerror = function () {
+                    alert("ምስሉን ማንበብ አልተቻለም! እባክዎ ሌላ ምስል ይሞክሩ።");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "ላክ (Submit)";
+                };
+
+                reader.readAsDataURL(file);
+
+            } catch (err) {
+                console.error("Deposit submit error:", err);
+                alert("ስህተት ተፈጥሯል፡ " + err.message);
+                const submitBtn = document.getElementById('txt-btn-dep-submit');
+                if(submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "ላክ (Submit)";
+                }
+            }
+        }
+
+        /* AUTOMATIC INCOME & EXPENSE CALCULATOR FUNCTION */
+        function calculateAdminFinances() {
+            let totalApprovedDep = depositRequests
+                .filter(r => r.status === 'approved')
+                .reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+            
+            let totalApprovedWith = withdrawRequests
+                .filter(r => r.status === 'approved')
+                .reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+
+            let pendingDepCount = depositRequests.filter(r => r.status === 'pending').length;
+            let pendingWithCount = withdrawRequests.filter(r => r.status === 'pending').length;
+
+            let netProfit = totalApprovedDep - totalApprovedWith;
+
+            const elDep = document.getElementById('adminCalcApprovedDeposits');
+            const elWith = document.getElementById('adminCalcApprovedWithdraws');
+            const elPending = document.getElementById('adminCalcPendingSummary');
+            const elNet = document.getElementById('adminCalcNetProfit');
+
+            if (elDep) elDep.textContent = `ETB ${totalApprovedDep.toFixed(2)}`;
+            if (elWith) elWith.textContent = `ETB ${totalApprovedWith.toFixed(2)}`;
+            if (elPending) elPending.textContent = `ገቢ: ${pendingDepCount} | ወጪ: ${pendingWithCount}`;
+            if (elNet) elNet.textContent = `ETB ${netProfit.toFixed(2)}`;
+        }
+
+        /* RENDER ALL ADMIN TABLES & RUN AUTOMATIC CALCULATOR */
+        function renderAdminTables() {
+            if (userPhone !== DEFAULT_ADMIN_PHONE) return;
+
+            // Run the Automatic Income/Expense Calculator
+            calculateAdminFinances();
+
+            // Render Deposit Requests Table
+            const depTbody = document.getElementById('adminDepositTable');
+            if (depTbody) {
+                depTbody.innerHTML = '';
+                if (depositRequests.length === 0) {
+                    depTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">ምንም የ Deposit ጥያቄ የለም</td></tr>`;
+                } else {
+                    depositRequests.slice().reverse().forEach(req => {
+                        const tr = document.createElement('tr');
+                        
+                        let imgHtml = req.screenshot 
+                            ? `<a href="${req.screenshot}" target="_blank" title="ለመመልከት ይጫኑ">
+                                 <img src="${req.screenshot}" class="admin-screenshot-thumb" alt="Deposit Screenshot">
+                               </a>`
+                            : `<span style="color:#ef4444; font-size:10px;">ምንም ምስል የለም</span>`;
+
+                        let actions = '-';
+                        if (req.status === 'pending') {
+                            actions = `
+                                <button class="admin-btn-approve" onclick="approveDeposit(${req.id})">Approve</button>
+                                <button class="admin-btn-reject" onclick="rejectDeposit(${req.id})">Reject</button>
+                            `;
+                        }
+
+                        tr.innerHTML = `
+                            <td>+251 ${req.phone}</td>
+                            <td>VIP ${req.vipLevel} (${req.amount} ETB)</td>
+                            <td>
+                                <div style="font-weight:bold; color:#fbbf24; margin-bottom:4px;">TxID: ${req.txId}</div>
+                                ${imgHtml}
+                            </td>
+                            <td><span class="status-badge ${req.status}">${req.status}</span></td>
+                            <td>${actions}</td>
+                        `;
+                        depTbody.appendChild(tr);
+                    });
+                }
+            }
+
+            // Render Withdraw Requests Table
+            const withTbody = document.getElementById('adminWithdrawTable');
+            if (withTbody) {
+                withTbody.innerHTML = '';
+                if (withdrawRequests.length === 0) {
+                    withTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">ምንም የ Withdraw ጥያቄ የለም</td></tr>`;
+                } else {
+                    withdrawRequests.slice().reverse().forEach(req => {
+                        const tr = document.createElement('tr');
+                        let actions = '-';
+                        if (req.status === 'pending') {
+                            actions = `
+                                <button class="admin-btn-approve" onclick="approveWithdraw(${req.id})">Approve</button>
+                                <button class="admin-btn-reject" onclick="rejectWithdraw(${req.id})">Reject</button>
+                            `;
+                        }
+
+                        tr.innerHTML = `
+                            <td>+251 ${req.phone}</td>
+                            <td>${req.method}<br><small>${req.accountNo} (${req.accountName})</small></td>
+                            <td><strong>${req.netAmount.toFixed(2)} ETB</strong> <br><small style="color:#94a3b8;">(Gross: ${req.amount})</small></td>
+                            <td><span class="status-badge ${req.status}">${req.status}</span></td>
+                            <td>${actions}</td>
+                        `;
+                        withTbody.appendChild(tr);
+                    });
+                }
+            }
+
+            // Render Redeem Codes Table
+            const redeemTbody = document.getElementById('adminRedeemTable');
+            if (redeemTbody) {
+                redeemTbody.innerHTML = '';
+                redeemCodes.forEach((rc, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${rc.code}</strong></td>
+                        <td>${rc.amount} ETB</td>
+                        <td>${rc.usedBy.length}/${rc.maxUses}</td>
+                        <td><button class="admin-btn-reject" onclick="deleteAdminRedeemCode(${idx})">Delete</button></td>
+                    `;
+                    redeemTbody.appendChild(tr);
+                });
+            }
+
+            // Render Members Table
+            const searchVal = (document.getElementById('adminMemberSearchInput')?.value || '').trim();
+            const membersTbody = document.getElementById('adminMembersTable');
+            const editSelect = document.getElementById('adminEditUserSelect');
+
+            if (membersTbody) {
+                membersTbody.innerHTML = '';
+                if (editSelect) editSelect.innerHTML = '';
+
+                membersList.forEach(m => {
+                    if (!searchVal || m.phone.includes(searchVal)) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>+251 ${m.phone}</td>
+                            <td>VIP ${m.vip}</td>
+                            <td>${m.referredBy || 'Direct'}</td>
+                            <td>ETB ${(m.withdrawableBalance || 0).toFixed(2)}</td>
+                            <td>ETB ${(m.depositBalance || 0).toFixed(2)}</td>
+                            <td><button class="copy-btn" onclick="selectMemberForEdit('${m.phone}')">Edit</button></td>
+                        `;
+                        membersTbody.appendChild(tr);
+                    }
+
+                    if (editSelect) {
+                        const opt = document.createElement('option');
+                        opt.value = m.phone;
+                        opt.textContent = `+251 ${m.phone} (VIP ${m.vip})`;
+                        editSelect.appendChild(opt);
+                    }
+                });
+            }
+        }
+
+        function distributeReferralCommission(targetUser, amount) {
+            if (!targetUser.referredBy || targetUser.referredBy === 'Direct') return;
+
+            let level1User = membersList.find(m => m.inviteCode === targetUser.referredBy);
+            if (level1User) {
+                let comm1 = amount * 0.15;
+                level1User.withdrawableBalance = (level1User.withdrawableBalance || 0) + comm1;
+                level1User.teamCommission = (level1User.teamCommission || 0) + comm1;
+
+                if (level1User.referredBy && level1User.referredBy !== 'Direct') {
+                    let level2User = membersList.find(m => m.inviteCode === level1User.referredBy);
+                    if (level2User) {
+                        let comm2 = amount * 0.03;
+                        level2User.withdrawableBalance = (level2User.withdrawableBalance || 0) + comm2;
+                        level2User.teamCommission = (level2User.teamCommission || 0) + comm2;
+
+                        if (level2User.referredBy && level2User.referredBy !== 'Direct') {
+                            let level3User = membersList.find(m => m.inviteCode === level2User.referredBy);
+                            if (level3User) {
+                                let comm3 = amount * 0.02;
+                                level3User.withdrawableBalance = (level3User.withdrawableBalance || 0) + comm3;
+                                level3User.teamCommission = (level3User.teamCommission || 0) + comm3;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function approveDeposit(reqId) {
+            const req = depositRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+
+            req.status = 'approved';
+
+            let targetUser = membersList.find(m => m.phone === req.phone);
+            if (targetUser) {
+                if (req.vipLevel > targetUser.vip) {
+                    targetUser.vip = req.vipLevel;
+                }
+                targetUser.deposit = (targetUser.deposit || 0) + req.amount;
+                targetUser.depositBalance = (targetUser.depositBalance || 0) + req.amount;
+                targetUser.hasDeposited = true;
+
+                distributeReferralCommission(targetUser, req.amount);
+            }
+
+            saveMembersList();
+            saveRequests();
+
+            if (userPhone === req.phone) {
+                currentUser = getCurrentUser();
+                currentVip = currentUser.vip;
+                userDepositBalance = currentUser.depositBalance;
+                updateTaskDashboardUI();
+                renderVIPs();
+            }
+            alert("✅ Deposit ጥያቄው ጸድቋል!");
+        }
+
+        function rejectDeposit(reqId) {
+            const req = depositRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+            req.status = 'rejected';
+            saveRequests();
+            alert("❌ Deposit ጥያቄው ውድቅ ተደርጓል!");
+        }
+
+        function approveWithdraw(reqId) {
+            const req = withdrawRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+            req.status = 'approved';
+
+            let targetUser = membersList.find(m => m.phone === req.phone);
+            if (targetUser) {
+                targetUser.withdraw = (targetUser.withdraw || 0) + req.amount;
+            }
+
+            saveMembersList();
+            saveRequests();
+            alert("✅ የወጪ ጥያቄው ተፈቅዷል!");
+        }
+
+        function rejectWithdraw(reqId) {
+            const req = withdrawRequests.find(r => r.id === reqId);
+            if (!req || req.status !== 'pending') return;
+
+            req.status = 'rejected';
+
+            // Refund user's withdrawable balance
+            let targetUser = membersList.find(m => m.phone === req.phone);
+            if (targetUser) {
+                targetUser.withdrawableBalance = (targetUser.withdrawableBalance || 0) + req.amount;
+            }
+
+            saveMembersList();
+            saveRequests();
+
+            if (userPhone === req.phone) {
+                userWithdrawableBalance = currentUser.withdrawableBalance;
+                updateTaskDashboardUI();
+            }
+            alert("❌ የወጪ ጥያቄው ውድቅ ተደርጓል፣ ገንዘቡ ወደ አባሉ ተመልሷል!");
+        }
+
+        function calculateWithdrawFee() {
+            const amt = parseFloat(document.getElementById('withdrawAmt').value) || 0;
+            const fee = amt * 0.15;
+            const net = amt - fee;
+            document.getElementById('feeAmount').textContent = `ETB ${fee.toFixed(2)}`;
+            document.getElementById('netAmount').textContent = `ETB ${net > 0 ? net.toFixed(2) : '0.00'}`;
+        }
+
+        function submitWithdraw() {
+            const method = document.getElementById('withdrawMethod').value;
+            const name = document.getElementById('withdrawName').value.trim();
+            const acc = document.getElementById('withdrawAcc').value.trim();
+            const amt = parseFloat(document.getElementById('withdrawAmt').value) || 0;
+
+            if (amt < 200) { alert("ከአነስተኛው የማውጫ መጠን (200 ETB) በታች ማውጣት አይቻልም!"); return; }
+            if (amt > userWithdrawableBalance) { alert("በቂ የሂሳብ መጠን የለዎትም!"); return; }
+            if (!name || !acc) { alert("እባክዎን የባንክ ሂሳብ ስም እና ቁጥር ያስገቡ!"); return; }
+
+            const fee = amt * 0.15;
+            const net = amt - fee;
+
+            userWithdrawableBalance -= amt;
+            currentUser.withdrawableBalance = userWithdrawableBalance;
+            syncUserToDatabase();
+
+            const newWithdrawReq = {
+                id: Date.now(),
+                phone: userPhone,
+                method: method,
+                accountName: name,
+                accountNo: acc,
+                amount: amt,
+                fee: fee,
+                netAmount: net,
+                status: 'pending',
+                date: new Date().toLocaleString()
+            };
+
+            withdrawRequests.push(newWithdrawReq);
+            saveRequests();
+
+            closeModals();
+            updateTaskDashboardUI();
+            alert("✅ የወጪ ጥያቄዎ በተሳካ ሁኔታ ተልኳል! በአድሚን እስኪረጋገጥ ይጠብቁ።");
+        }
+
+        function createAdminRedeemCode() {
+            const code = document.getElementById('adminRedeemCodeName').value.trim().toUpperCase();
+            const amount = parseFloat(document.getElementById('adminRedeemAmount').value) || 0;
+            const maxUses = parseInt(document.getElementById('adminRedeemMaxUses').value) || 100;
+
+            if (!code || amount <= 0) { alert("ትክክለኛ ኮድ እና የቦነስ መጠን ያስገቡ!"); return; }
+
+            redeemCodes.push({ code: code, amount: amount, maxUses: maxUses, usedBy: [] });
+            saveRedeemCodes();
+            renderAdminTables();
+            alert("✅ አዲስ Redeem Code ተፈጥሯል!");
+        }
+
+        function deleteAdminRedeemCode(index) {
+            redeemCodes.splice(index, 1);
+            saveRedeemCodes();
+            renderAdminTables();
+        }
+
+        function submitRedeemCode() {
+            const inputCode = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
+            if (!inputCode) return;
+
+            let rc = redeemCodes.find(r => r.code === inputCode);
+            if (!rc) { alert("የማይሰራ ኮድ ነው!"); return; }
+            if (rc.usedBy.includes(userPhone)) { alert("ይህንን ኮድ ቀደም ብለው ተጠቅመዋል!"); return; }
+            if (rc.usedBy.length >= rc.maxUses) { alert("ይህ ኮድ የመጠቀሚያ ገደቡ ላይ ደርሷል!"); return; }
+
+            rc.usedBy.push(userPhone);
+            saveRedeemCodes();
+
+            userWithdrawableBalance += rc.amount;
+            currentUser.withdrawableBalance = userWithdrawableBalance;
+            if(!currentUser.usedRedeemCodes) currentUser.usedRedeemCodes = [];
+            currentUser.usedRedeemCodes.push(inputCode);
+
+            syncUserToDatabase();
+            updateTaskDashboardUI();
+            closeModals();
+            alert(`🎉 እንኳን ደስ አለዎት! ${rc.amount} ETB ቦነስ ተቀብለዋል።`);
+        }
+
+        function saveAdminSystemBank() {
+            const cbeName = document.getElementById('adminCbeName').value.trim();
+            const cbeAcc = document.getElementById('adminCbeAcc').value.trim();
+            const teleName = document.getElementById('adminTeleName').value.trim();
+            const teleAcc = document.getElementById('adminTeleAcc').value.trim();
+
+            if (cbeName) document.getElementById('displayCbeHolder').textContent = cbeName;
+            if (cbeAcc) document.getElementById('displayCbeAcc').textContent = cbeAcc;
+            if (teleName) document.getElementById('displayTeleHolder').textContent = teleName;
+            if (teleAcc) document.getElementById('displayTeleAcc').textContent = teleAcc;
+
+            alert("✅ የሲስተም ባንክ መረጃዎች ተዘምነዋል!");
+        }
+
+        function selectMemberForEdit(phone) {
+            const select = document.getElementById('adminEditUserSelect');
+            if (select) {
+                select.value = phone;
+                onAdminSelectMemberChange();
+            }
+        }
+
+        function onAdminSelectMemberChange() {
+            const phone = document.getElementById('adminEditUserSelect').value;
+            let m = membersList.find(x => x.phone === phone);
+            if (!m) return;
+
+            document.getElementById('adminEditBalance').value = m.withdrawableBalance || 0;
+            document.getElementById('adminEditDepositBalance').value = m.depositBalance || 0;
+            document.getElementById('adminEditVipLevel').value = m.vip || 0;
+            document.getElementById('adminEditDeposit').value = m.deposit || 0;
+            document.getElementById('adminEditWithdraw').value = m.withdraw || 0;
+            document.getElementById('adminEditTodayEarned').value = m.todayEarned || 0;
+            document.getElementById('adminEditTeamComm').value = m.teamCommission || 0;
+        }
+
+        function saveMemberFinancialRecord() {
+            const phone = document.getElementById('adminEditUserSelect').value;
+            let m = membersList.find(x => x.phone === phone);
+            if (!m) return;
+
+            m.withdrawableBalance = parseFloat(document.getElementById('adminEditBalance').value) || 0;
+            m.depositBalance = parseFloat(document.getElementById('adminEditDepositBalance').value) || 0;
+            m.vip = parseInt(document.getElementById('adminEditVipLevel').value) || 0;
+            m.deposit = parseFloat(document.getElementById('adminEditDeposit').value) || 0;
+            m.withdraw = parseFloat(document.getElementById('adminEditWithdraw').value) || 0;
+            m.todayEarned = parseFloat(document.getElementById('adminEditTodayEarned').value) || 0;
+            m.teamCommission = parseFloat(document.getElementById('adminEditTeamComm').value) || 0;
+
+            saveMembersList();
+            renderAdminTables();
+
+            if (phone === userPhone) {
+                currentUser = getCurrentUser();
+                userWithdrawableBalance = currentUser.withdrawableBalance;
+                userDepositBalance = currentUser.depositBalance;
+                currentVip = currentUser.vip;
+                updateTaskDashboardUI();
+                renderVIPs();
+            }
+            alert("✅ የአባሉ የፋይናንስ መረጃ ተቀይሯል!");
+        }
+
+        function updateTeamUI() {
+            const user = getCurrentUser();
+            document.getElementById('userInviteCode').textContent = user.inviteCode;
+            document.getElementById('userInviteLink').textContent = `${window.location.origin}${window.location.pathname}?ref=${user.inviteCode}`;
+
+            let l1 = membersList.filter(m => m.referredBy === user.inviteCode);
+            let l2 = [];
+            l1.forEach(m1 => {
+                let sub = membersList.filter(m2 => m2.referredBy === m1.inviteCode);
+                l2.push(...sub);
+            });
+            let l3 = [];
+            l2.forEach(m2 => {
+                let sub = membersList.filter(m3 => m3.referredBy === m2.inviteCode);
+                l3.push(...sub);
+            });
+
+            document.getElementById('countLvl1').textContent = l1.length;
+            document.getElementById('countLvl2').textContent = l2.length;
+            document.getElementById('countLvl3').textContent = l3.length;
+
+            switchLevelTab(1);
+        }
+
+        function switchLevelTab(level) {
+            [1, 2, 3].forEach(l => {
+                const tab = document.getElementById(`tabLvl${l}`);
+                if (tab) tab.classList.toggle('active', l === level);
+            });
+
+            const user = getCurrentUser();
+            const container = document.getElementById('memberListContainer');
+            const title = document.getElementById('levelListTitle');
+
+            if (!container) return;
+            container.innerHTML = '';
+            title.textContent = `Level ${level} Members List`;
+
+            let list = [];
+            if (level === 1) {
+                list = membersList.filter(m => m.referredBy === user.inviteCode);
+            } else if (level === 2) {
+                let l1 = membersList.filter(m => m.referredBy === user.inviteCode);
+                l1.forEach(m1 => list.push(...membersList.filter(m2 => m2.referredBy === m1.inviteCode)));
+            } else if (level === 3) {
+                let l1 = membersList.filter(m => m.referredBy === user.inviteCode);
+                let l2 = [];
+                l1.forEach(m1 => l2.push(...membersList.filter(m2 => m2.referredBy === m1.inviteCode)));
+                l2.forEach(m2 => list.push(...membersList.filter(m3 => m3.referredBy === m2.inviteCode)));
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="font-size:12px; color:#94a3b8; text-align:center; padding:15px;">በዚህ ደረጃ የተመዘገበ አባል የለም።</div>`;
+                return;
+            }
+
+            list.forEach(m => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>+251 ${m.phone}</strong><br>
+                        <small style="color:#64748b;">VIP ${m.vip} | Date: ${m.regDate || '2026-01-01'}</small>
+                    </div>
+                    <div><span class="status-badge approved">Active</span></div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function submitPasswordChange() {
+            const oldP = document.getElementById('oldPasswordInput').value.trim();
+            const newP = document.getElementById('newPasswordInput').value.trim();
+            const confP = document.getElementById('confirmPasswordInput').value.trim();
+
+            if (oldP !== userPassword) { alert("የድሮው ይለፍ ቃል የተሳሳተ ነው!"); return; }
+            if (newP !== confP) { alert("አዲሱ ይለፍ ቃል አይመሳሰልም!"); return; }
+            if (newP.length < 4) { alert("ይለፍ ቃል ቢያንስ 4 ቁምፊዎች መሆን አለበት!"); return; }
+
+            userPassword = newP;
+            currentUser.password = newP;
+            localStorage.setItem('userPassword', newP);
+            syncUserToDatabase();
+
+            closeModals();
+            alert("✅ ይለፍ ቃልዎ ተቀይሯል!");
+        }
+
+        function openRecordsModal() {
+            renderUserRecords();
+            openModal('userRecordsModal');
+        }
+
+        function renderUserRecords() {
+            const depContainer = document.getElementById('userDepositRecordsContainer');
+            const withContainer = document.getElementById('userWithdrawRecordsContainer');
+
+            let userDeps = depositRequests.filter(r => r.phone === userPhone);
+            let userWiths = withdrawRequests.filter(r => r.phone === userPhone);
+
+            depContainer.innerHTML = '';
+            withContainer.innerHTML = '';
+
+            if (userDeps.length === 0) {
+                depContainer.innerHTML = `<div style="font-size:11px; color:#94a3b8;">ምንም የ deposit ታሪክ የለም</div>`;
+            } else {
+                userDeps.slice().reverse().forEach(r => {
+                    depContainer.innerHTML += `
+                        <div class="history-item">
+                            <div><strong>VIP ${r.vipLevel} (${r.amount} ETB)</strong><br><small>TxID: ${r.txId}</small></div>
+                            <span class="status-badge ${r.status}">${r.status}</span>
+                        </div>`;
+                });
+            }
+
+            if (userWiths.length === 0) {
+                withContainer.innerHTML = `<div style="font-size:11px; color:#94a3b8;">ምንም የ withdraw ታሪክ የለም</div>`;
+            } else {
+                userWiths.slice().reverse().forEach(r => {
+                    withContainer.innerHTML += `
+                        <div class="history-item">
+                            <div><strong>Net: ${r.netAmount.toFixed(2)} ETB</strong><br><small>${r.method} - ${r.accountNo}</small></div>
+                            <span class="status-badge ${r.status}">${r.status}</span>
+                        </div>`;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
